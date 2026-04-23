@@ -1,0 +1,278 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { COMPANY, NAV_LINKS } from "@/lib/constants";
+import { FaBars, FaTimes, FaArrowRight } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import NavBlobIndicator from "./NavBlobIndicator";
+
+export default function Navbar() {
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isHoveringTop, setIsHoveringTop] = useState(false);
+  const [shouldShowBackground, setShouldShowBackground] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState(0);
+  const [itemPositions, setItemPositions] = useState<
+    Array<{ left: number; width: number }>
+  >([]);
+  const [navbarHeight, setNavbarHeight] = useState(80);
+  const [buttonPosition, setButtonPosition] = useState<{ left: number; width: number } | null>(null);
+  const [isHoveringButton, setIsHoveringButton] = useState(false);
+  const navItemsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const navContainerRef = useRef<HTMLDivElement | null>(null);
+  const navbarRef = useRef<HTMLDivElement | null>(null);
+  const ctaButtonRef = useRef<HTMLAnchorElement | null>(null);
+
+  const toggleMenu = () => setIsOpen(!isOpen);
+  const closeMenu = () => setIsOpen(false);
+
+  // Set selected index based on current page
+  useEffect(() => {
+    const currentIndex = NAV_LINKS.findIndex((link) => {
+      if (link.href === "/") return pathname === "/";
+      return pathname.startsWith(link.href);
+    });
+    const index = currentIndex >= 0 ? currentIndex : 0;
+    setSelectedIndex(index);
+    setHoveredIndex(index);
+  }, [pathname]);
+
+  // Calculate nav item positions and navbar height
+  useEffect(() => {
+    const calculatePositions = () => {
+      if (navbarRef.current) {
+        setNavbarHeight(navbarRef.current.offsetHeight);
+      }
+
+      const positions = navItemsRef.current.map((item) => {
+        if (!item) return { left: 0, width: 0 };
+        const rect = item.getBoundingClientRect();
+        const parentRect =
+          item.parentElement?.getBoundingClientRect() || rect;
+        return {
+          left: rect.left - parentRect.left,
+          width: rect.width,
+        };
+      });
+      setItemPositions(positions);
+    };
+
+    calculatePositions();
+    window.addEventListener("resize", calculatePositions);
+    return () => window.removeEventListener("resize", calculatePositions);
+  }, []);
+
+  // Handle scroll to hide/show navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Show navbar only if near top of page
+      if (currentScrollY < 100) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+
+      // Show background when scrolled past hero section (~600px)
+      setShouldShowBackground(currentScrollY > 600);
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Handle mouse hover near top of screen to reveal navbar & reset blob when leaving navbar
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (e.clientY < 50) {
+        setIsHoveringTop(true);
+      } else if (e.clientY > 150) {
+        setIsHoveringTop(false);
+      }
+
+      // Reset blob to current page when mouse leaves navbar area
+      // Only hide navbar if we're already scrolled down (not at top)
+      if (e.clientY > navbarHeight) {
+        if (lastScrollY >= 100) {
+          setIsVisible(false);
+        }
+        setHoveredIndex(selectedIndex);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [selectedIndex, navbarHeight, lastScrollY]);
+
+  return (
+    <motion.nav
+      ref={navbarRef}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      style={{
+        backgroundColor: shouldShowBackground || isHoveringTop ? "#ffffff" : "#1a1a1a00",
+        boxShadow:
+          shouldShowBackground || isHoveringTop
+            ? "0 1px 3px rgba(0, 0, 0, 0.1)"
+            : "none",
+      }}
+      animate={{
+        y: isVisible || isHoveringTop ? 0 : -80,
+      }}
+      transition={{
+        type: "tween",
+        duration: 0.4,
+        ease: [0.43, 0.13, 0.23, 0.96], // Smooth easeInOutCubic-like curve
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo */}
+          <Link
+            href="/"
+            className="flex-shrink-0 h-20 flex items-center hover:opacity-80 transition-opacity"
+          >
+            <Image
+              src="/images/ntsLogo.png"
+              alt="NTS Ltd Logo"
+              width={280}
+              height={140}
+              priority
+              className="h-14 w-auto"
+            />
+          </Link>
+
+          {/* Desktop Navigation - Centered */}
+          <div
+            ref={navContainerRef}
+            className="hidden lg:flex items-center gap-12 relative"
+            onMouseLeave={() => setHoveredIndex(selectedIndex)}
+          >
+            <NavBlobIndicator
+              selectedIndex={hoveredIndex}
+              itemPositions={itemPositions}
+              buttonPosition={isHoveringButton ? buttonPosition : null}
+            />
+            {NAV_LINKS.map((link, index) => (
+              <div
+                key={link.href}
+                ref={(el) => {
+                  navItemsRef.current[index] = el;
+                }}
+                className="relative group z-10"
+                onMouseEnter={() => {
+                  setHoveredIndex(index);
+                }}
+              >
+                <Link
+                  href={link.href}
+                  className="font-medium text-sm relative z-20"
+                  style={{
+                    color: (shouldShowBackground || isHoveringTop) ? (hoveredIndex === index ? "#000000" : "#666666") : (hoveredIndex === index ? "white" : "#ffffff"),
+                    transition: "color 0.5s cubic-bezier(0.43, 0.13, 0.23, 0.96)",
+                  }}
+                >
+                  {link.label}
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          {/* Right Side - CTA Button */}
+          <div className="hidden lg:flex items-center gap-4 relative z-30">
+            <Link
+              ref={ctaButtonRef}
+              href="/contact"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 text-white"
+              style={{ backgroundColor: "#4caf50" }}
+              onMouseEnter={() => {
+                if (ctaButtonRef.current && navContainerRef.current) {
+                  const rect = ctaButtonRef.current.getBoundingClientRect();
+                  const parentRect = navContainerRef.current.getBoundingClientRect();
+                  setButtonPosition({
+                    left: rect.left - parentRect.left,
+                    width: rect.width,
+                  });
+                  setIsHoveringButton(true);
+                }
+              }}
+              onMouseLeave={() => {
+                setIsHoveringButton(false);
+                setHoveredIndex(selectedIndex);
+              }}
+            >
+              Get a Quote
+              <FaArrowRight size={14} />
+            </Link>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={toggleMenu}
+            className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
+            aria-label="Toggle menu"
+          >
+            {isOpen ? (
+              <FaTimes
+                size={24}
+                style={{ color: shouldShowBackground ? "#1a1a1a" : "white" }}
+              />
+            ) : (
+              <FaBars
+                size={24}
+                style={{ color: shouldShowBackground ? "#1a1a1a" : "white" }}
+              />
+            )}
+          </button>
+        </div>
+
+        {/* Mobile Navigation */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="lg:hidden border-t border-white/10"
+            >
+              <div className="px-6 py-6 space-y-4">
+                {NAV_LINKS.map((link) => (
+                  <div key={link.href}>
+                <Link
+                  href={link.href}
+                  className="block py-3 text-white/80 hover:text-white transition-colors font-medium"
+                  onClick={closeMenu}
+                >
+                  {link.label}
+                </Link>
+              </div>
+                ))}
+
+                {/* Mobile CTA Button */}
+                <div className="border-t border-white/10 pt-4 mt-4">
+                  <Link
+                    href="/contact"
+                    className="inline-flex w-full items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-all duration-200 text-white"
+                    style={{ backgroundColor: "#4caf50" }}
+                    onClick={closeMenu}
+                  >
+                    Get a Quote
+                    <FaArrowRight size={14} />
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.nav>
+  );
+}
