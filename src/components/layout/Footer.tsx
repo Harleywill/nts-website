@@ -26,9 +26,9 @@ export default function Footer() {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-16 sm:py-20">
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 sm:py-16">
         {/* Top Section: Logo, Mission, Social */}
-        <div className="mb-16 pb-16 border-b border-white/10">
+        <div className="mb-12 pb-12 border-b border-white/10">
           <div className="flex flex-col sm:flex-row items-start justify-between gap-8">
             <div className="flex-1">
               <h3 className="text-2xl font-bold mb-4">{COMPANY.name}</h3>
@@ -87,7 +87,7 @@ export default function Footer() {
         </div>
 
         {/* Middle Section: 3 Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
           {/* Column 1: Navigation Links */}
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-6">Navigate</h4>
@@ -172,28 +172,6 @@ export default function Footer() {
                   <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Address</p>
                   <p className="text-gray-300 text-sm leading-relaxed">{COMPANY.address}</p>
                 </div>
-              </div>
-
-              {/* Social Icons */}
-              <div className="flex gap-3 pt-2">
-                <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-white/10 text-white hover:bg-green-400 hover:text-gray-900 transition-all duration-200"
-                  aria-label="Facebook"
-                >
-                  <FaFacebook size={16} />
-                </a>
-                <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-white/10 text-white hover:bg-green-400 hover:text-gray-900 transition-all duration-200"
-                  aria-label="Twitter"
-                >
-                  <FaTwitter size={16} />
-                </a>
               </div>
             </div>
           </div>
