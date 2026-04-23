@@ -9,7 +9,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="relative isolate overflow-hidden text-white"
+      className="relative isolate overflow-visible text-white"
       style={{ backgroundColor: "#1a2f6e" }}
     >
       {/* Gradient Blob Background - Top */}

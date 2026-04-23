@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function ServicesBento() {
   return (
-    <div className="relative py-24 sm:py-32 overflow-hidden bg-gray-900">
+    <div className="relative py-24 sm:py-32 overflow-visible bg-gray-900">
       {/* Gradient Blob Background */}
       <div
         aria-hidden="true"
