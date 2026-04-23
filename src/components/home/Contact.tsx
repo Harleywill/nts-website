@@ -35,7 +35,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="isolate bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
+    <div className="isolate px-6 py-24 sm:py-32 lg:px-8 text-white" style={{ backgroundColor: "#1a2f6e" }}>
       <div
         aria-hidden="true"
         className="absolute inset-x-0 top-0 -z-10 transform-gpu overflow-hidden blur-3xl"
