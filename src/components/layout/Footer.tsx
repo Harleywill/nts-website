@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { FaFacebook, FaTwitter, FaLinkedin, FaGithub, FaYoutube } from "react-icons/fa";
-import { COMPANY } from "@/lib/constants";
+import { FaFacebook, FaTwitter, FaLinkedin, FaGithub, FaYoutube, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { COMPANY, SERVICES } from "@/lib/constants";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -86,52 +86,98 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Middle Section: 4 Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          {/* Column 1: Services */}
+        {/* Middle Section: 3 Columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          {/* Column 1: Contact Information */}
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-6">Contact Information</h4>
+            <div className="space-y-5">
+              {/* Phone */}
+              <div className="flex items-start gap-3">
+                <FaPhone size={18} className="text-green-400 flex-shrink-0 mt-1" />
+                <div>
+                  <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Phone Number</p>
+                  <a href={`tel:${COMPANY.phone.replace(/\s/g, "")}`} className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                    {COMPANY.phone}
+                  </a>
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="flex items-start gap-3">
+                <FaEnvelope size={18} className="text-green-400 flex-shrink-0 mt-1" />
+                <div>
+                  <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Email Address</p>
+                  <a href={`mailto:${COMPANY.email}`} className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                    {COMPANY.email}
+                  </a>
+                </div>
+              </div>
+
+              {/* Address */}
+              <div className="flex items-start gap-3">
+                <FaMapMarkerAlt size={18} className="text-green-400 flex-shrink-0 mt-1" />
+                <div>
+                  <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Address</p>
+                  <p className="text-gray-300 text-sm leading-relaxed">{COMPANY.address}</p>
+                </div>
+              </div>
+
+              {/* Social Icons */}
+              <div className="flex gap-3 pt-2">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-white/10 text-white hover:bg-green-400 hover:text-gray-900 transition-all duration-200"
+                  aria-label="Facebook"
+                >
+                  <FaFacebook size={16} />
+                </a>
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-white/10 text-white hover:bg-green-400 hover:text-gray-900 transition-all duration-200"
+                  aria-label="Twitter"
+                >
+                  <FaTwitter size={16} />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Column 2: All Services */}
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-6">Services</h4>
             <ul className="space-y-3">
-              <li>
-                <Link href="/services/plumbing-heating" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Plumbing & Heating
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/air-conditioning" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Air Conditioning
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/ventilation" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Ventilation
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/commercial" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Commercial HVAC
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/commissioning" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Commissioning
-                </Link>
-              </li>
+              {SERVICES.map((service) => (
+                <li key={service.id}>
+                  <Link href={`/services/${service.id}`} className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                    {service.title}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Column 2: Support */}
+          {/* Column 3: Navigation Links */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-6">Support</h4>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-6">Navigate</h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/contact" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Contact Us
+                <Link href="/" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                  Home
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  FAQ
+                <Link href="/about" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link href="/services" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                  Services
                 </Link>
               </li>
               <li>
@@ -140,45 +186,6 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href={`mailto:${COMPANY.email}`} className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Email Support
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 3: Company */}
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-6">Company</h4>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/about" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="/projects" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Portfolio
-                </Link>
-              </li>
-              <li>
-                <Link href="/careers" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <a href={`tel:${COMPANY.phone.replace(/\s/g, "")}`} className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  {COMPANY.phone}
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 4: Legal */}
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-6">Legal</h4>
-            <ul className="space-y-3">
-              <li>
                 <Link href="/privacy" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
                   Privacy Policy
                 </Link>
@@ -186,16 +193,6 @@ export default function Footer() {
               <li>
                 <Link href="/terms" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
                   Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link href="/cookies" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Cookie Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/disclaimer" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Disclaimer
                 </Link>
               </li>
             </ul>
