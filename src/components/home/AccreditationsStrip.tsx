@@ -4,6 +4,12 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 
 export default function AccreditationsStrip() {
+  const imageStyle = {
+    filter: "grayscale(1) brightness(1.3) invert(1)",
+    mixBlendMode: "screen" as const,
+    backgroundColor: "transparent",
+  } as const;
+
   const gridItemStyle = {
     display: "flex",
     justifyContent: "center",
@@ -43,10 +49,14 @@ export default function AccreditationsStrip() {
           viewport={{ once: true, amount: 0.2 }}
         >
           {accreditations.map((accreditation, index) => (
-            <div
+            <motion.div
               key={accreditation.name}
               className="col-span-1 flex justify-center"
               style={index === 10 ? { gridColumn: "2" } : index === 11 ? { gridColumn: "4" } : {}}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.1 + index * 0.02 }}
+              viewport={{ once: true, amount: 0.2 }}
             >
               <Image
                 src={accreditation.path}
@@ -54,12 +64,11 @@ export default function AccreditationsStrip() {
                 width={120}
                 height={80}
                 className="max-h-16 w-full object-contain"
-                style={{
-                  filter: "grayscale(1) brightness(1.3) invert(1)",
-                  mixBlendMode: "screen",
-                }}
+                style={imageStyle}
+                priority={index < 6}
+                loading={index < 6 ? "eager" : "lazy"}
               />
-            </div>
+            </motion.div>
           ))}
         </motion.div>
       </div>

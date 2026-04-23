@@ -133,9 +133,9 @@ export default function Navbar() {
         ease: [0.43, 0.13, 0.23, 0.96], // Smooth easeInOutCubic-like curve
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="flex justify-between items-center h-20">
-          {/* Logo */}
+      <div className="mx-auto px-6 sm:px-8 lg:px-12">
+        <div className="flex items-center h-20 justify-between">
+          {/* Logo - Left */}
           <Link
             href="/"
             className="flex-shrink-0 h-20 flex items-center hover:opacity-80 transition-opacity"
@@ -150,16 +150,18 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Desktop Navigation - Centered */}
-          <div
-            ref={navContainerRef}
-            className="hidden lg:flex items-center gap-12 relative"
-            onMouseLeave={() => setHoveredIndex(selectedIndex)}
-          >
+          {/* Center spacer for desktop nav centering */}
+          <div className="hidden lg:flex flex-1 items-center justify-center">
+            {/* Desktop Navigation - Center */}
+            <div
+              ref={navContainerRef}
+              className="flex items-center gap-12 relative"
+              onMouseLeave={() => setHoveredIndex(selectedIndex)}
+            >
             <NavBlobIndicator
               selectedIndex={hoveredIndex}
               itemPositions={itemPositions}
-              buttonPosition={isHoveringButton ? buttonPosition : null}
+              buttonPosition={null}
             />
             {NAV_LINKS.map((link, index) => (
               <div
@@ -184,42 +186,15 @@ export default function Navbar() {
                 </Link>
               </div>
             ))}
-          </div>
-
-          {/* Right Side - CTA Button */}
-          <div className="hidden lg:flex items-center gap-4 relative z-30">
-            <Link
-              ref={ctaButtonRef}
-              href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 text-white"
-              style={{ backgroundColor: "#4caf50" }}
-              onMouseEnter={() => {
-                if (ctaButtonRef.current && navContainerRef.current) {
-                  const rect = ctaButtonRef.current.getBoundingClientRect();
-                  const parentRect = navContainerRef.current.getBoundingClientRect();
-                  setButtonPosition({
-                    left: rect.left - parentRect.left,
-                    width: rect.width,
-                  });
-                  setIsHoveringButton(true);
-                }
-              }}
-              onMouseLeave={() => {
-                setIsHoveringButton(false);
-                setHoveredIndex(selectedIndex);
-              }}
-            >
-              Get a Quote
-              <FaArrowRight size={14} />
-            </Link>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            onClick={toggleMenu}
-            className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
-            aria-label="Toggle menu"
-          >
+              onClick={toggleMenu}
+              className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
+              aria-label="Toggle menu"
+            >
             {isOpen ? (
               <FaTimes
                 size={24}
@@ -255,19 +230,6 @@ export default function Navbar() {
                 </Link>
               </div>
                 ))}
-
-                {/* Mobile CTA Button */}
-                <div className="border-t border-white/10 pt-4 mt-4">
-                  <Link
-                    href="/contact"
-                    className="inline-flex w-full items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-all duration-200 text-white"
-                    style={{ backgroundColor: "#4caf50" }}
-                    onClick={closeMenu}
-                  >
-                    Get a Quote
-                    <FaArrowRight size={14} />
-                  </Link>
-                </div>
               </div>
             </motion.div>
           )}
