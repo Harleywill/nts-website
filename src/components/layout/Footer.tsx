@@ -10,7 +10,7 @@ export default function Footer() {
   return (
     <footer
       className="relative isolate overflow-hidden text-white"
-      style={{ backgroundColor: "#1a2f6e" }}
+      style={{ backgroundColor: "#101828" }}
     >
       {/* Gradient Blob Background - Bottom Only */}
       <div
