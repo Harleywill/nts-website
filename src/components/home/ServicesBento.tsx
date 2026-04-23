@@ -5,11 +5,11 @@ import Link from "next/link";
 
 export default function ServicesBento() {
   return (
-    <div className="relative py-24 sm:py-32 overflow-visible bg-gray-900">
+    <div className="relative py-24 sm:py-32 overflow-hidden bg-gray-900">
       {/* Gradient Blob Background */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+        className="absolute inset-x-0 top-0 -z-10 transform-gpu overflow-hidden blur-3xl"
       >
         <div
           style={{

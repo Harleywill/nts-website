@@ -9,13 +9,13 @@ export default function Footer() {
 
   return (
     <footer
-      className="relative isolate overflow-visible text-white"
+      className="relative isolate overflow-hidden text-white"
       style={{ backgroundColor: "#1a2f6e" }}
     >
       {/* Gradient Blob Background - Top */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+        className="absolute inset-x-0 top-0 -z-10 transform-gpu overflow-hidden blur-3xl"
       >
         <div
           style={{

@@ -59,13 +59,13 @@ export default function QuickEnquiry() {
   return (
     <section
       ref={ref}
-      className="relative isolate overflow-visible py-16 sm:py-20 lg:py-28 text-white"
+      className="relative isolate overflow-hidden py-16 sm:py-20 lg:py-28 text-white"
       style={{ backgroundColor: "#1a2f6e" }}
     >
       {/* Gradient Blob Background - Top */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+        className="absolute inset-x-0 top-0 -z-10 transform-gpu overflow-hidden blur-3xl"
       >
         <div
           style={{
