@@ -88,7 +88,58 @@ export default function Footer() {
 
         {/* Middle Section: 3 Columns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {/* Column 1: Contact Information */}
+          {/* Column 1: Navigation Links */}
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-6">Navigate</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link href="/services" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                  Services
+                </Link>
+              </li>
+              <li>
+                <Link href="/projects" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                  Projects
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                  Terms of Service
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 2: All Services */}
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-6">Services</h4>
+            <ul className="space-y-3">
+              {SERVICES.map((service) => (
+                <li key={service.id}>
+                  <Link href={`/services/${service.id}`} className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                    {service.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3: Contact Information */}
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-6">Contact Information</h4>
             <div className="space-y-5">
@@ -145,57 +196,6 @@ export default function Footer() {
                 </a>
               </div>
             </div>
-          </div>
-
-          {/* Column 2: All Services */}
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-6">Services</h4>
-            <ul className="space-y-3">
-              {SERVICES.map((service) => (
-                <li key={service.id}>
-                  <Link href={`/services/${service.id}`} className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                    {service.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Column 3: Navigation Links */}
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-6">Navigate</h4>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Services
-                </Link>
-              </li>
-              <li>
-                <Link href="/projects" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Projects
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
-                  Terms of Service
-                </Link>
-              </li>
-            </ul>
           </div>
         </div>
 
