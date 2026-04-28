@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <div className="relative isolate overflow-hidden min-h-screen flex items-center justify-center" style={{ backgroundColor: "#1a2f6e" }}>
+    <div className="relative isolate overflow-hidden min-h-screen flex items-center justify-center pt-20 lg:pt-0" style={{ backgroundColor: "#1a2f6e" }}>
       {/* Background Image */}
       <img
         src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=2830&h=1500&q=80"
