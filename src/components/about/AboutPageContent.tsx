@@ -142,7 +142,7 @@ export default function AboutPageContent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true, amount: 0.2 }}
-                className="flex flex-col items-center"
+                className={`flex flex-col items-center ${index === directors.length - 1 ? 'col-start-2' : ''}`}
               >
                 <div className="relative mb-6">
                   <div
