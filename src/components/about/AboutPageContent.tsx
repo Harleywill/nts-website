@@ -6,27 +6,27 @@ const directors = [
   {
     name: "Anthony Gartland",
     title: "Consultant Director",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80",
+    image: "/images/directors/Anthony-Gartland.jpg",
   },
   {
     name: "Matthew Gartland",
     title: "Managing Director",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80",
+    image: "/images/directors/Matthew-Gartland.jpg",
   },
   {
     name: "Nick Porter",
     title: "Director",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80",
+    image: "/images/directors/Nick-Porter.jpg",
   },
   {
     name: "Richard Tinker",
     title: "Director",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80",
+    image: "/images/directors/Richard-Tinker-768x768.jpg",
   },
   {
     name: "Lee Harris",
     title: "Financial Director",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400&q=80",
+    image: "/images/directors/Lee-Harris-768x768.jpg",
   },
 ];
 
@@ -246,7 +246,7 @@ export default function AboutPageContent() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          <div className="flex flex-wrap justify-center gap-12">
             {directors.map((director, index) => (
               <motion.div
                 key={index}
@@ -254,7 +254,7 @@ export default function AboutPageContent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true, amount: 0.2 }}
-                className="flex flex-col items-center"
+                className="flex flex-col items-center w-full md:w-auto"
               >
                 <div className="relative mb-6">
                   <div
