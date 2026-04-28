@@ -190,7 +190,7 @@ export default function Navbar() {
                   href={link.href}
                   className="font-medium text-sm relative z-20"
                   style={{
-                    color: (shouldShowBackground || isHoveringTop) ? (hoveredIndex === index ? "#1a2f6e" : "#1a2f6e") : (hoveredIndex === index ? "white" : "#ffffff"),
+                    color: (shouldShowBackground || isHoveringTop) ? "#000000" : "#ffffff",
                     transition: "color 0.5s cubic-bezier(0.43, 0.13, 0.23, 0.96)",
                   }}
                 >
@@ -210,12 +210,12 @@ export default function Navbar() {
             {isOpen ? (
               <FaTimes
                 size={24}
-                style={{ color: isMobile || shouldShowBackground ? "#1a1a1a" : "white" }}
+                style={{ color: isMobile || shouldShowBackground ? "#000000" : "#ffffff" }}
               />
             ) : (
               <FaBars
                 size={24}
-                style={{ color: isMobile || shouldShowBackground ? "#1a1a1a" : "white" }}
+                style={{ color: isMobile || shouldShowBackground ? "#000000" : "#ffffff" }}
               />
             )}
           </button>
