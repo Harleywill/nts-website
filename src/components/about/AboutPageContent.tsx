@@ -134,7 +134,7 @@ export default function AboutPageContent() {
             </p>
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 justify-items-center">
             {directors.map((director, index) => (
               <motion.div
                 key={index}
@@ -142,7 +142,7 @@ export default function AboutPageContent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true, amount: 0.2 }}
-                className="flex flex-col items-center w-full md:w-auto"
+                className="flex flex-col items-center"
               >
                 <div className="relative mb-6">
                   <div
