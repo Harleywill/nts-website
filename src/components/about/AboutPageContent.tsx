@@ -1,30 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaCheckCircle, FaUsers, FaTrophy, FaShieldAlt } from "react-icons/fa";
-
-const whyChooseUs = [
-  {
-    icon: FaCheckCircle,
-    title: "Expert Team",
-    description: "Over 50 fully qualified engineers with decades of combined experience in HVAC and mechanical services.",
-  },
-  {
-    icon: FaTrophy,
-    title: "Industry Leaders",
-    description: "Certified by leading manufacturers and accredited with Gas Safe, F-Gas, and multiple quality standards.",
-  },
-  {
-    icon: FaShieldAlt,
-    title: "Guaranteed Service",
-    description: "We stand behind our work with comprehensive warranties and 24/7 emergency support for our clients.",
-  },
-  {
-    icon: FaUsers,
-    title: "Customer First",
-    description: "Your satisfaction is our priority. We listen, plan carefully, and deliver solutions that exceed expectations.",
-  },
-];
 
 const process = [
   {
@@ -171,42 +147,6 @@ export default function AboutPageContent() {
             </div>
           </motion.div>
 
-          {/* Why Choose Us */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true, amount: 0.2 }}
-            className="mb-20"
-          >
-            <h3 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-12 text-center">
-              Why Choose NTS Ltd
-            </h3>
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-              {whyChooseUs.map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    className="relative group"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 to-blue-400/10 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
-                    <div className="relative bg-white rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 h-full">
-                      <div className="inline-block p-3 rounded-lg bg-green-500/10 mb-4">
-                        <Icon size={32} style={{ color: "#4caf50" }} />
-                      </div>
-                      <h4 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h4>
-                      <p className="text-gray-600 leading-relaxed">{item.description}</p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
 
           {/* Services & Our Philosophy */}
           <motion.div
