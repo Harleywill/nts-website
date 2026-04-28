@@ -137,7 +137,7 @@ export default function Navbar() {
             : "none",
       }}
       animate={{
-        y: isVisible || isHoveringTop ? 0 : -80,
+        y: isMobile || isVisible || isHoveringTop ? 0 : -80,
       }}
       transition={{
         type: "tween",
