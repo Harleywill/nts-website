@@ -21,7 +21,7 @@ export default function Navbar() {
   const [itemPositions, setItemPositions] = useState<
     Array<{ left: number; width: number }>
   >([]);
-  const [navbarHeight, setNavbarHeight] = useState(80);
+  const [navbarHeight, setNavbarHeight] = useState(96);
   const [buttonPosition, setButtonPosition] = useState<{ left: number; width: number } | null>(null);
   const [isHoveringButton, setIsHoveringButton] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -137,7 +137,7 @@ export default function Navbar() {
             : "none",
       }}
       animate={{
-        y: isMobile || isVisible || isHoveringTop ? 0 : -80,
+        y: isMobile || isVisible || isHoveringTop ? 0 : -96,
       }}
       transition={{
         type: "tween",
@@ -146,11 +146,11 @@ export default function Navbar() {
       }}
     >
       <div className="mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="flex items-center h-20 justify-between">
+        <div className="flex items-center h-24 justify-between">
           {/* Logo - Left */}
           <Link
             href="/"
-            className="flex-shrink-0 h-20 flex items-center hover:opacity-80 transition-opacity"
+            className="flex-shrink-0 h-24 flex items-center hover:opacity-80 transition-opacity"
           >
             <Image
               src="/images/ntsLogo.png"
@@ -158,7 +158,7 @@ export default function Navbar() {
               width={280}
               height={140}
               priority
-              className="h-14 w-auto"
+              className="h-16 w-auto"
             />
           </Link>
 
