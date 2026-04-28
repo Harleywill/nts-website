@@ -66,22 +66,22 @@ export default function AboutPageContent() {
               <img
                 src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=500&q=80"
                 alt="Team member"
-                className="rounded-lg w-full h-64 object-cover"
+                className="rounded-lg w-full h-56 object-cover"
               />
               <img
                 src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80"
                 alt="Work in progress"
-                className="rounded-lg w-full h-40 object-cover mt-8"
+                className="rounded-lg w-full h-56 object-cover"
               />
               <img
                 src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80"
                 alt="Team collaboration"
-                className="rounded-lg w-full h-40 object-cover"
+                className="rounded-lg w-full h-56 object-cover"
               />
               <img
                 src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=500&q=80"
                 alt="Office space"
-                className="rounded-lg w-full h-64 object-cover mt-8"
+                className="rounded-lg w-full h-56 object-cover"
               />
             </motion.div>
           </div>
