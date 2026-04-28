@@ -39,7 +39,7 @@ export default function AboutPageContent() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 via-gray-900 to-gray-800 px-6 py-24 sm:py-32 lg:px-8">
+      <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 via-gray-900 to-gray-800 px-6 pt-24 pb-24 sm:py-32 lg:px-8 lg:pt-24">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-center">
             {/* Left Content */}
