@@ -36,7 +36,7 @@ export default function Testimonials() {
   const testimonial = SAMPLE_TESTIMONIALS[currentIndex];
 
   return (
-    <section className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:px-8">
+    <section className="relative isolate overflow-hidden bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
       {/* Gradient Blob Background */}
       <div
         aria-hidden="true"
@@ -69,7 +69,7 @@ export default function Testimonials() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="text-center text-xl/8 font-semibold text-gray-900 sm:text-2xl/9"
+              className="text-center text-xl/8 font-semibold text-white sm:text-2xl/9"
             >
               <p>"{testimonial.text}"</p>
             </motion.blockquote>
@@ -84,7 +84,7 @@ export default function Testimonials() {
             className="mt-10"
           >
             <div className="flex items-center justify-center space-x-3 text-base">
-              <div className="font-semibold" style={{ color: "#1a2f6e" }}>
+              <div className="font-semibold text-white">
                 {testimonial.name}
               </div>
               <svg
@@ -96,7 +96,7 @@ export default function Testimonials() {
               >
                 <circle r="1" cx="1" cy="1" />
               </svg>
-              <div className="text-gray-600">{testimonial.company}</div>
+              <div className="text-gray-400">{testimonial.company}</div>
             </div>
           </motion.figcaption>
         </figure>

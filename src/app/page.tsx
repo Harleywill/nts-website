@@ -6,6 +6,7 @@ import ServicesBento from "@/components/home/ServicesBento";
 import AccreditationsStrip from "@/components/home/AccreditationsStrip";
 import LatestProjects from "@/components/home/LatestProjects";
 import Testimonials from "@/components/home/Testimonials";
+import FeaturedNews from "@/components/home/FeaturedNews";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
         <AccreditationsStrip />
         <LatestProjects />
         <Testimonials />
+        <FeaturedNews />
       </main>
       <Footer />
     </div>

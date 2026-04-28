@@ -118,9 +118,9 @@ export default function Navbar() {
       ref={navbarRef}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        backgroundColor: shouldShowBackground || isHoveringTop ? "#ffffff" : "#1a1a1a00",
+        backgroundColor: shouldShowBackground || isHoveringTop || isOpen ? "#ffffff" : "#1a1a1a00",
         boxShadow:
-          shouldShowBackground || isHoveringTop
+          shouldShowBackground || isHoveringTop || isOpen
             ? "0 1px 3px rgba(0, 0, 0, 0.1)"
             : "none",
       }}
@@ -178,7 +178,7 @@ export default function Navbar() {
                   href={link.href}
                   className="font-medium text-sm relative z-20"
                   style={{
-                    color: (shouldShowBackground || isHoveringTop) ? (hoveredIndex === index ? "#000000" : "#666666") : (hoveredIndex === index ? "white" : "#ffffff"),
+                    color: (shouldShowBackground || isHoveringTop) ? (hoveredIndex === index ? "#1a2f6e" : "#1a2f6e") : (hoveredIndex === index ? "white" : "#ffffff"),
                     transition: "color 0.5s cubic-bezier(0.43, 0.13, 0.23, 0.96)",
                   }}
                 >

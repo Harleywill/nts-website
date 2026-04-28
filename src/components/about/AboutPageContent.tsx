@@ -63,266 +63,198 @@ export default function AboutPageContent() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 px-6 py-32 sm:py-48 lg:px-8">
-        <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
-          <div
-            style={{
-              clipPath:
-                "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-            }}
-            className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[72.1875rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#4caf50] to-[#64b5f6] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[143.75rem]"
-          />
-        </div>
-        <div className="mx-auto max-w-3xl text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-4xl font-bold tracking-tight text-white sm:text-6xl"
-          >
-            About NTS Ltd
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mt-6 text-lg leading-8 text-gray-300"
-          >
-            Leading provider of professional HVAC and mechanical solutions across Hull and beyond. With over 15 years of expertise, we're committed to delivering reliability, quality, and excellence in every project.
-          </motion.p>
-        </div>
-      </section>
-
-      {/* Company Story */}
-      <section className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:px-8">
+      <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 via-gray-900 to-gray-800 px-6 py-24 sm:py-32 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-center">
+            {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              viewport={{ once: true, amount: 0.3 }}
             >
-              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-6">
-                Our Story
-              </h2>
-              <p className="text-lg text-gray-600 mb-4">
-                Founded in 2010, NTS Ltd began with a simple vision: to provide reliable, professional HVAC and mechanical solutions that homeowners and businesses could trust. What started as a small team of passionate engineers has grown into a thriving company serving hundreds of satisfied clients.
-              </p>
-              <p className="text-lg text-gray-600 mb-4">
-                Over the years, we've built our reputation on integrity, expertise, and customer satisfaction. Every project, whether residential or commercial, receives the same level of professionalism and attention to detail.
-              </p>
-              <p className="text-lg text-gray-600">
-                Today, we're proud to employ over 50 qualified engineers and continue to set the standard for excellence in the heating, cooling, and ventilation industry across the UK.
+              <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6">
+                About NTS Ltd
+              </h1>
+              <p className="text-lg leading-8 text-gray-300 mb-8">
+                Leading provider of professional HVAC and mechanical solutions across Hull and beyond. With over 15 years of expertise, we're committed to delivering reliability, quality, and excellence in every project.
               </p>
             </motion.div>
+
+            {/* Right Image Grid */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              viewport={{ once: true, amount: 0.3 }}
-              className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-12 text-center"
+              className="grid grid-cols-2 gap-4"
             >
-              <div className="text-5xl font-bold mb-4" style={{ color: "#1a2f6e" }}>
-                15+
-              </div>
-              <p className="text-xl font-semibold text-gray-900 mb-8">Years of Excellence</p>
-              <div className="space-y-4 text-left">
-                <div className="flex items-center gap-3">
-                  <span style={{ color: "#4caf50" }} className="text-2xl">✓</span>
-                  <span className="text-gray-700">2000+ successful projects</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span style={{ color: "#4caf50" }} className="text-2xl">✓</span>
-                  <span className="text-gray-700">50+ qualified engineers</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span style={{ color: "#4caf50" }} className="text-2xl">✓</span>
-                  <span className="text-gray-700">12 industry certifications</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span style={{ color: "#4caf50" }} className="text-2xl">✓</span>
-                  <span className="text-gray-700">24/7 customer support</span>
-                </div>
-              </div>
+              <img
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=500&q=80"
+                alt="Team member"
+                className="rounded-lg w-full h-64 object-cover"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80"
+                alt="Work in progress"
+                className="rounded-lg w-full h-40 object-cover mt-8"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80"
+                alt="Team collaboration"
+                className="rounded-lg w-full h-40 object-cover"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=500&q=80"
+                alt="Office space"
+                className="rounded-lg w-full h-64 object-cover mt-8"
+              />
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="relative isolate overflow-hidden bg-gray-50 px-6 py-24 sm:py-32 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true, amount: 0.2 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Why Choose NTS Ltd
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              We're not just another HVAC company—here's what sets us apart
-            </p>
-          </motion.div>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {whyChooseUs.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300"
-                >
-                  <div className="inline-block p-3 rounded-lg bg-green-500/10 mb-4">
-                    <Icon size={28} style={{ color: "#4caf50" }} />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
-                  <p className="text-gray-600">{item.description}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Our Process */}
+      {/* Cohesive Main Section: Our Story & Why We're Different */}
       <section className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:px-8">
-        <div className="absolute inset-x-0 top-0 -z-10 transform-gpu overflow-hidden blur-3xl">
-          <div
-            style={{
-              clipPath:
-                "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-            }}
-            className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[72.1875rem] -translate-x-1/2 bg-gradient-to-tr from-[#4caf50] to-[#64b5f6] opacity-15 sm:left-[calc(50%-30rem)] sm:w-[143.75rem]"
-          />
-        </div>
         <div className="mx-auto max-w-7xl">
+          {/* Our History */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true, amount: 0.3 }}
+            className="mb-20"
+          >
+            <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl mb-8">
+              Our Story
+            </h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="space-y-6 text-lg text-gray-600 leading-relaxed">
+                <p>
+                  NTS department was formed in 1981 as part of the heating company, providing design, installation and servicing to a wide range of customers, both commercial and domestic. In 2011, it became an independent company providing the same level of service gained over the preceding years of experience.
+                </p>
+                <p>
+                  Our vast experience has taught us that "right first time" is the only way to ensure high levels of customer retention and operational efficiency. We pride ourselves on our quality focus over and above commercial, physical and time constraints.
+                </p>
+                <p>
+                  Our long-standing, loyal client base is testament to good service and quality of workmanship, approaching each project from the client stand-point and looking at the entire project life cycle from installation, through to commissioning and service.
+                </p>
+              </div>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true, amount: 0.3 }}
+                className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-12 text-center"
+              >
+                <div className="text-5xl font-bold mb-4" style={{ color: "#1a2f6e" }}>
+                  45+
+                </div>
+                <p className="text-xl font-semibold text-gray-900 mb-8">Years of Excellence</p>
+                <div className="space-y-4 text-left">
+                  <div className="flex items-center gap-3">
+                    <span style={{ color: "#4caf50" }} className="text-2xl">✓</span>
+                    <span className="text-gray-700">Founded in 1981</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span style={{ color: "#4caf50" }} className="text-2xl">✓</span>
+                    <span className="text-gray-700">Independent since 2011</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span style={{ color: "#4caf50" }} className="text-2xl">✓</span>
+                    <span className="text-gray-700">50+ qualified engineers</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span style={{ color: "#4caf50" }} className="text-2xl">✓</span>
+                    <span className="text-gray-700">Proven track record</span>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Why Choose Us */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true, amount: 0.2 }}
-            className="text-center mb-16"
+            className="mb-20"
           >
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Our Process
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              From initial consultation to ongoing support, here's how we work with you
+            <h3 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-12 text-center">
+              Why Choose NTS Ltd
+            </h3>
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+              {whyChooseUs.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    className="relative group"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 to-blue-400/10 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                    <div className="relative bg-white rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 h-full">
+                      <div className="inline-block p-3 rounded-lg bg-green-500/10 mb-4">
+                        <Icon size={32} style={{ color: "#4caf50" }} />
+                      </div>
+                      <h4 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h4>
+                      <p className="text-gray-600 leading-relaxed">{item.description}</p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </motion.div>
+
+          {/* Services & Our Philosophy */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.2 }}
+            className="mb-20"
+          >
+            <h3 className="text-3xl font-bold text-gray-900 text-center mb-12">
+              Our Comprehensive Services
+            </h3>
+            <p className="text-center text-lg text-gray-600 max-w-3xl mx-auto mb-8">
+              We provide installation, service and maintenance of Plumbing and heating, Air Conditioning, Ventilation, Building and energy management systems, and RPZ testing. Constant training and sharing best practice ensures we are at the forefront of emerging technology, presenting clients with multiple options to fulfill their needs.
             </p>
           </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {process.map((step, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true, amount: 0.2 }}
-                className="relative"
-              >
-                <div className="flex gap-6">
-                  <div className="flex-shrink-0">
-                    <div
-                      className="flex h-14 w-14 items-center justify-center rounded-xl text-white font-bold text-xl"
-                      style={{ backgroundColor: "#4caf50" }}
-                    >
-                      {step.number}
-                    </div>
-                  </div>
-                  <div className="flex-grow">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
-                    <p className="text-gray-600">{step.description}</p>
-                  </div>
-                </div>
-                {index < process.length - 1 && (
-                  <div className="hidden lg:block absolute top-14 -right-4 w-8 h-0.5 bg-gradient-to-r from-green-400 to-transparent" />
-                )}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Mission & Values */}
-      <section className="relative isolate overflow-hidden bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
-        <div className="absolute inset-x-0 bottom-0 -z-10 transform-gpu overflow-hidden blur-3xl">
-          <div
-            style={{
-              clipPath:
-                "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-            }}
-            className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[72.1875rem] -translate-x-1/2 bg-gradient-to-tr from-[#64b5f6] to-[#4caf50] opacity-15 sm:left-[calc(50%+36rem)] sm:w-[143.75rem]"
-          />
-        </div>
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+          {/* Our Commitment */}
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-12 lg:p-16">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true, amount: 0.3 }}
+              className="text-center"
             >
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
-                Our Mission
-              </h2>
-              <p className="text-lg text-gray-300 leading-8">
-                To deliver reliable, efficient, and innovative HVAC and mechanical solutions that exceed customer expectations. We're committed to maintaining the highest standards of safety, quality, and professionalism in every project we undertake, ensuring our clients enjoy comfortable, safe, and efficient indoor environments.
+              <h3 className="text-3xl font-bold text-white mb-6">Our Core Values</h3>
+              <p className="text-gray-300 leading-8 max-w-2xl mx-auto mb-12">
+                A contract with NTS Ltd is more than a signed piece of paper, it is our commitment to you and the start of a potential long term relationship.
               </p>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true, amount: 0.3 }}
-            >
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-6">
-                Our Values
-              </h2>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3">
-                  <span style={{ color: "#4caf50" }} className="text-2xl flex-shrink-0 mt-1">
-                    ✓
-                  </span>
-                  <div>
-                    <p className="font-semibold text-white">Reliability</p>
-                    <p className="text-gray-400">You can count on us to deliver on our promises, every time</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span style={{ color: "#4caf50" }} className="text-2xl flex-shrink-0 mt-1">
-                    ✓
-                  </span>
-                  <div>
-                    <p className="font-semibold text-white">Quality</p>
-                    <p className="text-gray-400">We use only the best materials and proven techniques</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span style={{ color: "#4caf50" }} className="text-2xl flex-shrink-0 mt-1">
-                    ✓
-                  </span>
-                  <div>
-                    <p className="font-semibold text-white">Safety</p>
-                    <p className="text-gray-400">All work meets the highest safety and compliance standards</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span style={{ color: "#4caf50" }} className="text-2xl flex-shrink-0 mt-1">
-                    ✓
-                  </span>
-                  <div>
-                    <p className="font-semibold text-white">Excellence</p>
-                    <p className="text-gray-400">We strive for excellence in everything we do</p>
-                  </div>
-                </li>
-              </ul>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="text-left">
+                  <p className="font-semibold text-white text-lg mb-2">Reliability</p>
+                  <p className="text-gray-400">Delivering on every promise</p>
+                </div>
+                <div className="text-left">
+                  <p className="font-semibold text-white text-lg mb-2">Quality</p>
+                  <p className="text-gray-400">Right first time, every time</p>
+                </div>
+                <div className="text-left">
+                  <p className="font-semibold text-white text-lg mb-2">Safety</p>
+                  <p className="text-gray-400">Highest compliance standards</p>
+                </div>
+                <div className="text-left">
+                  <p className="font-semibold text-white text-lg mb-2">Partnership</p>
+                  <p className="text-gray-400">Your success is our success</p>
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
