@@ -228,14 +228,14 @@ export default function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden border-t border-white/10"
+              className="lg:hidden border-t border-gray-200"
             >
               <div className="px-6 py-6 space-y-4">
                 {NAV_LINKS.map((link) => (
                   <div key={link.href}>
                 <Link
                   href={link.href}
-                  className="block py-3 text-white/80 hover:text-white transition-colors font-medium"
+                  className="block py-3 text-gray-700 hover:text-gray-900 transition-colors font-medium"
                   onClick={closeMenu}
                 >
                   {link.label}
