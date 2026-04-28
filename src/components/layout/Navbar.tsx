@@ -24,6 +24,7 @@ export default function Navbar() {
   const [navbarHeight, setNavbarHeight] = useState(80);
   const [buttonPosition, setButtonPosition] = useState<{ left: number; width: number } | null>(null);
   const [isHoveringButton, setIsHoveringButton] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const navItemsRef = useRef<(HTMLDivElement | null)[]>([]);
   const navContainerRef = useRef<HTMLDivElement | null>(null);
   const navbarRef = useRef<HTMLDivElement | null>(null);
@@ -42,6 +43,17 @@ export default function Navbar() {
     setSelectedIndex(index);
     setHoveredIndex(index);
   }, [pathname]);
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Calculate nav item positions and navbar height
   useEffect(() => {
@@ -118,9 +130,9 @@ export default function Navbar() {
       ref={navbarRef}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        backgroundColor: shouldShowBackground || isHoveringTop || isOpen ? "#ffffff" : "#1a1a1a00",
+        backgroundColor: isMobile || shouldShowBackground || isHoveringTop ? "#ffffff" : "#1a1a1a00",
         boxShadow:
-          shouldShowBackground || isHoveringTop || isOpen
+          isMobile || shouldShowBackground || isHoveringTop
             ? "0 1px 3px rgba(0, 0, 0, 0.1)"
             : "none",
       }}
@@ -198,12 +210,12 @@ export default function Navbar() {
             {isOpen ? (
               <FaTimes
                 size={24}
-                style={{ color: shouldShowBackground ? "#1a1a1a" : "white" }}
+                style={{ color: isMobile || shouldShowBackground ? "#1a1a1a" : "white" }}
               />
             ) : (
               <FaBars
                 size={24}
-                style={{ color: shouldShowBackground ? "#1a1a1a" : "white" }}
+                style={{ color: isMobile || shouldShowBackground ? "#1a1a1a" : "white" }}
               />
             )}
           </button>
