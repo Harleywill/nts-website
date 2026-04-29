@@ -126,8 +126,8 @@ export default function Testimonials() {
               className="flex-none w-full snap-center snap-always px-3 md:px-4"
             >
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true, amount: 0.5 }}
                 className="flex flex-col rounded-2xl bg-gray-800 p-8 sm:p-12 border border-gray-700 min-h-96"
