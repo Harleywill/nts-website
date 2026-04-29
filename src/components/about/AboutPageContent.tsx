@@ -91,26 +91,26 @@ export default function AboutPageContent() {
               transition={{ duration: 0.8 }}
               className="grid grid-cols-2 gap-4"
             >
-              <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=500&q=80"
-                alt="Team member"
-                className="rounded-lg w-full h-56 object-cover"
-              />
-              <img
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80"
-                alt="Work in progress"
-                className="rounded-lg w-full h-56 object-cover"
-              />
-              <img
-                src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80"
-                alt="Team collaboration"
-                className="rounded-lg w-full h-56 object-cover"
-              />
-              <img
-                src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=500&q=80"
-                alt="Office space"
-                className="rounded-lg w-full h-56 object-cover"
-              />
+              <div className="rounded-lg w-full h-56 bg-gray-300 border-2 border-dashed border-gray-400 flex items-center justify-center">
+                <div className="text-center">
+                  <p className="text-gray-600 font-semibold text-sm">[PLACEHOLDER: Team Member Image]</p>
+                </div>
+              </div>
+              <div className="rounded-lg w-full h-56 bg-gray-300 border-2 border-dashed border-gray-400 flex items-center justify-center">
+                <div className="text-center">
+                  <p className="text-gray-600 font-semibold text-sm">[PLACEHOLDER: Work in Progress Image]</p>
+                </div>
+              </div>
+              <div className="rounded-lg w-full h-56 bg-gray-300 border-2 border-dashed border-gray-400 flex items-center justify-center">
+                <div className="text-center">
+                  <p className="text-gray-600 font-semibold text-sm">[PLACEHOLDER: Team Collaboration Image]</p>
+                </div>
+              </div>
+              <div className="rounded-lg w-full h-56 bg-gray-300 border-2 border-dashed border-gray-400 flex items-center justify-center">
+                <div className="text-center">
+                  <p className="text-gray-600 font-semibold text-sm">[PLACEHOLDER: Office Space Image]</p>
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>

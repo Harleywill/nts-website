@@ -13,37 +13,31 @@ const services = [
     id: "plumbing-heating",
     title: "Plumbing & Heating",
     icon: FaFire,
-    description: "From residential boiler installations to commercial heating systems, our Gas Safe registered engineers deliver reliable solutions.",
-  },
-  {
-    id: "air-conditioning",
-    title: "Air Conditioning",
-    icon: FaSnowflake,
-    description: "Cooling systems designed for maximum comfort and energy efficiency year-round.",
+    description: "Complete plumbing and heating solutions from domestic repairs to large commercial systems, delivered by Gas Safe registered engineers.",
   },
   {
     id: "ventilation",
     title: "Ventilation",
     icon: FaWind,
-    description: "Professional ventilation systems for improved air quality and healthier indoor environments.",
+    description: "Professional ventilation systems designed for optimal airflow, air quality, and energy efficiency.",
   },
   {
-    id: "domestic-servicing",
-    title: "Domestic Servicing",
-    icon: FaCheckCircle,
-    description: "Regular maintenance and repairs to keep your residential systems running smoothly.",
-  },
-  {
-    id: "commercial",
-    title: "Commercial HVAC",
+    id: "domestic-commercial-servicing",
+    title: "Domestic & Commercial Servicing",
     icon: FaTools,
-    description: "Large-scale mechanical and electrical solutions for industrial and commercial properties.",
+    description: "Comprehensive maintenance for all mechanical and electrical building systems across residential, commercial, and industrial properties.",
+  },
+  {
+    id: "air-conditioning",
+    title: "Air Conditioning",
+    icon: FaSnowflake,
+    description: "Professional cooling solutions from design and installation through ongoing maintenance, with F-Gas registered engineers.",
   },
   {
     id: "commissioning",
     title: "Commissioning",
     icon: FaCheckCircle,
-    description: "Professional system setup, testing, and verification to ensure optimal performance.",
+    description: "Professional system testing, verification, and optimization to ensure peak performance and energy efficiency.",
   },
 ];
 
@@ -53,7 +47,7 @@ export default function Services() {
       <Navbar />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 px-6 py-32 sm:py-40 lg:px-8">
+        <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 px-6 pt-24 pb-24 sm:py-32 lg:px-8 lg:pt-24 min-h-[550px] flex items-center">
           <div className="mx-auto max-w-2xl text-center">
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
               Our Services

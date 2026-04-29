@@ -87,7 +87,7 @@ export default function Footer() {
         </div>
 
         {/* Middle Section: 3 Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
           {/* Column 1: Navigation Links */}
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-6">Navigate</h4>

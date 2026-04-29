@@ -12,7 +12,7 @@ export const COMPANY = {
   name: "NTS Ltd",
   phone: "01482 838080",
   email: "info@ntsltd.com",
-  address: "Hull, UK",
+  address: "Unit F2 Rotterdam Park,Sutton Fields Industrial Estate,Hull, HU7 0AN",
   tagline: "Reliable Heating & Air Conditioning Services You Can Trust",
 };
 
