@@ -42,7 +42,7 @@ export default function NewsPage() {
       </div>
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="bg-gray-900 pt-20 pb-16 sm:pt-32 sm:pb-24 px-6 lg:px-8">
+        <section className="bg-gray-900 pt-24 pb-24 sm:py-32 lg:pt-24 px-6 lg:px-8 min-h-[550px] flex items-center">
           <div className="mx-auto max-w-4xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -78,54 +78,64 @@ export default function NewsPage() {
                 transition={{ duration: 0.6 }}
               >
                 {news.map((item) => (
-                  <article
+                  <motion.article
                     key={item.id}
-                    className="flex flex-col items-start justify-between hover:shadow-lg transition-shadow rounded-lg overflow-hidden"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    className="flex flex-col items-start justify-between bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:border-green-500 transition-all duration-300 h-full"
                   >
                     {item.imageUrl && (
-                      <div className="relative w-full">
+                      <div className="relative w-full overflow-hidden">
                         <img
                           src={item.imageUrl}
                           alt={item.title}
-                          className="aspect-video w-full rounded-lg bg-gray-100 object-cover"
+                          className="aspect-video w-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                     )}
 
-                    <div className="flex items-center gap-x-4 text-xs mt-6">
-                      <time dateTime={item.createdAt} className="text-gray-500">
-                        {new Date(item.createdAt).toLocaleDateString()}
-                      </time>
-                      {item.featured && (
-                        <span
-                          className="px-3 py-1 rounded-full text-xs font-semibold text-white"
-                          style={{ backgroundColor: "#4caf50" }}
-                        >
-                          Featured
-                        </span>
-                      )}
-                    </div>
+                    <div className="w-full p-6 flex flex-col grow">
+                      <div className="flex items-center gap-x-3 text-xs mb-4">
+                        <time dateTime={item.createdAt} className="text-gray-500 font-medium">
+                          {new Date(item.createdAt).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric"
+                          })}
+                        </time>
+                        {item.featured && (
+                          <span
+                            className="px-3 py-1.5 rounded-full text-xs font-semibold text-white"
+                            style={{ backgroundColor: "#4caf50" }}
+                          >
+                            Featured
+                          </span>
+                        )}
+                      </div>
 
-                    <div className="group relative grow">
-                      <h3 className="mt-3 text-lg/6 font-semibold text-gray-900 group-hover:text-blue-900">
-                        <Link href={`/news/${item.id}`}>
-                          <span className="absolute inset-0"></span>
-                          {item.title}
-                        </Link>
-                      </h3>
-                      <p className="mt-5 line-clamp-3 text-sm/6 text-gray-600">
-                        {item.content}
-                      </p>
-                    </div>
+                      <div className="group relative grow w-full">
+                        <h3 className="text-lg/7 font-bold text-gray-900 group-hover:text-green-600 transition-colors">
+                          <Link href={`/news/${item.id}`}>
+                            <span className="absolute inset-0"></span>
+                            {item.title}
+                          </Link>
+                        </h3>
+                        <p className="mt-3 line-clamp-3 text-sm/6 text-gray-600">
+                          {item.content}
+                        </p>
+                      </div>
 
-                    <Link
-                      href={`/news/${item.id}`}
-                      className="mt-6 inline-flex items-center gap-2 font-semibold rounded-lg transition-all duration-200"
-                      style={{ color: "#4caf50" }}
-                    >
-                      Read More →
-                    </Link>
-                  </article>
+                      <Link
+                        href={`/news/${item.id}`}
+                        className="mt-6 inline-flex items-center gap-2 font-semibold rounded-lg transition-all duration-200 hover:gap-3"
+                        style={{ color: "#4caf50" }}
+                      >
+                        Read More →
+                      </Link>
+                    </div>
+                  </motion.article>
                 ))}
               </motion.div>
             )}

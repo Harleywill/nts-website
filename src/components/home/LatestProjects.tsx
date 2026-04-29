@@ -1,52 +1,116 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
-
-const projects = [
-  {
-    id: 1,
-    title: "Commercial HVAC Installation",
-    description: "Complete heating and cooling system installation for a 50,000 sq ft commercial facility. State-of-the-art equipment with energy-efficient controls and zoning systems.",
-    category: "Commercial",
-    date: "Apr 15, 2024",
-    image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-    manager: {
-      name: "John Thompson",
-      role: "Project Manager",
-      image: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  },
-  {
-    id: 2,
-    title: "Residential Heating System Upgrade",
-    description: "Modern boiler installation and complete heating system optimization for a family home. Improved efficiency and comfort with smart controls integration.",
-    category: "Residential",
-    date: "Apr 8, 2024",
-    image: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-    manager: {
-      name: "Sarah Mitchell",
-      role: "Senior Engineer",
-      image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  },
-  {
-    id: 3,
-    title: "Ventilation System Retrofit",
-    description: "Energy-efficient ventilation system installation in heritage building. Preservation of original aesthetics while meeting modern building regulations and air quality standards.",
-    category: "Industrial",
-    date: "Mar 28, 2024",
-    image: "https://images.unsplash.com/photo-1581092162562-40038f04f6d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-    manager: {
-      name: "Michael Davies",
-      role: "Lead Technician",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  },
-];
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export default function LatestProjects() {
+  const [projects, setProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const touchStartX = useRef(0);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await fetch("/api/projects");
+        const data = await res.json();
+        setProjects(data);
+      } catch (error) {
+        console.error("Failed to fetch projects:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  // Sync currentIndex with scroll position
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || projects.length === 0) return;
+
+    const handleScroll = () => {
+      const scrollLeft = container.scrollLeft;
+      const containerWidth = container.offsetWidth;
+      const itemWidth = containerWidth / 3; // Each card is 1/3 width
+      const index = Math.round(scrollLeft / itemWidth);
+      const clampedIndex = Math.min(index, projects.length - 3);
+      setCurrentIndex(clampedIndex);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [projects.length]);
+
+  const scrollToIndex = (index: number) => {
+    if (!scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    const containerWidth = container.offsetWidth;
+    const itemWidth = containerWidth / 3;
+
+    container.scrollTo({
+      left: itemWidth * index,
+      behavior: "smooth",
+    });
+
+    setCurrentIndex(index);
+  };
+
+  const goToPrevious = () => {
+    const newIndex = Math.max(0, currentIndex - 1);
+    scrollToIndex(newIndex);
+  };
+
+  const goToNext = () => {
+    const maxIndex = Math.max(0, projects.length - 3);
+    const newIndex = Math.min(maxIndex, currentIndex + 1);
+    scrollToIndex(newIndex);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const difference = touchStartX.current - touchEndX;
+
+    // Swipe left (next)
+    if (difference > 50) {
+      goToNext();
+    }
+    // Swipe right (previous)
+    else if (difference < -50) {
+      goToPrevious();
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-gray-900 py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 text-center">
+          <p className="text-gray-300">Loading projects...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (projects.length === 0) {
+    return (
+      <div className="bg-gray-900 py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 text-center">
+          <p className="text-gray-300">No projects yet. Check back soon!</p>
+        </div>
+      </div>
+    );
+  }
+
+  const maxScrollIndex = Math.max(0, projects.length - 3);
+
   return (
     <div className="bg-gray-900 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -64,72 +128,118 @@ export default function LatestProjects() {
             View our recent work and see what we can do for you.
           </p>
         </motion.div>
-        <motion.div
-          className="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-700 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          {projects.map((project) => (
-            <article
-              key={project.id}
-              className="flex max-w-xl flex-col items-start justify-between"
-            >
-              <div className="relative w-full">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="aspect-video w-full rounded-lg bg-gray-800 object-cover"
-                />
-              </div>
 
-              <div className="flex items-center gap-x-4 text-xs mt-6">
-                <time dateTime={project.date} className="text-gray-400">
-                  {project.date}
-                </time>
-                <a
-                  href="#"
-                  className="relative z-10 rounded-full bg-gray-800/60 px-3 py-1.5 font-medium text-gray-300 hover:bg-gray-800"
-                  style={{ color: "#4caf50" }}
+        {/* Projects Carousel */}
+        <div className="mt-10 border-t border-gray-700 pt-32 sm:pt-40 pb-32">
+          <style>{`
+            .projects-carousel::-webkit-scrollbar {
+              display: none;
+            }
+          `}</style>
+          <div
+            ref={scrollContainerRef}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            className="projects-carousel w-full overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory gap-6 -mx-6 lg:-mx-8 px-6 lg:px-8 cursor-grab active:cursor-grabbing user-select-none"
+            style={{ display: "flex", scrollbarWidth: "none", msOverflowStyle: "none", minHeight: "auto", touchAction: "pan-y" }}
+          >
+            {projects.map((project) => (
+              <div
+                key={project.id}
+                className="flex-none w-full sm:w-1/2 lg:w-1/3 snap-center snap-always px-4 sm:px-6 lg:px-8"
+              >
+                <motion.article
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  className="flex flex-col items-start justify-between bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 shadow-md hover:shadow-xl hover:border-green-500 transition-all duration-300 h-[500px]"
                 >
-                  {project.category}
-                </a>
-              </div>
+                  <div className="relative w-full h-48 overflow-hidden">
+                    <img
+                      src={project.imageUrl || "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
 
-              <div className="group relative grow">
-                <h3 className="mt-3 text-lg/6 font-semibold text-white group-hover:text-gray-300">
-                  <Link href={`/projects/${project.id}`}>
-                    <span className="absolute inset-0"></span>
-                    {project.title}
-                  </Link>
-                </h3>
-                <p className="mt-5 line-clamp-3 text-sm/6 text-gray-400">
-                  {project.description}
-                </p>
-              </div>
+                  <div className="p-6 w-full flex flex-col grow">
+                    <div className="flex items-center gap-x-4 text-xs">
+                      <time dateTime={project.date} className="text-gray-400">
+                        {new Date(project.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                      </time>
+                      <span
+                        className="rounded-full px-3 py-1.5 font-medium text-white"
+                        style={{ backgroundColor: "#4caf50" }}
+                      >
+                        {project.category}
+                      </span>
+                    </div>
 
-              <div className="relative mt-8 flex items-center gap-x-4">
-                <Image
-                  src={project.manager.image}
-                  alt={project.manager.name}
-                  width={40}
-                  height={40}
-                  className="size-10 rounded-full bg-gray-800"
+                    <div className="group relative grow w-full">
+                      <h3 className="mt-3 text-lg/6 font-semibold text-white group-hover:text-green-400 transition-colors">
+                        <Link href={`/projects/${project.id}`}>
+                          <span className="absolute inset-0"></span>
+                          {project.title}
+                        </Link>
+                      </h3>
+                      <p className="mt-5 line-clamp-3 text-sm/6 text-gray-300">
+                        {project.description}
+                      </p>
+                    </div>
+
+                    <Link
+                      href={`/projects/${project.id}`}
+                      className="mt-6 inline-flex items-center gap-2 font-semibold rounded-lg transition-all duration-200 hover:gap-3"
+                      style={{ color: "#4caf50" }}
+                    >
+                      Read More →
+                    </Link>
+                  </div>
+                </motion.article>
+              </div>
+            ))}
+          </div>
+
+          {/* Navigation Controls */}
+          <div className="mt-8 flex items-center justify-center gap-6">
+            <button
+              onClick={goToPrevious}
+              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
+              style={{ color: "#4caf50" }}
+              aria-label="Previous projects"
+            >
+              <FaChevronLeft size={24} />
+            </button>
+
+            {/* Dot Indicators */}
+            <div className="flex gap-2">
+              {Array.from({ length: Math.max(1, maxScrollIndex + 1) }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => scrollToIndex(index)}
+                  className={`rounded-full transition-all duration-300 ${
+                    index === currentIndex ? "w-8 h-2" : "w-2 h-2"
+                  }`}
+                  style={{
+                    backgroundColor:
+                      index === currentIndex ? "#4caf50" : "rgba(255, 255, 255, 0.2)",
+                  }}
+                  aria-label={`Go to projects item ${index + 1}`}
                 />
-                <div className="text-sm/6">
-                  <p className="font-semibold text-white">
-                    <a href="#">
-                      <span className="absolute inset-0"></span>
-                      {project.manager.name}
-                    </a>
-                  </p>
-                  <p className="text-gray-400">{project.manager.role}</p>
-                </div>
-              </div>
-            </article>
-          ))}
-        </motion.div>
+              ))}
+            </div>
+
+            <button
+              onClick={goToNext}
+              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
+              style={{ color: "#4caf50" }}
+              aria-label="Next projects"
+            >
+              <FaChevronRight size={24} />
+            </button>
+          </div>
+        </div>
 
         <motion.div
           className="mt-12 text-center"

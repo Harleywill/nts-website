@@ -108,7 +108,7 @@ export default function Testimonials() {
         <div
           ref={scrollContainerRef}
           data-carousel
-          className="w-full overflow-x-auto scroll-smooth snap-x snap-mandatory gap-6 px-0"
+          className="w-full overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory gap-6 px-0"
           style={{
             display: "flex",
             scrollbarWidth: "none",

@@ -5,6 +5,7 @@ export async function GET() {
   try {
     const projects = await prisma.project.findMany({
       orderBy: { date: "desc" },
+      include: { images: true },
     });
     return NextResponse.json(projects);
   } catch (error) {
@@ -30,10 +31,18 @@ export async function POST(request: NextRequest) {
         duration: body.duration || null,
         highlights: body.highlights || null,
         metrics: body.metrics || null,
+        images: {
+          create: body.gallery?.map((url: string) => ({
+            imageUrl: url,
+            alt: body.title,
+          })) || [],
+        },
       },
+      include: { images: true },
     });
     return NextResponse.json(project);
   } catch (error) {
+    console.error("Failed to create project:", error);
     return NextResponse.json(
       { error: "Failed to create project" },
       { status: 500 }

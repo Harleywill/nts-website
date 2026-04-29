@@ -1,76 +1,149 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { SAMPLE_TESTIMONIALS } from "@/lib/constants";
+import { motion } from "framer-motion";
 import { FaStar } from "react-icons/fa";
 
-export const metadata = {
-  title: "Testimonials - NTS Ltd",
-  description: "Read what our satisfied customers say about our HVAC and mechanical services.",
-};
+interface Testimonial {
+  id: number;
+  name: string;
+  company: string;
+  text: string;
+  rating: number;
+}
 
-export default function Testimonials() {
+export default function TestimonialsPage() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const res = await fetch("/api/testimonials");
+        const data = await res.json();
+        setTestimonials(data);
+      } catch (error) {
+        console.error("Failed to fetch testimonials:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <Navbar />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 px-6 py-32 sm:py-40 lg:px-8">
+        <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 px-6 pt-24 pb-24 sm:py-32 lg:px-8 lg:pt-24 min-h-[550px] flex items-center">
           <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-              What Our Clients Say
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-300">
-              Real feedback from satisfied customers across the UK
-            </p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+                What Our Clients Say
+              </h1>
+              <p className="mt-6 text-lg leading-8 text-gray-300">
+                Real feedback from satisfied customers across the UK
+              </p>
+            </motion.div>
           </div>
         </section>
 
         {/* Testimonials Grid */}
-        <section className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:px-8">
+        <section className="py-24 sm:py-32 px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {SAMPLE_TESTIMONIALS.map((testimonial, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 p-8 shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300"
-                >
-                  {/* Stars */}
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <FaStar key={i} size={16} style={{ color: "#4caf50" }} />
-                    ))}
-                  </div>
+            {/* Title Section */}
+            <motion.div
+              className="mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              <h2 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
+                Testimonials
+              </h2>
+              <p className="mt-2 text-lg/8 text-gray-600">
+                Hear from our satisfied customers about their experience with NTS Ltd.
+              </p>
+            </motion.div>
 
-                  {/* Quote */}
-                  <p className="text-gray-700 leading-relaxed mb-6 flex-grow">
-                    "{testimonial.text}"
-                  </p>
+            {loading ? (
+              <div className="text-center py-12">
+                <p className="text-gray-600">Loading testimonials...</p>
+              </div>
+            ) : testimonials.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-600">No testimonials items available yet.</p>
+              </div>
+            ) : (
+              <motion.div
+                className="grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                {testimonials.map((testimonial) => (
+                  <motion.div
+                    key={testimonial.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    className="flex flex-col bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:border-green-500 transition-all duration-300 h-full p-6"
+                  >
+                    {/* Stars */}
+                    <div className="flex gap-1 mb-4">
+                      {[...Array(testimonial.rating || 5)].map((_, i) => (
+                        <FaStar key={i} size={16} style={{ color: "#4caf50" }} />
+                      ))}
+                    </div>
 
-                  {/* Author */}
-                  <div className="border-t border-gray-200 pt-4">
-                    <p className="font-semibold text-gray-900" style={{ color: "#1a2f6e" }}>
-                      {testimonial.name}
+                    {/* Quote */}
+                    <p className="text-gray-700 leading-relaxed mb-6 flex-grow text-sm/6">
+                      "{testimonial.text}"
                     </p>
-                    <p className="text-sm text-gray-600">
-                      {testimonial.company}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+
+                    {/* Author */}
+                    <div className="border-t border-gray-200 pt-4">
+                      <p className="font-semibold text-gray-900" style={{ color: "#1a2f6e" }}>
+                        {testimonial.name}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {testimonial.company}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
 
             {/* CTA */}
             <div className="mt-16 text-center">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                Ready to Experience Our Service?
-              </h2>
-              <a
-                href="/contact"
-                className="rounded-md px-8 py-3 font-semibold text-white transition-colors hover:opacity-90 inline-block"
-                style={{ backgroundColor: "#4caf50" }}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true, amount: 0.2 }}
               >
-                Get in Touch Today
-              </a>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                  Ready to Experience Our Service?
+                </h2>
+                <a
+                  href="/contact"
+                  className="rounded-lg px-8 py-3 font-semibold text-white transition-all duration-200 hover:shadow-lg inline-block"
+                  style={{ backgroundColor: "#4caf50" }}
+                >
+                  Get in Touch Today
+                </a>
+              </motion.div>
             </div>
           </div>
         </section>

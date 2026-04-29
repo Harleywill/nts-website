@@ -9,6 +9,7 @@ export async function GET(
     const { id } = await params;
     const project = await prisma.project.findUnique({
       where: { id: parseInt(id) },
+      include: { images: true },
     });
     if (!project) {
       return NextResponse.json(
@@ -32,6 +33,14 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
+    
+    // Handle gallery images: delete existing and create new ones
+    if (body.gallery) {
+      await prisma.projectImage.deleteMany({
+        where: { projectId: parseInt(id) },
+      });
+    }
+
     const project = await prisma.project.update({
       where: { id: parseInt(id) },
       data: {
@@ -45,7 +54,14 @@ export async function PUT(
         duration: body.duration,
         highlights: body.highlights,
         metrics: body.metrics,
+        images: {
+          create: body.gallery?.map((url: string) => ({
+            imageUrl: url,
+            alt: body.title,
+          })) || [],
+        },
       },
+      include: { images: true },
     });
     return NextResponse.json(project);
   } catch (error) {

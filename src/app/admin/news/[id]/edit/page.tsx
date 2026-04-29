@@ -19,6 +19,8 @@ export default function EditNewsPage({ params }: { params: Promise<{ id: string 
   const [error, setError] = useState("");
   const [newsId, setNewsId] = useState<string | null>(null);
   const [formData, setFormData] = useState<NewsItem | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   useEffect(() => {
     const resolveParams = async () => {
@@ -59,6 +61,18 @@ export default function EditNewsPage({ params }: { params: Promise<{ id: string 
     });
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData) return;
@@ -66,15 +80,22 @@ export default function EditNewsPage({ params }: { params: Promise<{ id: string 
     setSubmitting(true);
 
     try {
+      const data = new FormData();
+      data.append("title", formData.title);
+      data.append("content", formData.content);
+      data.append("featured", String(formData.featured));
+      if (imageFile) {
+        data.append("image", imageFile);
+      }
+
       const res = await fetch(`/api/news/${newsId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: data,
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        setError(data.error || "Failed to update news item");
+        const responseData = await res.json();
+        setError(responseData.error || "Failed to update news item");
         setSubmitting(false);
         return;
       }
@@ -155,20 +176,38 @@ export default function EditNewsPage({ params }: { params: Promise<{ id: string 
 
           <div>
             <label
-              htmlFor="imageUrl"
+              htmlFor="image"
               className="block text-sm font-medium text-gray-900 mb-2"
             >
-              Image URL (Optional)
+              Image (Optional)
             </label>
+            {(imagePreview || formData.imageUrl) && (
+              <div className="mb-4">
+                <img
+                  src={imagePreview || formData.imageUrl || ""}
+                  alt="Current"
+                  className="max-w-xs h-48 object-cover rounded-lg"
+                />
+              </div>
+            )}
             <input
-              id="imageUrl"
-              type="text"
-              name="imageUrl"
-              value={formData.imageUrl || ""}
-              onChange={handleChange}
-              placeholder="https://example.com/image.jpg"
+              id="image"
+              type="file"
+              name="image"
+              onChange={handleImageChange}
+              accept="image/*"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
+            {imagePreview && (
+              <div className="mt-4">
+                <p className="text-sm text-gray-500 mb-2">New image preview:</p>
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="max-w-xs h-48 object-cover rounded-lg"
+                />
+              </div>
+            )}
           </div>
 
           <div className="flex items-center">

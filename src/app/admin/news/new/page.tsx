@@ -8,12 +8,13 @@ export default function NewNewsPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    imageUrl: "",
     featured: false,
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -28,21 +29,40 @@ export default function NewNewsPage() {
     }));
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
+      const data = new FormData();
+      data.append("title", formData.title);
+      data.append("content", formData.content);
+      data.append("featured", String(formData.featured));
+      if (imageFile) {
+        data.append("image", imageFile);
+      }
+
       const res = await fetch("/api/news", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: data,
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        setError(data.error || "Failed to create news item");
+        const responseData = await res.json();
+        setError(responseData.error || "Failed to create news item");
         setLoading(false);
         return;
       }
@@ -111,20 +131,28 @@ export default function NewNewsPage() {
 
           <div>
             <label
-              htmlFor="imageUrl"
+              htmlFor="image"
               className="block text-sm font-medium text-gray-900 mb-2"
             >
-              Image URL (Optional)
+              Image (Optional)
             </label>
             <input
-              id="imageUrl"
-              type="text"
-              name="imageUrl"
-              value={formData.imageUrl}
-              onChange={handleChange}
-              placeholder="https://example.com/image.jpg"
+              id="image"
+              type="file"
+              name="image"
+              onChange={handleImageChange}
+              accept="image/*"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
+            {imagePreview && (
+              <div className="mt-4">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="max-w-xs h-48 object-cover rounded-lg"
+                />
+              </div>
+            )}
           </div>
 
           <div className="flex items-center">
