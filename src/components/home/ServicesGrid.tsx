@@ -70,7 +70,7 @@ export default function ServicesGrid() {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          {SERVICES.slice(0, 5).map((service) => (
+          {SERVICES.filter((service) => service.id !== "commercial-servicing").map((service) => (
             <motion.div
               key={service.id}
               variants={cardVariants}
