@@ -33,6 +33,7 @@ export default function Navbar() {
   const [buttonPosition, setButtonPosition] = useState<{ left: number; width: number } | null>(null);
   const [isHoveringButton, setIsHoveringButton] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
   const navItemsRef = useRef<(HTMLDivElement | null)[]>([]);
   const navContainerRef = useRef<HTMLDivElement | null>(null);
   const navbarRef = useRef<HTMLDivElement | null>(null);
@@ -70,6 +71,7 @@ export default function Navbar() {
         };
       });
       setItemPositions(positions);
+      setIsInitialized(true);
     };
 
     calculatePositions();
@@ -167,11 +169,13 @@ export default function Navbar() {
               className="flex items-center gap-16 relative"
               onMouseLeave={() => setHoveredIndex(selectedIndex)}
             >
-            <NavBlobIndicator
-              selectedIndex={hoveredIndex}
-              itemPositions={itemPositions}
-              buttonPosition={null}
-            />
+            {isInitialized && (
+              <NavBlobIndicator
+                selectedIndex={hoveredIndex}
+                itemPositions={itemPositions}
+                buttonPosition={null}
+              />
+            )}
             {NAV_LINKS.map((link, index) => (
               <div
                 key={link.href}
