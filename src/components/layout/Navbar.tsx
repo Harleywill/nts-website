@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -16,8 +16,16 @@ export default function Navbar() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isHoveringTop, setIsHoveringTop] = useState(false);
   const [shouldShowBackground, setShouldShowBackground] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [hoveredIndex, setHoveredIndex] = useState(0);
+  // Calculate selected index based on pathname - use memo to avoid recalculation
+  const selectedIndex = useMemo(() => {
+    const currentIndex = NAV_LINKS.findIndex((link) => {
+      if (link.href === "/") return pathname === "/";
+      return pathname.startsWith(link.href);
+    });
+    return currentIndex >= 0 ? currentIndex : 0;
+  }, [pathname]);
+
+  const [hoveredIndex, setHoveredIndex] = useState(selectedIndex);
   const [itemPositions, setItemPositions] = useState<
     Array<{ left: number; width: number }>
   >([]);
@@ -32,17 +40,6 @@ export default function Navbar() {
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
-
-  // Set selected index based on current page
-  useEffect(() => {
-    const currentIndex = NAV_LINKS.findIndex((link) => {
-      if (link.href === "/") return pathname === "/";
-      return pathname.startsWith(link.href);
-    });
-    const index = currentIndex >= 0 ? currentIndex : 0;
-    setSelectedIndex(index);
-    setHoveredIndex(index);
-  }, [pathname]);
 
   // Detect mobile viewport
   useEffect(() => {
