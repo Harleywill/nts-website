@@ -10,9 +10,9 @@ export default function FaviconManager() {
     let hasError = false;
 
     function setFavicon(url: string) {
-      let link = document.querySelector("link[rel*='icon']");
+      let link = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
       if (!link) {
-        link = document.createElement("link");
+        link = document.createElement("link") as HTMLLinkElement;
         link.rel = "icon";
         document.head.appendChild(link);
       }
