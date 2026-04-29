@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaFire, FaWind, FaSnowflake, FaTools, FaCheckCircle } from "react-icons/fa";
+import { FaFire, FaWind, FaSnowflake, FaCheckCircle } from "react-icons/fa";
 import Link from "next/link";
 
 export default function ServicesBento() {
@@ -119,28 +119,6 @@ export default function ServicesBento() {
               </div>
               <Link
                 href="/services/domestic-servicing"
-                className="mt-6 inline-flex items-center gap-2 font-semibold transition-colors hover:text-green-400"
-                style={{ color: "#4caf50" }}
-              >
-                Learn More <span aria-hidden="true">→</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* Commercial HVAC */}
-          <div>
-            <div className="h-full rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-8 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 flex flex-col justify-between group">
-              <div>
-                <div className="inline-block p-3 rounded-lg bg-green-500/10 mb-6 group-hover:bg-green-500/20 transition-colors">
-                  <FaTools size={32} style={{ color: "#4caf50" }} />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-4">Commercial HVAC</h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Large-scale mechanical and electrical solutions for industrial and commercial properties.
-                </p>
-              </div>
-              <Link
-                href="/services/commercial"
                 className="mt-6 inline-flex items-center gap-2 font-semibold transition-colors hover:text-green-400"
                 style={{ color: "#4caf50" }}
               >
