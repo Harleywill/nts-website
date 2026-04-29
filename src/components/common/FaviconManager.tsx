@@ -67,32 +67,31 @@ export default function FaviconManager() {
     });
 
     // Monitor fetch/API errors and 404s
-    const originalFetch = window.fetch.bind(window);
-    (window as any).fetch = function (...args: any[]) {
-      return originalFetch(...args)
-        .then((response: Response) => {
-          // Handle 404 and other error status codes
-          if (!response.ok && response.status >= 400) {
-            console.error("HTTP Error:", response.status);
-            hasError = true;
-            updateFavicon();
-            setTimeout(() => {
-              hasError = false;
-              updateFavicon();
-            }, 3000);
-          }
-          return response;
-        })
-        .catch((error: Error) => {
-          console.error("Fetch error:", error);
+    const originalFetch = window.fetch;
+    (window as any).fetch = async function (input: RequestInfo | URL, init?: RequestInit) {
+      try {
+        const response = await originalFetch(input, init);
+        // Handle 404 and other error status codes
+        if (!response.ok && response.status >= 400) {
+          console.error("HTTP Error:", response.status);
           hasError = true;
           updateFavicon();
           setTimeout(() => {
             hasError = false;
             updateFavicon();
           }, 3000);
-          throw error;
-        });
+        }
+        return response;
+      } catch (error) {
+        console.error("Fetch error:", error);
+        hasError = true;
+        updateFavicon();
+        setTimeout(() => {
+          hasError = false;
+          updateFavicon();
+        }, 3000);
+        throw error;
+      }
     };
 
     // Monitor network connectivity
