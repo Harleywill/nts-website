@@ -65,12 +65,12 @@ export default function ServicesGrid() {
         </motion.div>
 
         <motion.div
-          className="grid md:grid-cols-3 gap-8 [&>:nth-child(4)]:md:col-start-2 [&>:nth-child(n+4)]:md:place-self-center [&>:nth-child(6)]:md:col-start-2"
+          className="grid md:grid-cols-3 gap-8 [&>:nth-child(4)]:md:col-start-2 [&>:nth-child(n+4)]:md:place-self-center"
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          {SERVICES.map((service) => (
+          {SERVICES.slice(0, 5).map((service) => (
             <motion.div
               key={service.id}
               variants={cardVariants}
