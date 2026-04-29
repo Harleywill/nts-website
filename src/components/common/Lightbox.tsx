@@ -55,11 +55,18 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center"
-      onClick={onClose}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
     >
       {/* Close Button */}
       <button
-        onClick={onClose}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
         className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-60"
         aria-label="Close lightbox"
       >
@@ -85,9 +92,12 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
       </div>
 
       {/* Navigation Controls */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-6">
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-6 z-60">
         <button
-          onClick={handlePrevious}
+          onClick={(e) => {
+            e.stopPropagation();
+            handlePrevious();
+          }}
           className="p-2 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-all text-white"
           aria-label="Previous image"
         >
@@ -99,7 +109,10 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
         </div>
 
         <button
-          onClick={handleNext}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleNext();
+          }}
           className="p-2 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-all text-white"
           aria-label="Next image"
         >
@@ -108,11 +121,14 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
       </div>
 
       {/* Dot Indicators */}
-      <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 flex gap-2">
+      <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 flex gap-2 z-60">
         {images.map((_, index) => (
           <button
             key={index}
-            onClick={() => setCurrentIndex(index)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentIndex(index);
+            }}
             className={`rounded-full transition-all duration-300 ${
               index === currentIndex ? "w-3 h-3 bg-white" : "w-2 h-2 bg-white bg-opacity-50"
             }`}
