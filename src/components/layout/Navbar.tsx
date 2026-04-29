@@ -26,6 +26,11 @@ export default function Navbar() {
   }, [pathname]);
 
   const [hoveredIndex, setHoveredIndex] = useState(selectedIndex);
+
+  // Update hoveredIndex when selectedIndex changes (e.g., when navigating to a new page)
+  useEffect(() => {
+    setHoveredIndex(selectedIndex);
+  }, [selectedIndex]);
   const [itemPositions, setItemPositions] = useState<
     Array<{ left: number; width: number }>
   >([]);
