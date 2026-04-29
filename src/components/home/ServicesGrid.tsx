@@ -65,7 +65,7 @@ export default function ServicesGrid() {
         </motion.div>
 
         <motion.div
-          className="grid md:grid-cols-3 gap-8"
+          className="grid md:grid-cols-3 gap-8 [&>:nth-child(4)]:md:col-start-2 [&>:nth-child(n+4)]:md:place-self-center [&>:nth-child(6)]:md:col-start-2"
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
