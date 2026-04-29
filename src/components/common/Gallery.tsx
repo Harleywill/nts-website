@@ -26,6 +26,21 @@ export default function Gallery({ images, title = "Gallery" }: GalleryProps) {
     setLightboxOpen(true);
   };
 
+  const updateIndexFromScroll = () => {
+    if (!scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    const containerWidth = container.offsetWidth;
+    const itemWidth = containerWidth / 3;
+    const scrollPosition = container.scrollLeft;
+
+    // Calculate which index should be displayed based on scroll position
+    const calculatedIndex = Math.round(scrollPosition / itemWidth);
+    const maxScrollIndex = Math.max(0, images.length - 3);
+    const newIndex = Math.min(maxScrollIndex, calculatedIndex);
+
+    setCurrentIndex(newIndex);
+  };
+
   const scrollToIndex = (index: number) => {
     if (!scrollContainerRef.current) return;
     const container = scrollContainerRef.current;
@@ -66,6 +81,10 @@ export default function Gallery({ images, title = "Gallery" }: GalleryProps) {
     }
   };
 
+  const handleScroll = () => {
+    updateIndexFromScroll();
+  };
+
   const maxScrollIndex = Math.max(0, images.length - 3);
 
   return (
@@ -98,6 +117,7 @@ export default function Gallery({ images, title = "Gallery" }: GalleryProps) {
               ref={scrollContainerRef}
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
+              onScroll={handleScroll}
               className="gallery-carousel w-full overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory gap-6 -mx-6 lg:-mx-8 px-6 lg:px-8 cursor-grab active:cursor-grabbing user-select-none"
               style={{ display: "flex", scrollbarWidth: "none", msOverflowStyle: "none", minHeight: "auto", touchAction: "pan-y" }}
             >
