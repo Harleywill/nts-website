@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FaFacebook, FaTwitter, FaLinkedin, FaGithub, FaYoutube, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { COMPANY, SERVICES } from "@/lib/constants";
 
 export default function Footer() {
@@ -53,25 +53,7 @@ export default function Footer() {
                 className="p-2 rounded-full bg-white/10 text-white hover:bg-green-400 hover:text-gray-900 transition-all duration-200"
                 aria-label="Instagram"
               >
-                <FaYoutube size={20} />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-full bg-white/10 text-white hover:bg-green-400 hover:text-gray-900 transition-all duration-200"
-                aria-label="Twitter"
-              >
-                <FaTwitter size={20} />
-              </a>
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-full bg-white/10 text-white hover:bg-green-400 hover:text-gray-900 transition-all duration-200"
-                aria-label="GitHub"
-              >
-                <FaGithub size={20} />
+                <FaInstagram size={20} />
               </a>
               <a
                 href="https://linkedin.com"
