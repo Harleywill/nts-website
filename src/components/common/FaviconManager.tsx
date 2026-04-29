@@ -40,11 +40,11 @@ export default function FaviconManager() {
 
     // Monitor navigation (Next.js router)
     if (window.history && window.history.pushState) {
-      const originalPushState = window.history.pushState;
-      window.history.pushState = function (...args: any[]) {
+      const originalPushState = window.history.pushState.bind(window.history);
+      window.history.pushState = function (data: any, title: string, url?: string | URL | null) {
         isLoading = true;
         updateFavicon();
-        const result = originalPushState.apply(this, args);
+        const result = originalPushState(data, title, url);
         setTimeout(() => {
           isLoading = false;
           updateFavicon();
@@ -67,10 +67,9 @@ export default function FaviconManager() {
     });
 
     // Monitor fetch/API errors and 404s
-    const originalFetch = window.fetch;
-    window.fetch = function (...args: any[]) {
-      return originalFetch
-        .apply(this, args)
+    const originalFetch = window.fetch.bind(window);
+    (window as any).fetch = function (...args: any[]) {
+      return originalFetch(...args)
         .then((response: Response) => {
           // Handle 404 and other error status codes
           if (!response.ok && response.status >= 400) {
