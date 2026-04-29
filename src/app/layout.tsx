@@ -41,6 +41,8 @@ export default function RootLayout({
               (function() {
                 const NORMAL_FAVICON = '/favicon.svg';
                 const ERROR_FAVICON = '/favicon-error.svg';
+                let isLoading = false;
+                let hasError = false;
 
                 function setFavicon(url) {
                   let link = document.querySelector("link[rel*='icon']");
@@ -52,30 +54,94 @@ export default function RootLayout({
                   link.href = url;
                 }
 
-                // Monitor for errors and network issues
-                window.addEventListener('error', function(event) {
-                  console.error('Error detected:', event.message);
-                  setFavicon(ERROR_FAVICON);
-
-                  // Auto-recover after 5 seconds if no more errors
-                  setTimeout(() => {
+                function updateFavicon() {
+                  if (isLoading || hasError) {
+                    setFavicon(ERROR_FAVICON);
+                  } else {
                     setFavicon(NORMAL_FAVICON);
-                  }, 5000);
+                  }
+                }
+
+                // Track page loading state
+                window.addEventListener('load', function() {
+                  isLoading = false;
+                  updateFavicon();
                 });
 
-                // Monitor fetch/API errors
+                window.addEventListener('beforeunload', function() {
+                  isLoading = true;
+                  updateFavicon();
+                });
+
+                // Monitor navigation (Next.js router)
+                if (window.history && window.history.pushState) {
+                  const originalPushState = window.history.pushState;
+                  window.history.pushState = function(...args) {
+                    isLoading = true;
+                    updateFavicon();
+                    const result = originalPushState.apply(this, args);
+                    setTimeout(() => {
+                      isLoading = false;
+                      updateFavicon();
+                    }, 2000);
+                    return result;
+                  };
+                }
+
+                // Monitor for JavaScript errors
+                window.addEventListener('error', function(event) {
+                  console.error('Error detected:', event.message);
+                  hasError = true;
+                  updateFavicon();
+
+                  // Auto-recover after 3 seconds if no more errors
+                  setTimeout(() => {
+                    hasError = false;
+                    updateFavicon();
+                  }, 3000);
+                });
+
+                // Monitor fetch/API errors and 404s
                 const originalFetch = window.fetch;
                 window.fetch = function(...args) {
                   return originalFetch.apply(this, args)
+                    .then(response => {
+                      // Handle 404 and other error status codes
+                      if (!response.ok && (response.status >= 400)) {
+                        console.error('HTTP Error:', response.status);
+                        hasError = true;
+                        updateFavicon();
+                        setTimeout(() => {
+                          hasError = false;
+                          updateFavicon();
+                        }, 3000);
+                      }
+                      return response;
+                    })
                     .catch(error => {
                       console.error('Fetch error:', error);
-                      setFavicon(ERROR_FAVICON);
+                      hasError = true;
+                      updateFavicon();
                       setTimeout(() => {
-                        setFavicon(NORMAL_FAVICON);
-                      }, 5000);
+                        hasError = false;
+                        updateFavicon();
+                      }, 3000);
                       throw error;
                     });
                 };
+
+                // Monitor network connectivity
+                window.addEventListener('offline', function() {
+                  console.warn('Network connection lost');
+                  hasError = true;
+                  updateFavicon();
+                });
+
+                window.addEventListener('online', function() {
+                  console.log('Network connection restored');
+                  hasError = false;
+                  updateFavicon();
+                });
 
                 // Set initial favicon
                 setFavicon(NORMAL_FAVICON);
