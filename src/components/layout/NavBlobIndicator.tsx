@@ -29,6 +29,11 @@ export default function NavBlobIndicator({
   return (
     <motion.div
       className="absolute top-1/2 -translate-y-1/2 pointer-events-none rounded-full"
+      initial={{
+        left: animateTarget.left - 8,
+        width: isHoveringButton ? Math.max(animateTarget.width - 30, 0) : animateTarget.width + 16,
+        opacity: isHoveringButton ? 1 : 0.9,
+      }}
       animate={{
         left: animateTarget.left - 8,
         width: isHoveringButton ? Math.max(animateTarget.width - 30, 0) : animateTarget.width + 16,
