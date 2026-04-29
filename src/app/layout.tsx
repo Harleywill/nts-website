@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: "Professional heating, ventilation, and air conditioning services for domestic and commercial clients in Hull, UK. Gas Safe registered.",
   keywords: "heating, air conditioning, ventilation, plumbing, Hull, Gas Safe",
   icons: {
-    icon: "/favicon.svg",
+    icon: "/favicon.png",
   },
   openGraph: {
     title: "NTS Ltd | Reliable Heating & Air Conditioning Services",
@@ -39,8 +39,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                const NORMAL_FAVICON = '/favicon.svg';
-                const ERROR_FAVICON = '/favicon-error.svg';
+                const NORMAL_FAVICON = '/favicon.png';
+                const ERROR_FAVICON = '/favicon-error.png';
                 let isLoading = false;
                 let hasError = false;
 
