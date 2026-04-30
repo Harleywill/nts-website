@@ -49,6 +49,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
         {/* End Google Tag Manager */}
+
+        {/* Google Analytics 4 */}
+        <Script
+          id="ga4-script"
+          src="https://www.googletagmanager.com/gtag/js?id=G-PEK7PKH64Z"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="ga4-config"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-PEK7PKH64Z');`,
+          }}
+        />
+        {/* End Google Analytics 4 */}
       </head>
       <body className="min-h-screen flex flex-col bg-white text-gray-900">
         {/* Google Tag Manager (noscript) */}
