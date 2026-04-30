@@ -33,7 +33,7 @@ export default function LoginPage() {
 
       console.log("Login successful, redirecting...");
       await new Promise(resolve => setTimeout(resolve, 500));
-      router.push("/admin/projects");
+      router.push("/admin/dashboard");
     } catch (err) {
       console.error("Login error:", err);
       setError("An error occurred. Please try again.");
