@@ -5,10 +5,28 @@ import { verifyToken } from "@/lib/auth";
 // Initialize GA4 client
 function getAnalyticsClient() {
   const keyString = process.env.GOOGLE_SERVICE_ACCOUNT_KEY || "{}";
-  const credentials = JSON.parse(keyString);
+
+  // Handle escaped characters from environment variables
+  // The dotenv package preserves escaped quotes but converts \\n to actual newlines
+  // We need to: 1) unescape quotes, 2) re-escape actual newlines for JSON parsing
+  const step1 = keyString.replace(/\\"/g, '"');  // Unescape quotes
+  const step2 = step1.replace(/\n/g, '\\n');     // Re-escape newlines
+
+  const credentials = JSON.parse(step2);
 
   return new BetaAnalyticsDataClient({
-    credentials: credentials,
+    credentials: {
+      type: credentials.type,
+      project_id: credentials.project_id,
+      private_key_id: credentials.private_key_id,
+      private_key: credentials.private_key,
+      client_email: credentials.client_email,
+      client_id: credentials.client_id,
+      auth_uri: credentials.auth_uri,
+      token_uri: credentials.token_uri,
+      auth_provider_x509_cert_url: credentials.auth_provider_x509_cert_url,
+      client_x509_cert_url: credentials.client_x509_cert_url,
+    },
   });
 }
 
@@ -39,191 +57,217 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    console.log("Creating analytics client with property:", propertyId);
     const analyticsClient = getAnalyticsClient();
+    console.log("Analytics client created successfully");
 
     // Fetch real-time users
-    const realtimeResponse = await analyticsClient.runRealtimeReport({
-      property: `properties/${propertyId}`,
-      metrics: [{ name: "activeUsers" }],
-    });
+    try {
+      console.log("Fetching real-time users...");
+      const realtimeResponse = await analyticsClient.runRealtimeReport({
+        property: `properties/${propertyId}`,
+        metrics: [{ name: "activeUsers" }],
+      });
+      console.log("Real-time users fetched successfully");
 
-    const realTimeUsers = parseInt(
-      realtimeResponse[0].totals?.[0]?.metricValues?.[0]?.value || "0"
-    );
+      const realTimeUsers = parseInt(
+        realtimeResponse[0].totals?.[0]?.metricValues?.[0]?.value || "0"
+      );
 
-    // Fetch page views for today and 7-day trend
-    const today = new Date();
-    const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+      // Fetch page views for today and 7-day trend
+      const today = new Date();
+      const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-    const pageViewsResponse = await analyticsClient.runReport({
-      property: `properties/${propertyId}`,
-      dateRanges: [
-        {
-          startDate: today.toISOString().split("T")[0],
-          endDate: today.toISOString().split("T")[0],
-        },
-      ],
-      metrics: [{ name: "screenPageViews" }],
-    });
+      console.log("Fetching today's page views...");
+      const pageViewsResponse = await analyticsClient.runReport({
+        property: `properties/${propertyId}`,
+        dateRanges: [
+          {
+            startDate: today.toISOString().split("T")[0],
+            endDate: today.toISOString().split("T")[0],
+          },
+        ],
+        metrics: [{ name: "screenPageViews" }],
+      });
 
-    const todayPageViews = parseInt(
-      pageViewsResponse[0].totals?.[0]?.metricValues?.[0]?.value || "0"
-    );
+      const todayPageViews = parseInt(
+        pageViewsResponse[0].totals?.[0]?.metricValues?.[0]?.value || "0"
+      );
 
-    // Fetch 7-day page views
-    const sevenDayResponse = await analyticsClient.runReport({
-      property: `properties/${propertyId}`,
-      dateRanges: [
-        {
-          startDate: sevenDaysAgo.toISOString().split("T")[0],
-          endDate: today.toISOString().split("T")[0],
-        },
-      ],
-      metrics: [{ name: "screenPageViews" }],
-    });
+      // Fetch 7-day page views
+      console.log("Fetching 7-day page views...");
+      const sevenDayResponse = await analyticsClient.runReport({
+        property: `properties/${propertyId}`,
+        dateRanges: [
+          {
+            startDate: sevenDaysAgo.toISOString().split("T")[0],
+            endDate: today.toISOString().split("T")[0],
+          },
+        ],
+        metrics: [{ name: "screenPageViews" }],
+      });
 
-    const sevenDayPageViews = parseInt(
-      sevenDayResponse[0].totals?.[0]?.metricValues?.[0]?.value || "0"
-    );
+      const sevenDayPageViews = parseInt(
+        sevenDayResponse[0].totals?.[0]?.metricValues?.[0]?.value || "0"
+      );
 
-    // Fetch top pages
-    const topPagesResponse = await analyticsClient.runReport({
-      property: `properties/${propertyId}`,
-      dateRanges: [
-        {
-          startDate: sevenDaysAgo.toISOString().split("T")[0],
-          endDate: today.toISOString().split("T")[0],
-        },
-      ],
-      metrics: [{ name: "screenPageViews" }],
-      dimensions: [{ name: "pagePath" }],
-      orderBys: [
-        {
-          metric: { metricName: "screenPageViews" },
-          desc: true,
-        },
-      ],
-      limit: 5,
-    });
+      // Fetch top pages
+      console.log("Fetching top pages...");
+      const topPagesResponse = await analyticsClient.runReport({
+        property: `properties/${propertyId}`,
+        dateRanges: [
+          {
+            startDate: sevenDaysAgo.toISOString().split("T")[0],
+            endDate: today.toISOString().split("T")[0],
+          },
+        ],
+        metrics: [{ name: "screenPageViews" }],
+        dimensions: [{ name: "pagePath" }],
+        orderBys: [
+          {
+            metric: { metricName: "screenPageViews" },
+            desc: true,
+          },
+        ],
+        limit: 5,
+      });
 
-    const topPages = topPagesResponse[0].rows?.map((row) => ({
-      page: row.dimensionValues?.[0]?.value || "Unknown",
-      views: parseInt(row.metricValues?.[0]?.value || "0"),
-    })) || [];
-
-    const totalTopPageViews = topPages.reduce((sum, page) => sum + page.views, 0);
-    const topPagesWithPercent = topPages.map((page) => ({
-      ...page,
-      percent:
-        totalTopPageViews > 0
-          ? Math.round((page.views / totalTopPageViews) * 100)
-          : 0,
-    }));
-
-    // Fetch traffic sources
-    const trafficSourcesResponse = await analyticsClient.runReport({
-      property: `properties/${propertyId}`,
-      dateRanges: [
-        {
-          startDate: sevenDaysAgo.toISOString().split("T")[0],
-          endDate: today.toISOString().split("T")[0],
-        },
-      ],
-      metrics: [{ name: "sessions" }, { name: "users" }],
-      dimensions: [{ name: "sessionSource" }],
-      orderBys: [
-        {
-          metric: { metricName: "sessions" },
-          desc: true,
-        },
-      ],
-    });
-
-    const trafficSources = trafficSourcesResponse[0].rows?.map((row) => ({
-      source: row.dimensionValues?.[0]?.value || "Direct",
-      users: parseInt(row.metricValues?.[0]?.value || "0"),
-      sessions: parseInt(row.metricValues?.[1]?.value || "0"),
-    })) || [];
-
-    const totalUsers = trafficSources.reduce((sum, source) => sum + source.users, 0);
-    const trafficSourcesWithPercent = trafficSources.map((source) => ({
-      ...source,
-      percent:
-        totalUsers > 0 ? Math.round((source.users / totalUsers) * 100) : 0,
-    }));
-
-    // Fetch session metrics
-    const metricsResponse = await analyticsClient.runReport({
-      property: `properties/${propertyId}`,
-      dateRanges: [
-        {
-          startDate: sevenDaysAgo.toISOString().split("T")[0],
-          endDate: today.toISOString().split("T")[0],
-        },
-      ],
-      metrics: [
-        { name: "averageSessionDuration" },
-        { name: "bounceRate" },
-        { name: "sessions" },
-      ],
-    });
-
-    const sessionMetrics = {
-      avgDuration: parseFloat(
-        metricsResponse[0].totals?.[0]?.metricValues?.[0]?.value || "0"
-      ),
-      bounceRate: parseFloat(
-        metricsResponse[0].totals?.[0]?.metricValues?.[1]?.value || "0"
-      ),
-      totalSessions: parseInt(
-        metricsResponse[0].totals?.[0]?.metricValues?.[2]?.value || "0"
-      ),
-    };
-
-    // Fetch 7-day trend
-    const trendResponse = await analyticsClient.runReport({
-      property: `properties/${propertyId}`,
-      dateRanges: [
-        {
-          startDate: sevenDaysAgo.toISOString().split("T")[0],
-          endDate: today.toISOString().split("T")[0],
-        },
-      ],
-      metrics: [{ name: "screenPageViews" }],
-      dimensions: [{ name: "date" }],
-      orderBys: [
-        {
-          dimension: { dimensionName: "date" },
-          desc: false,
-        },
-      ],
-    });
-
-    const trend = trendResponse[0].rows?.map((row) => {
-      const dateStr = row.dimensionValues?.[0]?.value || "";
-      const formattedDate = dateStr
-        ? `${dateStr.substring(4, 6)}/${dateStr.substring(6, 8)}`
-        : "";
-      return {
-        date: formattedDate,
+      const topPages = topPagesResponse[0].rows?.map((row) => ({
+        page: row.dimensionValues?.[0]?.value || "Unknown",
         views: parseInt(row.metricValues?.[0]?.value || "0"),
-      };
-    }) || [];
+      })) || [];
 
-    return NextResponse.json({
-      realTimeUsers,
-      pageViews: {
-        today: todayPageViews,
-        sevenDay: sevenDayPageViews,
-        trend,
-      },
-      topPages: topPagesWithPercent,
-      trafficSources: trafficSourcesWithPercent,
-      sessionMetrics,
-      lastUpdated: new Date().toISOString(),
-    });
+      // Calculate percentages for top pages
+      const totalTopPageViews = topPages.reduce((sum, page) => sum + page.views, 0);
+      const topPagesWithPercent = topPages.map((page) => ({
+        ...page,
+        percent:
+          totalTopPageViews > 0
+            ? Math.round((page.views / totalTopPageViews) * 100)
+            : 0,
+      }));
+
+      // Fetch traffic sources
+      console.log("Fetching traffic sources...");
+      const trafficSourcesResponse = await analyticsClient.runReport({
+        property: `properties/${propertyId}`,
+        dateRanges: [
+          {
+            startDate: sevenDaysAgo.toISOString().split("T")[0],
+            endDate: today.toISOString().split("T")[0],
+          },
+        ],
+        metrics: [{ name: "sessions" }, { name: "users" }],
+        dimensions: [{ name: "sessionSource" }],
+        orderBys: [
+          {
+            metric: { metricName: "sessions" },
+            desc: true,
+          },
+        ],
+      });
+
+      const trafficSources = trafficSourcesResponse[0].rows?.map((row) => ({
+        source: row.dimensionValues?.[0]?.value || "Direct",
+        users: parseInt(row.metricValues?.[0]?.value || "0"),
+        sessions: parseInt(row.metricValues?.[1]?.value || "0"),
+      })) || [];
+
+      // Calculate percentages
+      const totalUsers = trafficSources.reduce((sum, source) => sum + source.users, 0);
+      const trafficSourcesWithPercent = trafficSources.map((source) => ({
+        ...source,
+        percent:
+          totalUsers > 0 ? Math.round((source.users / totalUsers) * 100) : 0,
+      }));
+
+      // Fetch session metrics (avg duration and bounce rate)
+      console.log("Fetching session metrics...");
+      const metricsResponse = await analyticsClient.runReport({
+        property: `properties/${propertyId}`,
+        dateRanges: [
+          {
+            startDate: sevenDaysAgo.toISOString().split("T")[0],
+            endDate: today.toISOString().split("T")[0],
+          },
+        ],
+        metrics: [
+          { name: "averageSessionDuration" },
+          { name: "bounceRate" },
+          { name: "sessions" },
+        ],
+      });
+
+      const sessionMetrics = {
+        avgDuration: parseFloat(
+          metricsResponse[0].totals?.[0]?.metricValues?.[0]?.value || "0"
+        ),
+        bounceRate: parseFloat(
+          metricsResponse[0].totals?.[0]?.metricValues?.[1]?.value || "0"
+        ),
+        totalSessions: parseInt(
+          metricsResponse[0].totals?.[0]?.metricValues?.[2]?.value || "0"
+        ),
+      };
+
+      // Fetch 7-day trend
+      console.log("Fetching 7-day trend...");
+      const trendResponse = await analyticsClient.runReport({
+        property: `properties/${propertyId}`,
+        dateRanges: [
+          {
+            startDate: sevenDaysAgo.toISOString().split("T")[0],
+            endDate: today.toISOString().split("T")[0],
+          },
+        ],
+        metrics: [{ name: "screenPageViews" }],
+        dimensions: [{ name: "date" }],
+        orderBys: [
+          {
+            dimension: { dimensionName: "date" },
+            desc: false,
+          },
+        ],
+      });
+
+      const trend = trendResponse[0].rows?.map((row) => {
+        const dateStr = row.dimensionValues?.[0]?.value || "";
+        const formattedDate = dateStr
+          ? `${dateStr.substring(4, 6)}/${dateStr.substring(6, 8)}`
+          : "";
+        return {
+          date: formattedDate,
+          views: parseInt(row.metricValues?.[0]?.value || "0"),
+        };
+      }) || [];
+
+      console.log("All analytics data fetched successfully");
+      return NextResponse.json({
+        realTimeUsers,
+        pageViews: {
+          today: todayPageViews,
+          sevenDay: sevenDayPageViews,
+          trend,
+        },
+        topPages: topPagesWithPercent,
+        trafficSources: trafficSourcesWithPercent,
+        sessionMetrics,
+        lastUpdated: new Date().toISOString(),
+      });
+    } catch (apiError: any) {
+      console.error("GA4 API Error Details:");
+      console.error("  Code:", apiError?.code);
+      console.error("  Message:", apiError?.message);
+      console.error("  Details:", apiError?.details);
+      console.error("  Status:", apiError?.status);
+      throw apiError;
+    }
   } catch (error) {
     console.error("Analytics API error:", error);
+    console.error("Error type:", error instanceof Error ? error.message : String(error));
+    if (error instanceof Error) {
+      console.error("Stack:", error.stack?.substring(0, 500));
+    }
     return NextResponse.json(
       { error: "Failed to fetch analytics data" },
       { status: 500 }
