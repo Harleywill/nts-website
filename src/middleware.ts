@@ -4,8 +4,8 @@ export function middleware(request: NextRequest) {
   // Get the authorization header
   const authHeader = request.headers.get('authorization');
 
-  // Credentials: admin / MNav0IIk0R7YAMDL
-  const credentials = Buffer.from('admin:MNav0IIk0R7YAMDL').toString('base64');
+  // Credentials: admin / password
+  const credentials = Buffer.from('admin:password').toString('base64');
   const expectedAuth = `Basic ${credentials}`;
 
   // Check if auth header matches
