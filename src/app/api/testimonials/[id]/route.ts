@@ -57,11 +57,25 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+
+    // Check if testimonial exists first
+    const testimonial = await prisma.testimonial.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!testimonial) {
+      return NextResponse.json(
+        { error: "Testimonial not found" },
+        { status: 404 }
+      );
+    }
+
     await prisma.testimonial.delete({
       where: { id: parseInt(id) },
     });
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("Delete testimonial error:", error);
     return NextResponse.json(
       { error: "Failed to delete testimonial" },
       { status: 500 }

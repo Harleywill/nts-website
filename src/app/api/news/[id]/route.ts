@@ -88,11 +88,25 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+
+    // Check if news item exists first
+    const newsItem = await prisma.newsItem.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!newsItem) {
+      return NextResponse.json(
+        { error: "News item not found" },
+        { status: 404 }
+      );
+    }
+
     await prisma.newsItem.delete({
       where: { id: parseInt(id) },
     });
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("Delete news item error:", error);
     return NextResponse.json(
       { error: "Failed to delete news item" },
       { status: 500 }
