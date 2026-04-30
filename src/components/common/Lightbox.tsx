@@ -92,19 +92,19 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
       </div>
 
       {/* Navigation Controls */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-6 z-60">
+      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex items-center gap-8 z-60">
         <button
           onClick={(e) => {
             e.stopPropagation();
             handlePrevious();
           }}
-          className="p-2 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-all text-white"
+          className="p-3 rounded-full bg-green-500 hover:bg-green-600 hover:scale-110 transition-all duration-200 text-white shadow-lg"
           aria-label="Previous image"
         >
-          <FaChevronLeft size={24} />
+          <FaChevronLeft size={28} />
         </button>
 
-        <div className="text-white font-semibold">
+        <div className="text-white font-semibold text-lg min-w-16 text-center">
           {currentIndex + 1} / {images.length}
         </div>
 
@@ -113,15 +113,15 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
             e.stopPropagation();
             handleNext();
           }}
-          className="p-2 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-all text-white"
+          className="p-3 rounded-full bg-green-500 hover:bg-green-600 hover:scale-110 transition-all duration-200 text-white shadow-lg"
           aria-label="Next image"
         >
-          <FaChevronRight size={24} />
+          <FaChevronRight size={28} />
         </button>
       </div>
 
       {/* Dot Indicators */}
-      <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 flex gap-2 z-60">
+      <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 flex gap-3 z-60">
         {images.map((_, index) => (
           <button
             key={index}
@@ -129,8 +129,8 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
               e.stopPropagation();
               setCurrentIndex(index);
             }}
-            className={`rounded-full transition-all duration-300 ${
-              index === currentIndex ? "w-3 h-3 bg-white" : "w-2 h-2 bg-white bg-opacity-50"
+            className={`rounded-full transition-all duration-300 hover:scale-125 cursor-pointer ${
+              index === currentIndex ? "w-4 h-4 bg-green-400 shadow-lg shadow-green-400/50" : "w-3 h-3 bg-white bg-opacity-60 hover:bg-opacity-100"
             }`}
             aria-label={`Go to image ${index + 1}`}
           />
