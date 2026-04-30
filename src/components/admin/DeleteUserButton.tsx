@@ -19,7 +19,21 @@ export default function DeleteUserButton({ userId }: { userId: number }) {
       });
 
       if (!res.ok) {
-        alert("Failed to delete user");
+        let errorMsg = "Failed to delete user";
+        try {
+          const errorData = await res.json();
+          errorMsg = errorData.error || errorMsg;
+        } catch (e) {
+          // If response is not JSON, use default message
+        }
+
+        if (res.status === 404) {
+          errorMsg = "User not found";
+        } else if (res.status === 500) {
+          errorMsg = "Server error - please try again";
+        }
+
+        alert(errorMsg);
         setLoading(false);
         return;
       }

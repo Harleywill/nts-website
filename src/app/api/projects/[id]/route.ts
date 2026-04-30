@@ -78,11 +78,25 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+
+    // Check if project exists first
+    const project = await prisma.project.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!project) {
+      return NextResponse.json(
+        { error: "Project not found" },
+        { status: 404 }
+      );
+    }
+
     await prisma.project.delete({
       where: { id: parseInt(id) },
     });
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("Delete project error:", error);
     return NextResponse.json(
       { error: "Failed to delete project" },
       { status: 500 }

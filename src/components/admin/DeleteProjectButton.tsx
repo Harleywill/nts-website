@@ -19,7 +19,21 @@ export default function DeleteProjectButton({ projectId }: { projectId: number }
       });
 
       if (!res.ok) {
-        alert("Failed to delete project");
+        let errorMsg = "Failed to delete project";
+        try {
+          const errorData = await res.json();
+          errorMsg = errorData.error || errorMsg;
+        } catch (e) {
+          // If response is not JSON, use default message
+        }
+
+        if (res.status === 404) {
+          errorMsg = "Project not found";
+        } else if (res.status === 500) {
+          errorMsg = "Server error - please try again";
+        }
+
+        alert(errorMsg);
         setLoading(false);
         return;
       }
