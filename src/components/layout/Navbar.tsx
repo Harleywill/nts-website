@@ -171,7 +171,7 @@ export default function Navbar() {
             {/* Desktop Navigation - Center */}
             <div
               ref={navContainerRef}
-              className="flex items-center gap-16 relative"
+              className="flex items-center justify-center gap-16 relative"
               onMouseLeave={() => setHoveredIndex(selectedIndex)}
             >
             {isInitialized && (

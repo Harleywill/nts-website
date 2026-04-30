@@ -61,13 +61,14 @@ export default function LatestProjects() {
   };
 
   const goToPrevious = () => {
-    const newIndex = Math.max(0, currentIndex - 1);
+    const maxIndex = Math.max(0, projects.length - 3);
+    const newIndex = currentIndex === 0 ? maxIndex : currentIndex - 1;
     scrollToIndex(newIndex);
   };
 
   const goToNext = () => {
     const maxIndex = Math.max(0, projects.length - 3);
-    const newIndex = Math.min(maxIndex, currentIndex + 1);
+    const newIndex = currentIndex === maxIndex ? 0 : currentIndex + 1;
     scrollToIndex(newIndex);
   };
 
