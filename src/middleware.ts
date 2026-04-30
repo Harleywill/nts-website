@@ -1,26 +1,31 @@
-import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "@/lib/auth";
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    if (request.nextUrl.pathname === "/admin/login") {
-      return NextResponse.next();
-    }
+export function middleware(request: NextRequest) {
+  // Get the authorization header
+  const authHeader = request.headers.get('authorization');
 
-    const token = request.cookies.get("auth-token")?.value;
-    if (!token) {
-      return NextResponse.redirect(new URL("/admin/login", request.url));
-    }
+  // Credentials: admin / MNav0IIk0R7YAMDL
+  const credentials = Buffer.from('admin:MNav0IIk0R7YAMDL').toString('base64');
+  const expectedAuth = `Basic ${credentials}`;
 
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.redirect(new URL("/admin/login", request.url));
-    }
-
-    return NextResponse.next();
+  // Check if auth header matches
+  if (authHeader !== expectedAuth) {
+    // Return 401 Unauthorized with WWW-Authenticate header to trigger browser login
+    return new NextResponse('Unauthorized', {
+      status: 401,
+      headers: {
+        'WWW-Authenticate': 'Basic realm="NTS Website"',
+      },
+    });
   }
+
+  // If authorized, continue to next middleware/route
+  return NextResponse.next();
 }
 
+// Apply middleware to all routes except static files and api
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|public).*)',
+  ],
 };
