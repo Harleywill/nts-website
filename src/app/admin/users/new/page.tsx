@@ -42,6 +42,7 @@ export default function NewUserPage() {
       const res = await fetch("/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           username: formData.username,
           password: formData.password,

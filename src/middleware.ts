@@ -23,9 +23,9 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Apply middleware to all routes except static files and api
+// Apply middleware to admin UI pages only (not API routes)
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|public).*)',
+    '/((?!_next/static|_next/image|favicon.ico|public|api).*)',
   ],
 };
