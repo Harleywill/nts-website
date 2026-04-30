@@ -63,11 +63,25 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+
+    // Check if user exists first
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "User not found" },
+        { status: 404 }
+      );
+    }
+
     await prisma.user.delete({
       where: { id: parseInt(id) },
     });
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("Delete user error:", error);
     return NextResponse.json(
       { error: "Failed to delete user" },
       { status: 500 }
