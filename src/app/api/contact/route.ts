@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     // Send email to admin(s)
     const adminEmailResult = await resend.emails.send({
-      from: "noreply@ntsltd.com",
+      from: "noreply@ntsltd.onresend.com",
       to: ["info@ntsltd.com", "hjakewilliams@gmail.com"],
       subject: `New Contact Form Submission - ${name}`,
       html: `
