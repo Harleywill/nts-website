@@ -13,6 +13,10 @@ export default function Contact() {
     agreed: false,
   });
 
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -21,16 +25,62 @@ export default function Contact() {
       ...formData,
       [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
     });
+    setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
     if (!formData.agreed) {
-      alert("Please agree to the privacy policy");
+      setError("Please agree to the privacy policy");
       return;
     }
-    // TODO: Handle form submission in Phase 2
-    console.log("Form submitted:", formData);
+
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: `${formData.firstName} ${formData.lastName}`,
+          service: formData.company || "General Inquiry",
+          contact: formData.email || formData.phone,
+          message: formData.message,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Failed to send message. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      setSubmitted(true);
+      setFormData({
+        firstName: "",
+        lastName: "",
+        company: "",
+        email: "",
+        phone: "",
+        message: "",
+        agreed: false,
+      });
+
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 5000);
+    } catch (err) {
+      setError("An error occurred. Please try again.");
+      console.error("Form submission error:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -73,6 +123,20 @@ export default function Contact() {
       </div>
 
       <form onSubmit={handleSubmit} className="mx-auto mt-16 max-w-xl sm:mt-20">
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            {error}
+          </div>
+        )}
+
+        {/* Success Message */}
+        {submitted && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
+            ✓ Thank you! We'll be in touch soon.
+          </div>
+        )}
+
         <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
           <div>
             <label htmlFor="firstName" className="block text-sm/6 font-semibold text-gray-900">
@@ -205,12 +269,21 @@ export default function Contact() {
         <div className="mt-10">
           <button
             type="submit"
-            className="block w-full rounded-md px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
-            style={{ backgroundColor: "#4caf50" }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            disabled={loading || submitted}
+            className="block w-full rounded-md px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500 disabled:opacity-70"
+            style={{ backgroundColor: submitted ? "#10b981" : "#4caf50" }}
+            onMouseEnter={(e) => {
+              if (!loading && !submitted) {
+                e.currentTarget.style.opacity = "0.9";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!loading && !submitted) {
+                e.currentTarget.style.opacity = "1";
+              }
+            }}
           >
-            Send Message
+            {submitted ? "✓ Message Sent!" : loading ? "Sending..." : "Send Message"}
           </button>
         </div>
       </form>
