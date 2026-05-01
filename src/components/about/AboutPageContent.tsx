@@ -91,25 +91,17 @@ export default function AboutPageContent() {
               transition={{ duration: 0.8 }}
               className="grid grid-cols-2 gap-4"
             >
-              <div className="rounded-lg w-full h-56 bg-gray-300 border-2 border-dashed border-gray-400 flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-gray-600 font-semibold text-sm">[PLACEHOLDER: Team Member Image]</p>
-                </div>
+              <div className="rounded-lg w-full h-56 overflow-hidden">
+                <img src="/images/team-member.jpg" alt="Team Member" className="w-full h-full object-cover" />
               </div>
-              <div className="rounded-lg w-full h-56 bg-gray-300 border-2 border-dashed border-gray-400 flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-gray-600 font-semibold text-sm">[PLACEHOLDER: Work in Progress Image]</p>
-                </div>
+              <div className="rounded-lg w-full h-56 overflow-hidden">
+                <img src="/images/work-in-progress.jpg" alt="Work in Progress" className="w-full h-full object-cover" />
               </div>
-              <div className="rounded-lg w-full h-56 bg-gray-300 border-2 border-dashed border-gray-400 flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-gray-600 font-semibold text-sm">[PLACEHOLDER: Team Collaboration Image]</p>
-                </div>
+              <div className="rounded-lg w-full h-56 overflow-hidden">
+                <img src="/images/team-collaboration.jpg" alt="Team Collaboration" className="w-full h-full object-cover" />
               </div>
-              <div className="rounded-lg w-full h-56 bg-gray-300 border-2 border-dashed border-gray-400 flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-gray-600 font-semibold text-sm">[PLACEHOLDER: Office Space Image]</p>
-                </div>
+              <div className="rounded-lg w-full h-56 overflow-hidden">
+                <img src="/images/office-space.jpg" alt="Office Space" className="w-full h-full object-cover" />
               </div>
             </motion.div>
           </div>
