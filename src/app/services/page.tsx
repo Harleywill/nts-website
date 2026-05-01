@@ -76,9 +76,33 @@ export default function Services() {
           </div>
         </section>
 
+        {/* Services Information Section */}
+        <section className="relative py-24 sm:py-32 overflow-hidden bg-white px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl">
+            <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-16 text-center">
+              What We Offer
+            </h2>
+            <div className="space-y-12">
+              {serviceInfo.map((service, index) => (
+                <div key={index} className="border-l-4 border-green-500 pl-8">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                    {service.title}
+                  </h3>
+                  <p className="text-lg text-gray-600 leading-relaxed">
+                    {service.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Services Grid */}
         <section className="relative py-24 sm:py-32 overflow-hidden bg-gray-50 px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
+            <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-16 text-center">
+              Explore Our Services
+            </h2>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
               {services.map((service) => {
                 const Icon = service.icon;
@@ -100,27 +124,6 @@ export default function Services() {
                   </Link>
                 );
               })}
-            </div>
-          </div>
-        </section>
-
-        {/* Services Information Section */}
-        <section className="relative py-24 sm:py-32 overflow-hidden bg-white px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl">
-            <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-16 text-center">
-              What We Offer
-            </h2>
-            <div className="space-y-12">
-              {serviceInfo.map((service, index) => (
-                <div key={index} className="border-l-4 border-green-500 pl-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                    {service.title}
-                  </h3>
-                  <p className="text-lg text-gray-600 leading-relaxed">
-                    {service.description}
-                  </p>
-                </div>
-              ))}
             </div>
           </div>
         </section>
