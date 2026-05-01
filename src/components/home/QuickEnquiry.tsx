@@ -20,6 +20,8 @@ export default function QuickEnquiry() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -28,23 +30,50 @@ export default function QuickEnquiry() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
 
     // Validation
     if (!formData.name || !formData.service || !formData.contact || !formData.message) {
-      alert("Please fill in all fields");
+      setError("Please fill in all fields");
+      setLoading(false);
       return;
     }
 
-    // Phase 1: Just show success message (no backend yet)
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Failed to send enquiry. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      // Success
+      setSubmitted(true);
       setFormData({ name: "", service: "", contact: "", message: "" });
-    }, 3000);
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 5000);
+    } catch (err) {
+      setError("An error occurred. Please try again.");
+      console.error("Form submission error:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const containerVariants = {
@@ -92,6 +121,13 @@ export default function QuickEnquiry() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Error Message */}
+            {error && (
+              <div className="p-4 bg-red-500 bg-opacity-20 border border-red-400 rounded-lg text-red-200">
+                {error}
+              </div>
+            )}
+
             <div className="grid md:grid-cols-2 gap-6">
               {/* Name */}
               <div>
@@ -176,15 +212,20 @@ export default function QuickEnquiry() {
             {/* Submit Button */}
             <motion.button
               type="submit"
-              disabled={submitted}
-              whileHover={{ scale: submitted ? 1 : 1.05 }}
+              disabled={submitted || loading}
+              whileHover={{ scale: submitted || loading ? 1 : 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="w-full sm:w-auto px-8 py-4 rounded-lg font-semibold text-white transition-all duration-200 flex items-center justify-center gap-2"
-              style={{ backgroundColor: "#4caf50" }}
+              style={{ backgroundColor: submitted ? "#10b981" : "#4caf50", opacity: loading ? 0.7 : 1 }}
             >
               {submitted ? (
                 <>
                   <span>✓ Thank you! We'll be in touch soon</span>
+                </>
+              ) : loading ? (
+                <>
+                  <span>Sending...</span>
+                  <div className="animate-spin">⏳</div>
                 </>
               ) : (
                 <>
