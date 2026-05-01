@@ -37,7 +37,7 @@ export default function AnalyticsDashboard() {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch("/api/analytics");
+      const response = await fetch("/api/analytics", { credentials: "include" });
       if (!response.ok) {
         throw new Error("Failed to fetch analytics");
       }
@@ -93,6 +93,7 @@ export default function AnalyticsDashboard() {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Analytics Overview</h2>
@@ -117,25 +118,30 @@ export default function AnalyticsDashboard() {
         </button>
       </div>
 
+      {/* Key Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {/* Real-time Users */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <p className="text-sm text-gray-600 font-medium">Real-time Visitors</p>
           <p className="text-4xl font-bold text-green-600 mt-2">{data.realTimeUsers}</p>
           <p className="mt-2 text-xs text-gray-500">Currently on site</p>
         </div>
 
+        {/* Page Views Today */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <p className="text-sm text-gray-600 font-medium">Page Views (Today)</p>
           <p className="text-4xl font-bold text-blue-600 mt-2">{data.pageViews.today}</p>
           <p className="mt-2 text-xs text-gray-500">Pages viewed</p>
         </div>
 
+        {/* Sessions */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <p className="text-sm text-gray-600 font-medium">Sessions (7 days)</p>
           <p className="text-4xl font-bold text-purple-600 mt-2">{data.sessionMetrics.totalSessions}</p>
           <p className="mt-2 text-xs text-gray-500">Total sessions</p>
         </div>
 
+        {/* Bounce Rate */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <p className="text-sm text-gray-600 font-medium">Bounce Rate</p>
           <p className="text-4xl font-bold text-orange-600 mt-2">
@@ -145,6 +151,7 @@ export default function AnalyticsDashboard() {
         </div>
       </div>
 
+      {/* Page Views Trend Chart (simple bar representation) */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">7-Day Traffic Trend</h3>
         <div className="flex items-end gap-2 h-48">
@@ -166,7 +173,9 @@ export default function AnalyticsDashboard() {
         </div>
       </div>
 
+      {/* Top Pages and Traffic Sources */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Top Pages */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Pages (7 days)</h3>
           <div className="space-y-4">
@@ -192,6 +201,7 @@ export default function AnalyticsDashboard() {
           </div>
         </div>
 
+        {/* Traffic Sources */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Traffic Sources (7 days)</h3>
           <div className="space-y-4">
@@ -224,6 +234,7 @@ export default function AnalyticsDashboard() {
         </div>
       </div>
 
+      {/* Session Duration */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Session Insights</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
