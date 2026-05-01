@@ -28,10 +28,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Send email to admin
+    // Send email to admin(s)
     const adminEmailResult = await resend.emails.send({
       from: "noreply@ntsltd.com",
-      to: "info@ntsltd.com",
+      to: ["info@ntsltd.com", "hjakewilliams@gmail.com"],
       subject: `New Contact Form Submission - ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
