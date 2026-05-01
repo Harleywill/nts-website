@@ -13,31 +13,31 @@ const services = [
     id: "plumbing-heating",
     title: "Plumbing & Heating",
     icon: FaFire,
-    description: "Complete plumbing and heating solutions from domestic repairs to large commercial systems, delivered by Gas Safe registered engineers.",
+    description: "Complete plumbing and heating solutions for residential and commercial properties. From new boiler installations and radiator systems to emergency repairs and ongoing maintenance. All work carried out by Gas Safe registered engineers.",
   },
   {
     id: "ventilation",
     title: "Ventilation",
     icon: FaWind,
-    description: "Professional ventilation systems designed for optimal airflow, air quality, and energy efficiency.",
+    description: "Professional ventilation system design, installation, and maintenance. We ensure optimal airflow and air quality while maximizing energy efficiency. Suitable for homes, offices, and industrial facilities.",
   },
   {
     id: "domestic-commercial-servicing",
     title: "Domestic & Commercial Servicing",
     icon: FaTools,
-    description: "Comprehensive maintenance for all mechanical and electrical building systems across residential, commercial, and industrial properties.",
+    description: "Regular maintenance and servicing for all mechanical and electrical building systems. Preventative care to avoid costly breakdowns, covering boilers, heating systems, air conditioning, and more across residential and commercial properties.",
   },
   {
     id: "air-conditioning",
     title: "Air Conditioning",
     icon: FaSnowflake,
-    description: "Professional cooling solutions from design and installation through ongoing maintenance, with F-Gas registered engineers.",
+    description: "Complete air conditioning solutions from system design and professional installation to routine maintenance and emergency repairs. F-Gas registered engineers ensure safe, efficient cooling for homes and businesses.",
   },
   {
     id: "commissioning",
     title: "Commissioning",
     icon: FaCheckCircle,
-    description: "Professional system testing, verification, and optimization to ensure peak performance and energy efficiency.",
+    description: "Thorough system testing, verification, and optimization of HVAC and mechanical systems. We ensure your systems operate at peak performance and energy efficiency before handover and throughout their lifespan.",
   },
 ];
 
