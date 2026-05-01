@@ -56,17 +56,19 @@ export async function POST(request: NextRequest) {
       </div>
     `;
 
-    // Send email to admin(s)
+    // Check if contact is an email
+    const isEmail = emailRegex.test(contact);
+
+    // Send email to admin(s) - using verified email for Resend test domain
     await transporter.sendMail({
       from: "onboarding@resend.dev",
-      to: "info@ntsltd.com",
+      to: "hjakewilliams@gmail.com",
       replyTo: contact,
       subject: `New Contact Form Submission - ${name}`,
-      html: adminHtml,
+      html: `${adminHtml}<p style="color: #999; font-size: 11px; margin-top: 20px;">From: ${contact}</p>`,
     });
 
     // Send confirmation email to customer if email was provided
-    const isEmail = emailRegex.test(contact);
     if (isEmail) {
       const customerHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -83,9 +85,9 @@ export async function POST(request: NextRequest) {
           <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px;">
             <h3 style="color: #1a2f6e; margin-top: 0;">Quick Links:</h3>
             <ul style="color: #333;">
-              <li><a href="https://ntsltd.com" style="color: #4caf50; text-decoration: none;">Visit Our Website</a></li>
-              <li><a href="https://ntsltd.com/services" style="color: #4caf50; text-decoration: none;">View Our Services</a></li>
-              <li><a href="https://ntsltd.com/contact" style="color: #4caf50; text-decoration: none;">Contact Us</a></li>
+              <li><a href="https://nevilletuckerservices.co.uk" style="color: #4caf50; text-decoration: none;">Visit Our Website</a></li>
+              <li><a href="https://nevilletuckerservices.co.uk/services" style="color: #4caf50; text-decoration: none;">View Our Services</a></li>
+              <li><a href="https://nevilletuckerservices.co.uk/contact" style="color: #4caf50; text-decoration: none;">Contact Us</a></li>
             </ul>
           </div>
 
