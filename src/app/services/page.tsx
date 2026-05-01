@@ -13,30 +13,48 @@ const services = [
     id: "plumbing-heating",
     title: "Plumbing & Heating",
     icon: FaFire,
-    description: "Complete plumbing and heating solutions for residential and commercial properties. From new boiler installations and radiator systems to emergency repairs and ongoing maintenance. All work carried out by Gas Safe registered engineers.",
   },
   {
     id: "ventilation",
     title: "Ventilation",
     icon: FaWind,
-    description: "Professional ventilation system design, installation, and maintenance. We ensure optimal airflow and air quality while maximizing energy efficiency. Suitable for homes, offices, and industrial facilities.",
   },
   {
     id: "domestic-commercial-servicing",
     title: "Domestic & Commercial Servicing",
     icon: FaTools,
-    description: "Regular maintenance and servicing for all mechanical and electrical building systems. Preventative care to avoid costly breakdowns, covering boilers, heating systems, air conditioning, and more across residential and commercial properties.",
   },
   {
     id: "air-conditioning",
     title: "Air Conditioning",
     icon: FaSnowflake,
-    description: "Complete air conditioning solutions from system design and professional installation to routine maintenance and emergency repairs. F-Gas registered engineers ensure safe, efficient cooling for homes and businesses.",
   },
   {
     id: "commissioning",
     title: "Commissioning",
     icon: FaCheckCircle,
+  },
+];
+
+const serviceInfo = [
+  {
+    title: "Plumbing & Heating",
+    description: "Complete plumbing and heating solutions for residential and commercial properties. From new boiler installations and radiator systems to emergency repairs and ongoing maintenance. All work carried out by Gas Safe registered engineers.",
+  },
+  {
+    title: "Ventilation",
+    description: "Professional ventilation system design, installation, and maintenance. We ensure optimal airflow and air quality while maximizing energy efficiency. Suitable for homes, offices, and industrial facilities.",
+  },
+  {
+    title: "Domestic & Commercial Servicing",
+    description: "Regular maintenance and servicing for all mechanical and electrical building systems. Preventative care to avoid costly breakdowns, covering boilers, heating systems, air conditioning, and more across residential and commercial properties.",
+  },
+  {
+    title: "Air Conditioning",
+    description: "Complete air conditioning solutions from system design and professional installation to routine maintenance and emergency repairs. F-Gas registered engineers ensure safe, efficient cooling for homes and businesses.",
+  },
+  {
+    title: "Commissioning",
     description: "Thorough system testing, verification, and optimization of HVAC and mechanical systems. We ensure your systems operate at peak performance and energy efficiency before handover and throughout their lifespan.",
   },
 ];
@@ -68,23 +86,41 @@ export default function Services() {
                   <Link
                     key={service.id}
                     href={`/services/${service.id}`}
-                    className="group h-full rounded-2xl bg-white p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-green-500"
+                    className="group h-full rounded-2xl bg-white p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-green-500 flex flex-col items-center justify-center text-center"
                   >
                     <div className="inline-block p-3 rounded-lg bg-green-500/10 mb-6 group-hover:bg-green-500/20 transition-colors">
-                      <Icon size={32} style={{ color: "#4caf50" }} />
+                      <Icon size={40} style={{ color: "#4caf50" }} />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    <h3 className="text-2xl font-bold text-gray-900">
                       {service.title}
                     </h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      {service.description}
-                    </p>
                     <div className="mt-6 inline-flex items-center gap-2 font-semibold transition-colors hover:text-green-600" style={{ color: "#4caf50" }}>
                       Learn More <span aria-hidden="true">→</span>
                     </div>
                   </Link>
                 );
               })}
+            </div>
+          </div>
+        </section>
+
+        {/* Services Information Section */}
+        <section className="relative py-24 sm:py-32 overflow-hidden bg-white px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl">
+            <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-16 text-center">
+              What We Offer
+            </h2>
+            <div className="space-y-12">
+              {serviceInfo.map((service, index) => (
+                <div key={index} className="border-l-4 border-green-500 pl-8">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                    {service.title}
+                  </h3>
+                  <p className="text-lg text-gray-600 leading-relaxed">
+                    {service.description}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
