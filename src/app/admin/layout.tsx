@@ -15,7 +15,7 @@ export default async function AdminLayout({
   const authCookie = cookieStore.get("auth-token");
 
   if (!authCookie) {
-    redirect("/admin/login");
+    redirect("/login");
   }
 
   return (
