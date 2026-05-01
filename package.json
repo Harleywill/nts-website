@@ -20,6 +20,7 @@
     "bcryptjs": "^3.0.3",
     "framer-motion": "^12.38.0",
     "google-auth-library": "^10.6.2",
+    "googleapis": "^171.4.0",
     "jose": "^6.2.3",
     "next": "16.2.4",
     "prisma": "^6.19.3",
