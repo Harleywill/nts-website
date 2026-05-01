@@ -68,8 +68,9 @@ export async function POST(request: NextRequest) {
       html: `${adminHtml}<p style="color: #999; font-size: 11px; margin-top: 20px;">From: ${contact}</p>`,
     });
 
-    // Send confirmation email to customer if email was provided
-    if (isEmail) {
+    // Send confirmation email to customer if email is verified
+    // During test phase, only send to verified Resend addresses
+    if (isEmail && contact === "hjakewilliams@gmail.com") {
       const customerHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #1a2f6e;">Thank You for Your Enquiry</h2>
