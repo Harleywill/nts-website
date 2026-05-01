@@ -76,7 +76,7 @@ export default function AboutSection() {
         {/* Right Column - Image */}
         <div className="-mt-12 -ml-12 p-12 lg:sticky lg:top-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=800&q=80"
+            src="/images/hvac-installation.jpg"
             alt="HVAC Services"
             className="w-3xl max-w-none rounded-xl bg-gray-800 shadow-xl ring-1 ring-white/10 sm:w-228"
           />
