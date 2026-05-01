@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
 
 interface Stats {
   users: number;
@@ -72,11 +71,6 @@ export default function AdminDashboard() {
           {error}
         </div>
       )}
-
-      {/* Analytics Section */}
-      <div className="border-t border-gray-200 pt-8">
-        <AnalyticsDashboard />
-      </div>
 
       {/* Stats Grid */}
       {!loading && (
