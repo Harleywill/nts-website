@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NTS Ltd Website
+
+Professional website for NTS Ltd, a UK-based mechanical and electrical services company specializing in HVAC solutions.
+
+## About NTS Ltd
+
+NTS Ltd provides comprehensive heating, ventilation, air conditioning, and mechanical services for residential and commercial properties throughout Hull and the surrounding areas.
+
+**Services:**
+- Plumbing & Heating
+- Ventilation Systems
+- Domestic & Commercial Servicing
+- Air Conditioning
+- System Commissioning
+
+**Accreditations:** Gas Safe Registered | F-Gas Certified
+
+## Tech Stack
+
+- **Framework:** Next.js 15+ (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS 3
+- **Animations:** Framer Motion
+- **Email Service:** Resend (SMTP via Nodemailer)
+- **Hosting:** VPS (PM2)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/Harleywill/nts-website.git
+cd nts-website
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/                 # Next.js app router
+│   ├── layout.tsx      # Root layout
+│   ├── page.tsx        # Homepage
+│   ├── about/          # About page
+│   ├── contact/        # Contact page
+│   ├── services/       # Services pages
+│   └── api/            # API routes (email, etc.)
+├── components/         # Reusable React components
+│   ├── layout/         # Navbar, Footer
+│   └── home/           # Homepage sections
+├── lib/                # Utilities and constants
+└── public/             # Static assets
+```
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- ✅ Responsive design (mobile-first)
+- ✅ Fast performance (Lighthouse 90+)
+- ✅ Contact form with email notifications
+- ✅ Service pages with detailed information
+- ✅ Professional branding and styling
+- ✅ SEO optimized
+- ✅ Accessibility (WCAG AA)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Building & Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Build for Production
+```bash
+npm run build
+npm start
+```
 
-## Deploy on Vercel
+### Deploy to VPS
+```bash
+git push origin main
+# Pull and rebuild on VPS (automatic via CI/CD)
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Environment Variables
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Required for production:
+
+```
+RESEND_API_KEY=your_resend_api_key
+NEXT_PUBLIC_SITE_URL=https://nevilletuckerservices.co.uk
+```
+
+## Contact
+
+**Phone:** 01482 838080  
+**Email:** info@nevilletuckerservices.co.uk  
+**Website:** https://nevilletuckerservices.co.uk
+
+## License
+
+Private repository - All rights reserved © NTS Ltd
