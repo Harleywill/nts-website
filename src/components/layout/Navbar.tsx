@@ -46,6 +46,7 @@ export default function Navbar() {
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
+  
 
   // Detect mobile viewport
   useEffect(() => {
