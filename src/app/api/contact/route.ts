@@ -59,18 +59,17 @@ export async function POST(request: NextRequest) {
     // Check if contact is an email
     const isEmail = emailRegex.test(contact);
 
-    // Send email to admin(s) - using verified email for Resend test domain
+    // Send email to admin(s)
     await transporter.sendMail({
-      from: "onboarding@resend.dev",
-      to: "hjakewilliams@gmail.com",
+      from: "noreply@nevilletuckerservices.co.uk",
+      to: "info@nevilletuckerservices.co.uk",
       replyTo: contact,
       subject: `New Contact Form Submission - ${name}`,
       html: `${adminHtml}<p style="color: #999; font-size: 11px; margin-top: 20px;">From: ${contact}</p>`,
     });
 
-    // Send confirmation email to customer if email is verified
-    // During test phase, only send to verified Resend addresses
-    if (isEmail && contact === "hjakewilliams@gmail.com") {
+    // Send confirmation email to customer if email was provided
+    if (isEmail) {
       const customerHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #1a2f6e;">Thank You for Your Enquiry</h2>
@@ -102,7 +101,7 @@ export async function POST(request: NextRequest) {
       `;
 
       await transporter.sendMail({
-        from: "onboarding@resend.dev",
+        from: "noreply@nevilletuckerservices.co.uk",
         to: contact,
         subject: "Thank you for your enquiry - NTS Ltd",
         html: customerHtml,
