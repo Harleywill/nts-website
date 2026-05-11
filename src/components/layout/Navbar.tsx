@@ -151,11 +151,11 @@ export default function Navbar() {
       }}
     >
       <div className="mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="flex items-center h-20 justify-between">
+        <div className="flex items-center h-20 justify-between relative">
           {/* Logo - Left */}
           <Link
             href="/"
-            className="flex-shrink-0 h-20 flex items-center hover:opacity-80 transition-opacity"
+            className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity relative z-10"
           >
             <Image
               src="/images/ntsLogo.png"
@@ -163,12 +163,12 @@ export default function Navbar() {
               width={280}
               height={140}
               priority
-              className="h-14 w-auto"
+              className="h-12 w-auto"
             />
           </Link>
 
-          {/* Center spacer for desktop nav centering */}
-          <div className="hidden lg:flex flex-1 items-center justify-center">
+          {/* Center navigation - Truly centered */}
+          <div className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 items-center justify-center">
             {/* Desktop Navigation - Center */}
             <div
               ref={navContainerRef}
@@ -211,7 +211,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
               onClick={toggleMenu}
-              className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors relative z-10"
               aria-label="Toggle menu"
             >
             {isOpen ? (
