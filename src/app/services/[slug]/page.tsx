@@ -3,6 +3,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
@@ -22,7 +23,7 @@ const serviceData: Record<
     title: "Plumbing & Heating",
     description:
       "Complete plumbing and heating solutions from domestic tap replacements to large commercial systems",
-    imageUrl: "[PLACEHOLDER: Plumbing & Heating Service Image]",
+    imageUrl: "/images/services/plumbing-heating.jpg",
     content:
       "Our highly experienced engineers deliver comprehensive plumbing and heating solutions for both domestic and commercial properties. We handle everything from small domestic repairs to large-scale commercial installations. All our engineers are Gas Safe registered and qualified to all relevant regulations concerning building, water, and gas work, ensuring your systems are installed and maintained to the highest standards.",
     features: [
@@ -44,7 +45,7 @@ const serviceData: Record<
     title: "Ventilation",
     description:
       "Professional ventilation systems designed for optimal airflow and indoor air quality",
-    imageUrl: "[PLACEHOLDER: Ventilation Service Image]",
+    imageUrl: "/images/services/ventilation.jpg",
     content:
       "Good ventilation is essential for healthy indoor environments. Our team works with you to identify the most efficient and cost-effective ventilation solutions tailored to your building's unique requirements. We design and install systems that maximize airflow, reduce humidity, and improve overall air quality in residential, commercial, and industrial spaces.",
     features: [
@@ -66,7 +67,7 @@ const serviceData: Record<
     title: "Domestic & Commercial Servicing",
     description:
       "Comprehensive maintenance for all mechanical and electrical building systems",
-    imageUrl: "[PLACEHOLDER: Servicing Service Image]",
+    imageUrl: "/images/services/domestic-commercial-servicing.jpg",
     content:
       "We provide comprehensive servicing for all mechanical and electrical systems in domestic, commercial, and industrial buildings. Our highly trained and accredited engineers maintain expertise across a wide range of equipment and systems. Whether it's routine maintenance or emergency repairs, we keep your systems running efficiently and reliably.",
     features: [
@@ -90,7 +91,7 @@ const serviceData: Record<
     title: "Air Conditioning",
     description:
       "Professional cooling solutions from design through installation and ongoing maintenance",
-    imageUrl: "[PLACEHOLDER: Air Conditioning Service Image]",
+    imageUrl: "/images/services/air-conditioning.jpg",
     content:
       "We deliver complete air conditioning solutions for residential and commercial spaces. From initial feasibility studies and system design through installation and ongoing maintenance, our F-Gas registered engineers ensure your systems operate efficiently year-round. We're approved contractors for leading manufacturers including Mitsubishi Electric, Toshiba, Daikin, and Panasonic.",
     features: [
@@ -114,7 +115,7 @@ const serviceData: Record<
     title: "Commissioning",
     description:
       "Professional system testing, verification, and optimization for peak performance",
-    imageUrl: "[PLACEHOLDER: Commissioning Service Image]",
+    imageUrl: "/images/services/commissioning.jpg",
     content:
       "Commissioning is the critical final step that ensures your mechanical and electrical systems operate at optimal performance. Our engineers conduct comprehensive testing and verification of all systems, addressing any performance concerns and optimizing energy consumption. For existing equipment, we diagnose efficiency issues and deliver solutions. For new installations, we design and commission bespoke control systems tailored to your exact requirements.",
     features: [
@@ -172,18 +173,22 @@ export default function ServicePage() {
         <section className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-center">
-              {/* Left - Image Placeholder */}
+              {/* Left - Image */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true, amount: 0.3 }}
               >
-                <div className="rounded-lg w-full h-96 bg-gray-200 border-2 border-dashed border-gray-300 flex items-center justify-center shadow-lg">
-                  <div className="text-center">
-                    <p className="text-gray-500 font-semibold">{service.imageUrl}</p>
-                    <p className="text-gray-400 text-sm mt-2">Service image coming soon</p>
-                  </div>
+                <div className="rounded-lg overflow-hidden shadow-lg">
+                  <Image
+                    src={service.imageUrl}
+                    alt={service.title}
+                    width={600}
+                    height={400}
+                    className="w-full h-auto object-cover"
+                    priority={false}
+                  />
                 </div>
               </motion.div>
 
