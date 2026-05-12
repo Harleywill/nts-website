@@ -10,10 +10,6 @@ export default function AccreditationsStrip() {
     backgroundColor: "transparent",
   } as const;
 
-  const gridItemStyle = {
-    display: "flex",
-    justifyContent: "center",
-  } as const;
   const accreditations = [
     { name: "Honeywell", path: "/images/accreditations/honeywell.jpg" },
     { name: "Toshiba", path: "/images/accreditations/toshiba.png" },
@@ -42,7 +38,10 @@ export default function AccreditationsStrip() {
           Trusted by industry leaders
         </motion.h2>
         <motion.div
-          className="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5 lg:justify-items-center"
+          className="mx-auto mt-10 grid max-w-lg gap-x-8 gap-y-10 sm:max-w-xl lg:mx-0 lg:max-w-none"
+          style={{
+            gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))"
+          }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -51,8 +50,7 @@ export default function AccreditationsStrip() {
           {accreditations.map((accreditation, index) => (
             <motion.div
               key={accreditation.name}
-              className="col-span-1 flex justify-center"
-              style={index === 10 ? { gridColumn: "2" } : index === 11 ? { gridColumn: "4" } : {}}
+              className="flex justify-center items-center"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.1 + index * 0.02 }}
@@ -63,7 +61,7 @@ export default function AccreditationsStrip() {
                 alt={accreditation.name}
                 width={120}
                 height={80}
-                className="max-h-16 w-full object-contain"
+                className="max-h-16 w-auto object-contain"
                 style={imageStyle}
                 priority={index < 6}
                 loading={index < 6 ? "eager" : "lazy"}
