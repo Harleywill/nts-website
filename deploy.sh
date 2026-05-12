@@ -24,6 +24,8 @@ echo "📂 Navigating to project directory..."
 cd /var/www/ntsltd
 
 echo "📥 Pulling latest code from git..."
+# Clean up any local database files that might block the pull
+rm -f prisma/dev.db prisma/*.db
 git pull origin main
 
 echo "🔨 Building Next.js application..."
