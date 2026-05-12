@@ -5,9 +5,13 @@ import QuickEnquiryModal from "./QuickEnquiryModal";
 
 export default function StickyButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // Mark that we're on the client
+    setIsClient(true);
+
     // Check if screen is mobile (< 768px)
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -21,6 +25,12 @@ export default function StickyButton() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // Don't render on server or during hydration
+  // Only render on client after checking viewport
+  if (!isClient || isMobile === null) {
+    return null;
+  }
+
   // Don't render on desktop
   if (!isMobile) {
     return null;
@@ -28,7 +38,7 @@ export default function StickyButton() {
 
   return (
     <>
-      {/* Sticky Button - Mobile only */}
+      {/* Sticky Button - Mobile only (< 768px) */}
       <div>
         <button
           onClick={() => setIsModalOpen(true)}
