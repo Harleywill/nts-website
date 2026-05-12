@@ -10,6 +10,13 @@
 }
 
 @theme inline {
+  /* Breakpoints - Required for responsive design in Tailwind v4 */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
   /* Brand color palette */
   --color-navy: #1a2f6e;
   --color-green: #4caf50;
