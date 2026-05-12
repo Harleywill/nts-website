@@ -1,15 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import QuickEnquiryModal from "./QuickEnquiryModal";
 
 export default function StickyButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Check if screen is mobile (< 768px)
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Check on mount
+    checkMobile();
+
+    // Listen for resize events
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Don't render on desktop
+  if (!isMobile) {
+    return null;
+  }
 
   return (
     <>
-      {/* Sticky Button - Mobile only (hidden on desktop via md:hidden) */}
-      <div className="block md:hidden">
+      {/* Sticky Button - Mobile only */}
+      <div>
         <button
           onClick={() => setIsModalOpen(true)}
           style={{
