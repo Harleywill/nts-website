@@ -1,10 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import QuickEnquiryModal from "./QuickEnquiryModal";
 
 export default function StickyButtonClient() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+  const heroRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // Get the hero section
+    const heroSection = document.querySelector('div[style*="1a2f6e"]') || document.querySelector('[class*="Hero"]');
+    
+    if (!heroSection) return;
+
+    // Create intersection observer to detect when hero is out of view
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Show sticky button only when hero is NOT visible
+        setShowButton(!entry.isIntersecting);
+      },
+      {
+        threshold: 0,
+      }
+    );
+
+    observer.observe(heroSection);
+
+    return () => observer.disconnect();
+  }, []);
+
+  if (!showButton) return null;
 
   return (
     <>
