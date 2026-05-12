@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
@@ -17,9 +17,6 @@ interface NewsItem {
 export default function FeaturedNews() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const touchStartX = useRef(0);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -30,6 +27,7 @@ export default function FeaturedNews() {
         setNews(featured);
       } catch (error) {
         console.error("Failed to fetch news:", error);
+        setNews([]);
       } finally {
         setLoading(false);
       }
@@ -37,49 +35,19 @@ export default function FeaturedNews() {
 
     fetchNews();
   }, []);
-
-  // Sync currentIndex with scroll position
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container || news.length === 0) return;
-
-    const handleScroll = () => {
-      const scrollLeft = container.scrollLeft;
-      const containerWidth = container.offsetWidth;
-      const itemWidth = containerWidth / 3; // Each card is 1/3 width
-      const index = Math.round(scrollLeft / itemWidth);
-      const clampedIndex = Math.min(index, news.length - 3);
-      setCurrentIndex(clampedIndex);
-    };
-
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, [news.length]);
-
-  const scrollToIndex = (index: number) => {
-    if (!scrollContainerRef.current) return;
-    const container = scrollContainerRef.current;
-    const containerWidth = container.offsetWidth;
-    const itemWidth = containerWidth / 3;
-
-    container.scrollTo({
-      left: itemWidth * index,
-      behavior: "smooth",
-    });
-
-    setCurrentIndex(index);
-  };
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const touchStartX = useRef(0);
 
   const goToPrevious = () => {
-    const maxIndex = Math.max(0, news.length - 3);
-    const newIndex = currentIndex === 0 ? maxIndex : currentIndex - 1;
-    scrollToIndex(newIndex);
+    setCurrentIndex((prev) => (prev === 0 ? news.length - 1 : prev - 1));
   };
 
   const goToNext = () => {
-    const maxIndex = Math.max(0, news.length - 3);
-    const newIndex = currentIndex === maxIndex ? 0 : currentIndex + 1;
-    scrollToIndex(newIndex);
+    setCurrentIndex((prev) => (prev === news.length - 1 ? 0 : prev + 1));
+  };
+
+  const goToPage = (index: number) => {
+    setCurrentIndex(index);
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -90,28 +58,21 @@ export default function FeaturedNews() {
     const touchEndX = e.changedTouches[0].clientX;
     const difference = touchStartX.current - touchEndX;
 
-    // Swipe left (next)
     if (difference > 50) {
       goToNext();
-    }
-    // Swipe right (previous)
-    else if (difference < -50) {
+    } else if (difference < -50) {
       goToPrevious();
     }
   };
-
-  if (loading) {
-    return null;
-  }
 
   if (news.length === 0) {
     return null;
   }
 
-  const maxScrollIndex = Math.max(0, news.length - 3);
+  const currentNews = news[currentIndex];
 
   return (
-    <section className="bg-white py-24 sm:py-32 px-6 lg:px-8">
+    <section className="bg-white py-16 sm:py-24 lg:py-32 px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <motion.div
           className="mx-auto max-w-2xl lg:mx-0"
@@ -120,109 +81,91 @@ export default function FeaturedNews() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true, amount: 0.2 }}
         >
-          <h2 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 lg:text-5xl">
             Latest News
           </h2>
-          <p className="mt-2 text-lg/8 text-gray-600">
+          <p className="mt-2 text-base sm:text-lg text-gray-600">
             Stay updated with our latest news and announcements.
           </p>
         </motion.div>
 
-        {/* News Carousel */}
-        <div className="mt-10 border-t border-gray-200 pt-32 sm:pt-40 pb-32">
-          <style>{`
-            .news-carousel::-webkit-scrollbar {
-              display: none;
-            }
-          `}</style>
+        <div className="mt-8 sm:mt-10 border-t border-gray-200 pt-8 sm:pt-12">
           <div
-            ref={scrollContainerRef}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
-            className="news-carousel w-full overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory gap-6 -mx-6 lg:-mx-8 px-6 lg:px-8 cursor-grab active:cursor-grabbing user-select-none"
-            style={{ display: "flex", scrollbarWidth: "none", msOverflowStyle: "none", minHeight: "auto", touchAction: "pan-y" }}
+            className="cursor-grab active:cursor-grabbing h-auto sm:h-[480px] lg:h-[600px]"
           >
-            {news.map((item) => (
-              <div
-                key={item.id}
-                className="flex-none w-full sm:w-1/2 lg:w-1/3 snap-center snap-always px-4 sm:px-6 lg:px-8"
+            <AnimatePresence mode="wait">
+              <motion.article
+                key={currentNews.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 bg-white h-full"
               >
-                <motion.article
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  className="flex flex-col items-start justify-between bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl hover:border-green-500 transition-all duration-300 h-[500px]"
-                >
-                  {item.imageUrl && (
-                    <div className="relative w-full h-48 overflow-hidden">
-                      <img
-                        src={item.imageUrl}
-                        alt={item.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-
-                  <div className="p-6 w-full flex flex-col grow">
-                    <div className="flex items-center gap-x-4 text-xs">
-                      <time dateTime={item.createdAt} className="text-gray-500 font-medium">
-                        {new Date(item.createdAt).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric"
-                        })}
-                      </time>
-                      <span
-                        className="px-3 py-1 rounded-full text-xs font-semibold text-white"
-                        style={{ backgroundColor: "#4caf50" }}
-                      >
-                        News
-                      </span>
-                    </div>
-
-                    <div className="group relative grow w-full">
-                      <h3 className="mt-4 text-lg/6 font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
-                        <Link href={`/news/${item.id}`}>
-                          <span className="absolute inset-0"></span>
-                          {item.title}
-                        </Link>
-                      </h3>
-                      <p className="mt-3 line-clamp-3 text-sm/6 text-gray-600">
-                        {item.content}
-                      </p>
-                    </div>
-
-                    <Link
-                      href={`/news/${item.id}`}
-                      className="mt-6 inline-flex items-center gap-2 font-semibold rounded-lg transition-all duration-200 hover:gap-3"
-                      style={{ color: "#4caf50" }}
-                    >
-                      Read More →
-                    </Link>
+                {currentNews.imageUrl && (
+                  <div className="relative w-full h-40 sm:h-56 lg:h-80 overflow-hidden bg-gray-200 flex-shrink-0">
+                    <img
+                      src={currentNews.imageUrl}
+                      alt={currentNews.title}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </motion.article>
-              </div>
-            ))}
+                )}
+
+                <div className="p-4 sm:p-6 lg:p-8 flex flex-col grow overflow-y-auto">
+                  <div className="flex items-center gap-x-3 text-xs sm:text-sm flex-shrink-0">
+                    <time dateTime={currentNews.createdAt} className="text-gray-500 font-medium">
+                      {new Date(currentNews.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric"
+                      })}
+                    </time>
+                    <span
+                      className="px-2 sm:px-3 py-1 rounded-full text-xs font-semibold text-white whitespace-nowrap"
+                      style={{ backgroundColor: "#4caf50" }}
+                    >
+                      News
+                    </span>
+                  </div>
+
+                  <h3 className="mt-3 sm:mt-4 text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
+                    {currentNews.title}
+                  </h3>
+
+                  <p className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed">
+                    {currentNews.content}
+                  </p>
+
+                  <Link
+                    href={`/news/${currentNews.id}`}
+                    className="mt-4 sm:mt-6 inline-flex items-center gap-2 font-semibold rounded-lg transition-all duration-200 hover:gap-3 w-fit text-sm sm:text-base flex-shrink-0"
+                    style={{ color: "#4caf50" }}
+                  >
+                    Read More →
+                  </Link>
+                </div>
+              </motion.article>
+            </AnimatePresence>
           </div>
 
-          {/* Navigation Controls */}
-          <div className="mt-8 flex items-center justify-center gap-6">
+          <div className="mt-6 sm:mt-8 flex items-center justify-between sm:justify-center gap-4 sm:gap-8">
             <button
               onClick={goToPrevious}
-              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
+              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95 flex-shrink-0"
               style={{ color: "#4caf50" }}
               aria-label="Previous news"
             >
-              <FaChevronLeft size={24} />
+              <FaChevronLeft size={20} className="sm:w-6 sm:h-6" />
             </button>
 
-            {/* Dot Indicators */}
-            <div className="flex gap-2">
-              {Array.from({ length: Math.max(1, maxScrollIndex + 1) }).map((_, index) => (
+            <div className="flex gap-2 flex-wrap justify-center">
+              {news.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => scrollToIndex(index)}
+                  onClick={() => goToPage(index)}
                   className={`rounded-full transition-all duration-300 ${
                     index === currentIndex ? "w-8 h-2" : "w-2 h-2"
                   }`}
@@ -237,12 +180,16 @@ export default function FeaturedNews() {
 
             <button
               onClick={goToNext}
-              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
+              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95 flex-shrink-0"
               style={{ color: "#4caf50" }}
               aria-label="Next news"
             >
-              <FaChevronRight size={24} />
+              <FaChevronRight size={20} className="sm:w-6 sm:h-6" />
             </button>
+          </div>
+
+          <div className="mt-4 text-center text-xs sm:text-sm text-gray-600">
+            {currentIndex + 1} of {news.length}
           </div>
         </div>
       </div>

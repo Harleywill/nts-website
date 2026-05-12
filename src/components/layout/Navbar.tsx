@@ -155,7 +155,7 @@ export default function Navbar() {
           {/* Logo - Left */}
           <Link
             href="/"
-            className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity relative z-10"
+            className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity relative z-10 mr-auto lg:mr-0"
           >
             <Image
               src="/images/ntsLogo.png"
@@ -163,7 +163,7 @@ export default function Navbar() {
               width={280}
               height={140}
               priority
-              className="h-12 w-auto"
+              className="h-9 sm:h-10 lg:h-12 w-auto"
             />
           </Link>
 

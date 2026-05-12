@@ -1,15 +1,20 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import Image from "next/image";
+
+interface Testimonial {
+  id: number;
+  name: string;
+  company: string;
+  rating: number;
+  text: string;
+}
 
 export default function Testimonials() {
-  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -19,6 +24,7 @@ export default function Testimonials() {
         setTestimonials(data);
       } catch (error) {
         console.error("Failed to fetch testimonials:", error);
+        setTestimonials([]);
       } finally {
         setLoading(false);
       }
@@ -26,157 +32,121 @@ export default function Testimonials() {
 
     fetchTestimonials();
   }, []);
-
-  // Sync currentIndex with actual scroll position
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      // Calculate which card is in view based on scroll position
-      const scrollLeft = container.scrollLeft;
-      const cardWidth = container.offsetWidth;
-      const index = Math.round(scrollLeft / cardWidth);
-
-      // Clamp index to valid range
-      const clampedIndex = Math.min(index, testimonials.length - 1);
-      setCurrentIndex(clampedIndex);
-    };
-
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, [testimonials.length]);
-
-  const scrollToIndex = (index: number) => {
-    if (!scrollContainerRef.current) return;
-    const container = scrollContainerRef.current;
-    const cardWidth = container.offsetWidth; // Use actual container width
-
-    container.scrollTo({
-      left: cardWidth * index,
-      behavior: "smooth",
-    });
-
-    // Update index (will also be synced by scroll listener)
-    setCurrentIndex(index);
-  };
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const touchStartX = useRef(0);
 
   const goToPrevious = () => {
-    scrollToIndex(
-      currentIndex === 0 ? testimonials.length - 1 : currentIndex - 1
+    setCurrentIndex((prev) =>
+      prev === 0 ? testimonials.length - 1 : prev - 1
     );
   };
 
   const goToNext = () => {
-    scrollToIndex((currentIndex + 1) % testimonials.length);
+    setCurrentIndex((prev) =>
+      prev === testimonials.length - 1 ? 0 : prev + 1
+    );
   };
 
-  if (loading || testimonials.length === 0) {
+  const goToPage = (index: number) => {
+    setCurrentIndex(index);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const difference = touchStartX.current - touchEndX;
+
+    if (difference > 50) {
+      goToNext();
+    } else if (difference < -50) {
+      goToPrevious();
+    }
+  };
+
+  if (testimonials.length === 0) {
     return null;
   }
 
-  return (
-    <section className="relative isolate overflow-hidden bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        {/* NTS Logo */}
-        <div className="flex justify-center mb-12">
-          <Image
-            src="/images/ntsLogo.png"
-            alt="NTS Ltd Logo"
-            width={140}
-            height={70}
-            className="h-12 w-auto"
-          />
-        </div>
+  const currentTestimonial = testimonials[currentIndex];
 
+  return (
+    <section className="relative isolate overflow-hidden bg-white px-6 py-16 sm:py-24 lg:py-32 lg:px-8">
+      <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, amount: 0.2 }}
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
         >
-          <h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl mb-6">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 lg:text-5xl mb-2 sm:mb-4">
             What Our Clients Say
           </h2>
-          <p className="text-xl text-gray-300">
+          <p className="text-base sm:text-lg text-gray-600">
             Real feedback from satisfied customers across the UK
           </p>
         </motion.div>
 
-        {/* Testimonials Carousel - Each card takes full container width */}
         <div
-          ref={scrollContainerRef}
-          data-carousel
-          className="w-full overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory gap-6 px-0"
-          style={{
-            display: "flex",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          className="cursor-grab active:cursor-grabbing max-w-2xl mx-auto h-auto sm:h-[380px] lg:h-[420px]"
         >
-          <style>{`
-            [data-carousel]::-webkit-scrollbar {
-              display: none;
-            }
-          `}</style>
-          {testimonials.map((testimonial) => (
-            <div
-              key={testimonial.id}
-              className="flex-none w-full snap-center snap-always px-3 md:px-4"
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentTestimonial.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col rounded-2xl bg-gray-50 p-4 sm:p-6 lg:p-10 border border-gray-200 h-full overflow-y-auto"
             >
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true, amount: 0.5 }}
-                className="flex flex-col rounded-2xl bg-gray-800 p-8 sm:p-12 border border-gray-700 min-h-96"
-              >
-                {/* Stars */}
-                <div className="flex gap-1 mb-6">
-                  {[...Array(testimonial.rating || 5)].map((_, i) => (
-                    <FaStar key={i} size={18} style={{ color: "#4caf50" }} />
-                  ))}
-                </div>
+              <div className="flex gap-1 mb-4 sm:mb-6 flex-shrink-0">
+                {[...Array(currentTestimonial.rating || 5)].map((_, i) => (
+                  <FaStar key={i} size={16} className="sm:w-5 sm:h-5" style={{ color: "#4caf50" }} />
+                ))}
+              </div>
 
-                {/* Quote */}
-                <p className="text-lg leading-relaxed text-gray-100 mb-8 flex-grow overflow-hidden line-clamp-4">
-                  "{testimonial.text}"
+              <p className="text-sm sm:text-base lg:text-lg leading-relaxed text-gray-700 mb-6 sm:mb-8">
+                "{currentTestimonial.text}"
+              </p>
+
+              <div className="border-t border-gray-200 pt-4 sm:pt-6 flex-shrink-0">
+                <p className="font-semibold text-gray-900 text-sm sm:text-base">
+                  {currentTestimonial.name}
                 </p>
-
-                {/* Author */}
-                <div className="border-t border-gray-700 pt-6">
-                  <p className="font-semibold text-white">{testimonial.name}</p>
-                  <p className="text-sm text-gray-400">{testimonial.company}</p>
-                </div>
-              </motion.div>
-            </div>
-          ))}
+                <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                  {currentTestimonial.company}
+                </p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* Navigation Controls */}
-        <div className="mt-12 flex items-center justify-center gap-6">
+        <div className="mt-6 sm:mt-8 flex items-center justify-between sm:justify-center gap-4 sm:gap-8 max-w-2xl mx-auto">
           <button
             onClick={goToPrevious}
-            className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
+            className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95 flex-shrink-0"
             style={{ color: "#4caf50" }}
             aria-label="Previous testimonial"
           >
-            <FaChevronLeft size={24} />
+            <FaChevronLeft size={20} className="sm:w-6 sm:h-6" />
           </button>
 
-          {/* Dot Indicators */}
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap justify-center">
             {testimonials.map((_, index) => (
               <button
                 key={index}
-                onClick={() => scrollToIndex(index)}
+                onClick={() => goToPage(index)}
                 className={`rounded-full transition-all duration-300 ${
                   index === currentIndex ? "w-8 h-2" : "w-2 h-2"
                 }`}
                 style={{
                   backgroundColor:
-                    index === currentIndex ? "#4caf50" : "rgba(255, 255, 255, 0.2)",
+                    index === currentIndex ? "#4caf50" : "rgba(0, 0, 0, 0.2)",
                 }}
                 aria-label={`Go to testimonial ${index + 1}`}
               />
@@ -185,12 +155,16 @@ export default function Testimonials() {
 
           <button
             onClick={goToNext}
-            className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
+            className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95 flex-shrink-0"
             style={{ color: "#4caf50" }}
             aria-label="Next testimonial"
           >
-            <FaChevronRight size={24} />
+            <FaChevronRight size={20} className="sm:w-6 sm:h-6" />
           </button>
+        </div>
+
+        <div className="mt-4 text-center text-xs sm:text-sm text-gray-600">
+          {currentIndex + 1} of {testimonials.length}
         </div>
       </div>
     </section>
