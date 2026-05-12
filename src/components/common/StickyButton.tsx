@@ -8,7 +8,6 @@ export default function StickyButton() {
 
   return (
     <>
-      {/* Sticky Button - Mobile & Tablet only */}
       <button
         onClick={() => setIsModalOpen(true)}
         style={{
@@ -22,22 +21,27 @@ export default function StickyButton() {
           color: "white",
           fontSize: "16px",
           fontWeight: "bold",
-          padding: "8px 16px",
-          border: "1px solid #e0e0e0",
-          borderBottom: "none",
-          boxShadow: "0 -2px 8px rgba(0,0,0,0.1)",
-          zIndex: 50,
+          padding: "0 16px",
+          border: "none",
+          borderTop: "1px solid #ddd",
+          boxShadow: "0 -2px 10px rgba(0,0,0,0.15)",
+          zIndex: 9999,
           cursor: "pointer",
-          transition: "background-color 0.2s",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
-        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#45a049"}
-        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#4caf50"}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = "#45a049";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = "#4caf50";
+        }}
         aria-label="Get Free Quote"
       >
         Get Free Quote
       </button>
 
-      {/* Modal Form */}
       <QuickEnquiryModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>
   );
