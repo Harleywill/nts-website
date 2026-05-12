@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import HeroMobile from "@/components/home/HeroMobile";
 import HeroDesktop from "@/components/home/HeroDesktop";
 import AboutSection from "@/components/home/AboutSection";
 import ServicesBento from "@/components/home/ServicesBento";
@@ -14,13 +15,20 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-white">
       <Navbar />
       <main className="flex-grow pb-14 md:pb-0">
-        <HeroDesktop />
-        <AboutSection />
-        <div className="hidden md:block">
-          <ServicesGrid />
+        {/* Hero: Mobile version with 2 buttons vs Desktop version with stats and links */}
+        <div className="block md:hidden">
+          <HeroMobile />
         </div>
+        <div className="hidden md:block">
+          <HeroDesktop />
+        </div>
+        <AboutSection />
+        {/* Services: Mobile interactive cards vs Desktop static layout */}
         <div className="block md:hidden">
           <ServicesBento />
+        </div>
+        <div className="hidden md:block">
+          <ServicesGrid />
         </div>
         <AccreditationsStrip />
         <LatestProjects />
