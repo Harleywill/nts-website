@@ -61,3 +61,14 @@ h3 {
 button {
   @apply transition-all duration-200 ease-out;
 }
+
+/* Explicit responsive display utilities for md breakpoint (768px) */
+@media (min-width: 768px) {
+  .md\:hidden {
+    display: none !important;
+  }
+
+  .md\:block {
+    display: block !important;
+  }
+}
