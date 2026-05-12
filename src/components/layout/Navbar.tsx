@@ -211,7 +211,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
               onClick={toggleMenu}
-              className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors relative z-10"
+              className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
               aria-label="Toggle menu"
             >
             {isOpen ? (
