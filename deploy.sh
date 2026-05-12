@@ -31,6 +31,13 @@ git pull origin main
 echo "🔨 Building Next.js application..."
 npm run build
 
+echo "🗄️  Setting up database..."
+# Run Prisma migrations to create the database schema
+npx prisma migrate deploy || echo "Migrations already applied"
+
+# Seed the database with initial data
+npx prisma db seed || echo "Database already seeded"
+
 echo "📦 Copying public assets to standalone build..."
 cp -r public/* .next/standalone/public/
 
