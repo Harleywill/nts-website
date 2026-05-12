@@ -81,6 +81,31 @@ gtag('config', 'G-PEK7PKH64Z');`,
         {/* End Google Tag Manager (noscript) */}
         <FaviconManager />
         {children}
+        
+        {/* Sticky Mobile CTA Button */}
+        <div style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "56px",
+          width: "100%",
+          backgroundColor: "#4caf50",
+          color: "white",
+          fontSize: "16px",
+          fontWeight: "bold",
+          padding: "0 16px",
+          border: "none",
+          borderTop: "1px solid #ddd",
+          boxShadow: "0 -2px 10px rgba(0,0,0,0.15)",
+          zIndex: 9999,
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}>
+          Get Free Quote
+        </div>
       </body>
     </html>
   );
