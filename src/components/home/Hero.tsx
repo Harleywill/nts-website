@@ -36,51 +36,32 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 w-full">
-        <div className="mx-auto max-w-2xl lg:mx-0">
-          <h2 className="text-5xl font-semibold tracking-tight text-white sm:text-7xl">
-            Professional HVAC Solutions
-          </h2>
-          <p className="mt-8 text-lg font-medium text-pretty text-gray-200 sm:text-xl/8">
-            Over 15 years of expertise in heating, cooling, and ventilation. Gas Safe registered engineers delivering reliable, professional solutions for domestic and commercial clients across Hull and beyond.
-          </p>
-        </div>
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 w-full flex flex-col items-center justify-center">
+        <div className="w-full max-w-2xl text-center">
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-white">
+            Professional HVAC Services You Can Trust
+          </h1>
 
-        <div className="mx-auto mt-10 max-w-2xl lg:mx-0 lg:max-w-none">
-          <div className="grid grid-cols-1 gap-x-8 gap-y-6 text-base/7 font-semibold text-white sm:grid-cols-2 md:flex lg:gap-x-10">
-            <Link href="/contact" className="hover:text-green-400 transition-colors">
-              Get a Free Quote <span aria-hidden="true">&rarr;</span>
+          {/* CTA Buttons - Stacked on Mobile, Side-by-side on Tablet+ */}
+          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/contact"
+              className="h-14 sm:h-16 flex items-center justify-center px-6 bg-[#4caf50] text-white font-bold rounded-lg hover:bg-green-600 transition-colors"
+            >
+              Get Free Quote
             </Link>
-            <Link href="/services" className="hover:text-green-400 transition-colors">
-              View Our Services <span aria-hidden="true">&rarr;</span>
-            </Link>
-            <Link href="/projects" className="hover:text-green-400 transition-colors">
-              Recent Projects <span aria-hidden="true">&rarr;</span>
-            </Link>
-            <Link href="/about" className="hover:text-green-400 transition-colors">
-              About Us <span aria-hidden="true">&rarr;</span>
+            <Link
+              href="/projects"
+              className="h-14 sm:h-16 flex items-center justify-center px-6 border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition-colors"
+            >
+              View Our Work
             </Link>
           </div>
 
-          {/* Stats */}
-          <dl className="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="flex flex-col-reverse gap-1">
-              <dt className="text-base/7 text-gray-300">Years in Business</dt>
-              <dd className="text-4xl font-semibold tracking-tight text-white">15+</dd>
-            </div>
-            <div className="flex flex-col-reverse gap-1">
-              <dt className="text-base/7 text-gray-300">Projects Completed</dt>
-              <dd className="text-4xl font-semibold tracking-tight text-white">500+</dd>
-            </div>
-            <div className="flex flex-col-reverse gap-1">
-              <dt className="text-base/7 text-gray-300">Qualified Engineers</dt>
-              <dd className="text-4xl font-semibold tracking-tight text-white">25+</dd>
-            </div>
-            <div className="flex flex-col-reverse gap-1">
-              <dt className="text-base/7 text-gray-300">24/7 Support</dt>
-              <dd className="text-4xl font-semibold tracking-tight text-white">Always</dd>
-            </div>
-          </dl>
+          {/* Scroll Indicator */}
+          <div className="mt-12 text-white/60 text-sm">
+            ↓ Scroll to explore
+          </div>
         </div>
       </div>
     </div>
