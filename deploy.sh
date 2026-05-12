@@ -32,6 +32,9 @@ npm run build
 echo "📦 Copying public assets to standalone build..."
 cp -r public/* .next/standalone/public/
 
+echo "📦 Copying static CSS/JS to standalone build..."
+cp -r .next/static .next/standalone/.next/
+
 echo "🔄 Restarting PM2 process..."
 pm2 restart nts-website
 
@@ -39,10 +42,19 @@ echo "⏳ Waiting for app to start..."
 sleep 3
 
 echo "✅ Verifying deployment..."
-if curl -s https://nevilletuckerservices.co.uk/images/ntsLogo.png -o /dev/null -w "%{http_code}" | grep -q "200"; then
+images=$(curl -s -o /dev/null -w "%{http_code}" "https://nevilletuckerservices.co.uk/images/ntsLogo.png")
+css=$(curl -s -o /dev/null -w "%{http_code}" "https://nevilletuckerservices.co.uk/_next/static/chunks/0-qgiswpibda~.css" || echo "404")
+
+if [ "$images" = "200" ]; then
     echo "✅ Images loading correctly (HTTP 200)"
 else
-    echo "⚠️  Warning: Image verification failed"
+    echo "⚠️  Warning: Images not loading (HTTP $images)"
+fi
+
+if [ "$css" = "200" ]; then
+    echo "✅ CSS loading correctly (HTTP 200)"
+else
+    echo "⚠️  Warning: CSS not loading (HTTP $css)"
 fi
 
 echo ""
