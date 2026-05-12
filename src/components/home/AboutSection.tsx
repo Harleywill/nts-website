@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 
 export default function AboutSection() {
   const features = [
@@ -121,14 +120,6 @@ export default function AboutSection() {
               <p className="mt-6">
                 Get in touch with our team to discuss your heating, cooling, and ventilation needs. We'll provide expert advice and a competitive quote for your project.
               </p>
-
-              <Link
-                href="/contact"
-                className="mt-8 inline-flex items-center gap-2 px-6 py-3 font-semibold text-white rounded-lg transition-all duration-200 transform hover:scale-105"
-                style={{ backgroundColor: "#4caf50" }}
-              >
-                Get a Quote
-              </Link>
             </div>
           </div>
         </div>
