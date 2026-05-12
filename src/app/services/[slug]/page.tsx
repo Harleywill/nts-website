@@ -67,7 +67,7 @@ const serviceData: Record<
     title: "Domestic & Commercial Servicing",
     description:
       "Comprehensive maintenance for all mechanical and electrical building systems",
-    imageUrl: "/images/services/domestic-commercial-servicing.jpg",
+    imageUrl: "/images/services/domestic and comercial servicing.jpg",
     content:
       "We provide comprehensive servicing for all mechanical and electrical systems in domestic, commercial, and industrial buildings. Our highly trained and accredited engineers maintain expertise across a wide range of equipment and systems. Whether it's routine maintenance or emergency repairs, we keep your systems running efficiently and reliably.",
     features: [
@@ -91,7 +91,7 @@ const serviceData: Record<
     title: "Air Conditioning",
     description:
       "Professional cooling solutions from design through installation and ongoing maintenance",
-    imageUrl: "/images/services/air-conditioning.jpg",
+    imageUrl: "/images/services/airconditioning.jpg",
     content:
       "We deliver complete air conditioning solutions for residential and commercial spaces. From initial feasibility studies and system design through installation and ongoing maintenance, our F-Gas registered engineers ensure your systems operate efficiently year-round. We're approved contractors for leading manufacturers including Mitsubishi Electric, Toshiba, Daikin, and Panasonic.",
     features: [
@@ -115,7 +115,7 @@ const serviceData: Record<
     title: "Commissioning",
     description:
       "Professional system testing, verification, and optimization for peak performance",
-    imageUrl: "/images/services/commissioning.jpg",
+    imageUrl: "/images/services/comissioning.jpg",
     content:
       "Commissioning is the critical final step that ensures your mechanical and electrical systems operate at optimal performance. Our engineers conduct comprehensive testing and verification of all systems, addressing any performance concerns and optimizing energy consumption. For existing equipment, we diagnose efficiency issues and deliver solutions. For new installations, we design and commission bespoke control systems tailored to your exact requirements.",
     features: [
