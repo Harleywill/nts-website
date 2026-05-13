@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import AnimatedHeading from "@/components/common/AnimatedHeading";
 
 interface NewsItem {
   id: number;
@@ -81,9 +82,11 @@ export default function FeaturedNews() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true, amount: 0.2 }}
         >
-          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 lg:text-5xl">
-            Latest News
-          </h2>
+          <AnimatedHeading
+            text="Latest News"
+            level="h2"
+            className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 lg:text-5xl"
+          />
           <p className="mt-2 text-base sm:text-lg text-gray-600">
             Stay updated with our latest news and announcements.
           </p>

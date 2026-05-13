@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import AnimatedHeading from "@/components/common/AnimatedHeading";
 
 export default function AboutSection() {
   const features = [
@@ -62,9 +63,12 @@ export default function AboutSection() {
               <p className="text-base/7 font-semibold" style={{ color: "#4caf50" }}>
                 About NTS Ltd
               </p>
-              <h2 className="mt-2 text-4xl font-semibold tracking-tight text-pretty" style={{ color: "#1a2f6e" }} >
-                Your Trusted HVAC Partner
-              </h2>
+              <AnimatedHeading
+                text="Your Trusted HVAC Partner"
+                level="h2"
+                className="mt-2 text-4xl font-semibold tracking-tight text-pretty"
+                delay={0.2}
+              />
               <p className="mt-6 text-xl/8 text-gray-700">
                 For over 15 years, NTS Ltd has been delivering exceptional heating, cooling, and ventilation services to homes and businesses across Hull. We're committed to keeping your systems running smoothly, efficiently, and safely.
               </p>
