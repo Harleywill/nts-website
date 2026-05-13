@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AnimatedHeading from "@/components/common/AnimatedHeading";
@@ -35,19 +35,37 @@ export default function LatestProjects() {
 
     fetchProjects();
   }, []);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const touchStartX = useRef(0);
 
+  // Detect screen size for responsive behavior
+  const [itemsToShow, setItemsToShow] = useState(3);
+  useEffect(() => {
+    const checkScreenSize = () => {
+      if (window.innerWidth < 768) {
+        setItemsToShow(1);
+      } else if (window.innerWidth < 1024) {
+        setItemsToShow(2);
+      } else {
+        setItemsToShow(3);
+      }
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
   const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? projects.length - 1 : prev - 1));
+    setCurrentIndex((prev) =>
+      prev === 0 ? Math.max(0, projects.length - itemsToShow) : prev - 1
+    );
   };
 
   const goToNext = () => {
-    setCurrentIndex((prev) => (prev === projects.length - 1 ? 0 : prev + 1));
-  };
-
-  const goToPage = (index: number) => {
-    setCurrentIndex(index);
+    const maxIndex = Math.max(0, projects.length - itemsToShow);
+    setCurrentIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -69,7 +87,8 @@ export default function LatestProjects() {
     return null;
   }
 
-  const currentProject = projects[currentIndex];
+  const visibleProjects = projects.slice(currentIndex, currentIndex + itemsToShow);
+  const maxIndex = Math.max(0, projects.length - itemsToShow);
 
   return (
     <section className="py-16 sm:py-24 lg:py-32 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
@@ -92,35 +111,33 @@ export default function LatestProjects() {
         </motion.div>
 
         <div className="mt-8 sm:mt-10 border-t border-gray-700 pt-8 sm:pt-12">
-          <div
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            className="cursor-grab active:cursor-grabbing h-80 sm:h-[480px] lg:h-[600px]"
-          >
-            <AnimatePresence mode="wait">
-              <motion.article
-                key={currentProject.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-md bg-white h-full"
-                whileHover={{ scale: 1.03, y: -8, boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)" }}
+          {/* Projects Grid - 3 on desktop, 2 on tablet, 1 on mobile */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {visibleProjects.map((project) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true, amount: 0.2 }}
+                className="flex flex-col rounded-2xl overflow-hidden border border-gray-700 shadow-md h-full"
+                style={{ backgroundColor: "#1f2937" }}
+                whileHover={{ scale: 1.03, y: -4 }}
               >
-                <motion.div className="relative w-full h-40 sm:h-56 lg:h-80 overflow-hidden bg-gray-200 flex-shrink-0">
+                <div className="relative w-full h-40 sm:h-56 overflow-hidden bg-gray-600 flex-shrink-0">
                   <motion.img
-                    src={currentProject.imageUrl || "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"}
-                    alt={currentProject.title}
+                    src={project.imageUrl || "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"}
+                    alt={project.title}
                     className="w-full h-full object-cover"
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.4 }}
                   />
-                </motion.div>
+                </div>
 
-                <div className="p-4 sm:p-6 lg:p-8 flex flex-col grow overflow-y-auto">
+                <div className="p-4 sm:p-6 flex flex-col grow">
                   <div className="flex items-center gap-x-3 text-xs sm:text-sm flex-shrink-0">
-                    <time dateTime={currentProject.date} className="text-gray-500 font-medium">
-                      {new Date(currentProject.date).toLocaleDateString("en-US", {
+                    <time dateTime={project.date} className="text-gray-400 font-medium">
+                      {new Date(project.date).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
                         day: "numeric"
@@ -130,69 +147,70 @@ export default function LatestProjects() {
                       className="px-2 sm:px-3 py-1 rounded-full text-xs font-semibold text-white whitespace-nowrap"
                       style={{ backgroundColor: "#4caf50" }}
                     >
-                      {currentProject.category}
+                      {project.category}
                     </span>
                   </div>
 
-                  <h3 className="mt-3 sm:mt-4 text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
-                    {currentProject.title}
+                  <h3 className="mt-3 sm:mt-4 text-lg font-semibold text-white">
+                    {project.title}
                   </h3>
 
-                  <p className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed">
-                    {currentProject.description}
+                  <p className="mt-2 text-sm text-gray-300 leading-relaxed line-clamp-2">
+                    {project.description}
                   </p>
 
                   <Link
-                    href={`/projects/${currentProject.id}`}
-                    className="mt-4 sm:mt-6 inline-flex items-center gap-2 font-semibold rounded-lg transition-all duration-200 hover:gap-3 w-fit text-sm sm:text-base flex-shrink-0"
+                    href={`/projects/${project.id}`}
+                    className="mt-4 sm:mt-6 inline-flex items-center gap-2 font-semibold transition-all duration-200 w-fit text-sm"
                     style={{ color: "#4caf50" }}
                   >
                     Read More →
                   </Link>
                 </div>
-              </motion.article>
-            </AnimatePresence>
+              </motion.div>
+            ))}
           </div>
 
-          <div className="mt-6 sm:mt-8 flex items-center justify-between sm:justify-center gap-4 sm:gap-8">
+          {/* Navigation Controls */}
+          <div className="mt-8 flex items-center justify-center gap-4 sm:gap-6">
             <button
               onClick={goToPrevious}
-              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95 flex-shrink-0"
+              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
               style={{ color: "#4caf50" }}
-              aria-label="Previous project"
+              aria-label="Previous projects"
             >
               <FaChevronLeft size={20} className="sm:w-6 sm:h-6" />
             </button>
 
             <div className="flex gap-2 flex-wrap justify-center">
-              {projects.map((_, index) => (
+              {Array.from({ length: Math.max(1, maxIndex + 1) }).map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => goToPage(index)}
+                  onClick={() => setCurrentIndex(index)}
                   className={`rounded-full transition-all duration-300 ${
                     index === currentIndex ? "w-8 h-2" : "w-2 h-2"
                   }`}
                   style={{
                     backgroundColor:
-                      index === currentIndex ? "#4caf50" : "rgba(0, 0, 0, 0.2)",
+                      index === currentIndex ? "#4caf50" : "rgba(255, 255, 255, 0.2)",
                   }}
-                  aria-label={`Go to project ${index + 1}`}
+                  aria-label={`Go to project set ${index + 1}`}
                 />
               ))}
             </div>
 
             <button
               onClick={goToNext}
-              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95 flex-shrink-0"
+              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
               style={{ color: "#4caf50" }}
-              aria-label="Next project"
+              aria-label="Next projects"
             >
               <FaChevronRight size={20} className="sm:w-6 sm:h-6" />
             </button>
           </div>
 
           <div className="mt-4 text-center text-xs sm:text-sm text-gray-400">
-            {currentIndex + 1} of {projects.length}
+            {currentIndex + 1}-{Math.min(currentIndex + itemsToShow, projects.length)} of {projects.length}
           </div>
         </div>
 
