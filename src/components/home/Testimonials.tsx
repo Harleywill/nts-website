@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AnimatedHeading from "@/components/common/AnimatedHeading";
+import Image from "next/image";
 
 interface Testimonial {
   id: number;
@@ -76,6 +77,23 @@ export default function Testimonials() {
   return (
     <section className="relative isolate overflow-hidden px-6 py-16 sm:py-24 lg:py-32 lg:px-8" style={{ backgroundColor: "#101828" }}>
       <div className="mx-auto max-w-7xl">
+        {/* NTS Logo */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true, amount: 0.2 }}
+          className="flex justify-center mb-12"
+        >
+          <Image
+            src="/images/ntsLogo.png"
+            alt="NTS Ltd Logo"
+            width={140}
+            height={70}
+            className="h-12 w-auto"
+          />
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
