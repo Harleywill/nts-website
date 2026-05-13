@@ -5,6 +5,7 @@ import "./globals.css";
 import FaviconManager from "@/components/common/FaviconManager";
 import QuickEnquiryModal from "@/components/common/QuickEnquiryModal";
 import StickyButtonClient from "@/components/common/StickyButtonClient";
+import PageTransition from "@/components/layout/PageTransition";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -89,7 +90,7 @@ gtag('config', 'G-PEK7PKH64Z');`,
         </noscript>
         {/* End Google Tag Manager (noscript) */}
         <FaviconManager />
-        {children}
+        <PageTransition>{children}</PageTransition>
         <StickyButtonClient />
       </body>
     </html>
