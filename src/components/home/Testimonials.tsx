@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import AnimatedHeading from "@/components/common/AnimatedHeading";
 
 interface Testimonial {
   id: number;
@@ -82,9 +83,11 @@ export default function Testimonials() {
           viewport={{ once: true, amount: 0.2 }}
           className="text-center mb-8 sm:mb-12 lg:mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 lg:text-5xl mb-2 sm:mb-4">
-            What Our Clients Say
-          </h2>
+          <AnimatedHeading
+            text="What Our Clients Say"
+            level="h2"
+            className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 lg:text-5xl mb-2 sm:mb-4"
+          />
           <p className="text-base sm:text-lg text-gray-600">
             Real feedback from satisfied customers across the UK
           </p>

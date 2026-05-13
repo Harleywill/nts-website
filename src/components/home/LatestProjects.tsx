@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import AnimatedHeading from "@/components/common/AnimatedHeading";
 
 interface ProjectItem {
   id: number;
@@ -80,9 +81,11 @@ export default function LatestProjects() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true, amount: 0.2 }}
         >
-          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 lg:text-5xl">
-            Latest Projects
-          </h2>
+          <AnimatedHeading
+            text="Latest Projects"
+            level="h2"
+            className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 lg:text-5xl"
+          />
           <p className="mt-2 text-base sm:text-lg text-gray-600">
             View our recent work and see what we can do for you.
           </p>

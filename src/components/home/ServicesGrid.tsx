@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import AnimatedHeading from "@/components/common/AnimatedHeading";
 import Link from "next/link";
 import { FaArrowRight, FaFaucet, FaWind, FaHome, FaBuilding, FaSnowflake, FaCheckCircle } from "react-icons/fa";
 import { SERVICES } from "@/lib/constants";
@@ -53,12 +54,12 @@ export default function ServicesGrid() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2
+          <AnimatedHeading
+            text="Our Services"
+            level="h2"
             className="text-3xl sm:text-4xl font-bold mb-4"
             style={{ color: "#1a2f6e" }}
-          >
-            Our Services
-          </h2>
+          />
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Comprehensive mechanical and electrical services tailored to your needs
           </p>

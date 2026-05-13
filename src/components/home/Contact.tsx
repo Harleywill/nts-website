@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { staggerContainerVariants, staggerItemVariants, slideUpVariants } from "@/lib/animations";
+import AnimatedHeading from "@/components/common/AnimatedHeading";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -116,9 +117,11 @@ export default function Contact() {
       </div>
 
       <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-          Get In Touch
-        </h2>
+        <AnimatedHeading
+          text="Get In Touch"
+          level="h2"
+          className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl"
+        />
         <p className="mt-2 text-lg/8 text-gray-600">
           Have a question about our services? Contact our team and we'll respond as soon as possible.
         </p>
