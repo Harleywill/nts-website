@@ -59,7 +59,7 @@ export default function ServicesGrid() {
             const isExpanded = expandedId === service.id;
 
             return (
-              <button
+              <div
                 key={service.id}
                 onClick={() => handleCardClick(service.id)}
                 className="group rounded-2xl shadow-md border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col p-8 transition-all duration-300 text-left"
@@ -121,7 +121,7 @@ export default function ServicesGrid() {
                     </button>
                   )}
                 </div>
-              </button>
+              </div>
             );
           })}
         </div>
