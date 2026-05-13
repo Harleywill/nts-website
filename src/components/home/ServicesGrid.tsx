@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { FaArrowRight, FaTimes, FaFaucet, FaWind, FaHome, FaBuilding, FaSnowflake, FaCheckCircle } from "react-icons/fa";
 import { SERVICES } from "@/lib/constants";
 
@@ -57,20 +58,23 @@ export default function ServicesGrid() {
             const isExpanded = expandedId === service.id;
 
             return (
-              <div key={service.id}>
-                <button
+              <motion.div
+                key={service.id}
+                animate={{
+                  scale: isExpanded ? 1.3 : 1,
+                  zIndex: isExpanded ? 50 : 10,
+                }}
+                transition={{
+                  duration: 0.4,
+                  ease: "easeInOut",
+                }}
+              >
+                <motion.button
                   onClick={() => handleCardClick(service.id)}
                   className={`group rounded-2xl shadow-md border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col w-full text-left bg-transparent relative p-8 transition-all duration-300`}
                   style={{
                     backgroundColor: "#1f2937",
-                    position: isExpanded ? "fixed" : "relative",
-                    top: isExpanded ? "50%" : "auto",
-                    left: isExpanded ? "50%" : "auto",
-                    transform: isExpanded ? "translate(-50%, -50%)" : "none",
-                    width: isExpanded ? "1000px" : "auto",
-                    height: isExpanded ? "600px" : "auto",
-                    zIndex: isExpanded ? 50 : 10,
-                    overflow: isExpanded ? "auto" : "visible",
+                    minHeight: isExpanded ? "600px" : "auto",
                   }}
                 >
                   <div
@@ -128,8 +132,8 @@ export default function ServicesGrid() {
                       </button>
                     )}
                   </div>
-                </button>
-              </div>
+                </motion.button>
+              </motion.div>
             );
           })}
         </div>
