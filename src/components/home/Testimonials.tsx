@@ -93,7 +93,7 @@ export default function Testimonials() {
         <div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="cursor-grab active:cursor-grabbing max-w-2xl mx-auto h-auto sm:h-[380px] lg:h-[420px]"
+          className="cursor-grab active:cursor-grabbing max-w-2xl mx-auto h-80 sm:h-[380px] lg:h-[420px]"
         >
           <AnimatePresence mode="wait">
             <motion.div

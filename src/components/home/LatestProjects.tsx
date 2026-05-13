@@ -92,7 +92,7 @@ export default function LatestProjects() {
           <div
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
-            className="cursor-grab active:cursor-grabbing h-auto sm:h-[480px] lg:h-[600px]"
+            className="cursor-grab active:cursor-grabbing h-80 sm:h-[480px] lg:h-[600px]"
           >
             <AnimatePresence mode="wait">
               <motion.article
