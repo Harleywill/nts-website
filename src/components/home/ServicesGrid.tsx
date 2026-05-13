@@ -87,8 +87,7 @@ export default function ServicesGrid() {
           }}
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
+          animate="visible"
         >
           {SERVICES.filter((service) => service.id !== "commercial-servicing").map((service) => {
             const isExpanded = expandedId === service.id;
