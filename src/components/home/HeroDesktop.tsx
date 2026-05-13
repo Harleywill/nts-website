@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import Counter from "@/components/common/Counter";
 import {
   wordStaggerContainerVariants,
   wordVariants,
@@ -147,10 +148,10 @@ export default function HeroDesktop() {
             transition={{ staggerChildren: 0.1, delayChildren: 0.4 }}
           >
             {[
-              { label: "Years in Business", value: "15+" },
-              { label: "Projects Completed", value: "500+" },
-              { label: "Qualified Engineers", value: "25+" },
-              { label: "24/7 Support", value: "Always" },
+              { label: "Years in Business", value: 15, suffix: "+" },
+              { label: "Projects Completed", value: 500, suffix: "+" },
+              { label: "Qualified Engineers", value: 25, suffix: "+" },
+              { label: "24/7 Support", value: "Always", suffix: "" },
             ].map((stat, index) => (
               <motion.div
                 key={index}
@@ -160,7 +161,13 @@ export default function HeroDesktop() {
                 whileHover={{ scale: 1.05, y: -4 }}
               >
                 <motion.dt className="text-base/7 text-gray-300">{stat.label}</motion.dt>
-                <motion.dd className="text-4xl font-semibold tracking-tight text-white">{stat.value}</motion.dd>
+                <motion.dd className="text-4xl font-semibold tracking-tight text-white">
+                  {typeof stat.value === "number" ? (
+                    <Counter to={stat.value} suffix={stat.suffix} duration={2.5} />
+                  ) : (
+                    stat.value
+                  )}
+                </motion.dd>
               </motion.div>
             ))}
           </motion.dl>
