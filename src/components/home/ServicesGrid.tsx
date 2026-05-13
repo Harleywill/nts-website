@@ -63,16 +63,18 @@ export default function ServicesGrid() {
                 animate={{
                   width: isExpanded ? "900px" : "100%",
                   height: isExpanded ? "600px" : "auto",
-                  position: isExpanded ? "fixed" : "relative",
-                  top: isExpanded ? "50%" : "auto",
-                  left: isExpanded ? "50%" : "auto",
                   x: isExpanded ? "-50%" : "0%",
                   y: isExpanded ? "-50%" : "0%",
-                  zIndex: isExpanded ? 50 : 10,
                 }}
                 transition={{
                   duration: 0.5,
                   ease: "easeInOut",
+                }}
+                style={{
+                  position: isExpanded ? "fixed" : "relative",
+                  top: isExpanded ? "50%" : "auto",
+                  left: isExpanded ? "50%" : "auto",
+                  zIndex: isExpanded ? 50 : 10,
                 }}
               >
                 <motion.button
