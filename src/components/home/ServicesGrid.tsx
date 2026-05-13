@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { FaArrowRight, FaTimes, FaFaucet, FaWind, FaHome, FaBuilding, FaSnowflake, FaCheckCircle } from "react-icons/fa";
 import { SERVICES } from "@/lib/constants";
 
@@ -112,16 +113,21 @@ export default function ServicesGrid() {
                   </div>
 
                   {isExpanded && (
-                    <button
+                    <motion.button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleGoToPage(service.id);
                       }}
-                      className="px-4 py-2 rounded-lg font-semibold text-white text-sm transition-all duration-200"
+                      className="px-4 py-2 rounded-lg font-semibold text-white text-sm"
                       style={{ backgroundColor: "#4caf50" }}
+                      whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(76, 175, 80, 0.5)" }}
+                      whileTap={{ scale: 0.95 }}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
                     >
                       Full Page
-                    </button>
+                    </motion.button>
                   )}
                 </div>
               </div>
