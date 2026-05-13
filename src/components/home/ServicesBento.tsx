@@ -90,7 +90,7 @@ export default function ServicesBento() {
   const [expanded, setExpanded] = useState<string | null>(null);
 
   return (
-    <div className="relative py-24 sm:py-32 overflow-hidden bg-gray-900">
+    <div className="relative py-24 sm:py-32 overflow-hidden" style={{ backgroundColor: "#101828" }}>
       {/* Gradient Blob Background */}
       <div aria-hidden="true" className="absolute inset-x-0 top-0 -z-10 transform-gpu overflow-hidden blur-3xl">
         <div
