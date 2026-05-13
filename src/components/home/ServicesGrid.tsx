@@ -19,14 +19,16 @@ export default function ServicesGrid() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const handleCardClick = (serviceId: string) => {
-    setExpandedId(serviceId);
+    if (expandedId === serviceId) {
+      setExpandedId(null);
+    } else {
+      setExpandedId(serviceId);
+    }
   };
 
   const handleGoToPage = (serviceId: string) => {
     router.push(`/services/${serviceId}`);
   };
-
-  const expandedService = expandedId ? SERVICES.find((s) => s.id === expandedId) : null;
 
   return (
     <section
@@ -46,105 +48,82 @@ export default function ServicesGrid() {
           </p>
         </div>
 
-        {/* Modal Backdrop */}
-        {expandedId && (
-          <div
-            className="fixed inset-0 bg-black/50 z-40 flex items-center justify-center"
-            onClick={() => setExpandedId(null)}
-          >
-            {expandedService && (
-              <div
-                className="bg-gray-900 rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto relative border border-gray-700"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {/* Close Button */}
-                <button
-                  onClick={() => setExpandedId(null)}
-                  className="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors"
-                  aria-label="Close"
-                >
-                  <FaTimes size={28} />
-                </button>
+        {/* Services Grid */}
+        <div
+          className="grid gap-8"
+          style={{
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          }}
+        >
+          {SERVICES.filter((service) => service.id !== "commercial-servicing").map((service) => {
+            const isExpanded = expandedId === service.id;
 
-                {/* Icon */}
-                <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-lg bg-green-500/10">
+            return (
+              <button
+                key={service.id}
+                onClick={() => handleCardClick(service.id)}
+                className="group rounded-2xl shadow-md border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col p-8 transition-all duration-300 text-left"
+                style={{
+                  backgroundColor: "#1f2937",
+                  gridColumn: isExpanded ? "span 2" : "span 1",
+                  minHeight: isExpanded ? "500px" : "auto",
+                }}
+              >
+                <div className="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors flex-shrink-0">
                   <div style={{ color: "#4caf50" }}>
-                    {iconMap[expandedService.icon] || <FaCheckCircle size={40} />}
+                    {iconMap[service.icon] || <FaCheckCircle size={36} />}
                   </div>
                 </div>
 
-                {/* Title */}
-                <h3 className="text-3xl font-bold text-white mb-4">
-                  {expandedService.title}
+                <h3 className="font-semibold text-xl mb-3 text-white" style={{ fontSize: isExpanded ? "24px" : "20px" }}>
+                  {service.title}
                 </h3>
 
-                {/* Description */}
-                <p className="text-gray-300 text-lg mb-6 leading-relaxed">
-                  {expandedService.description}
+                <p className="text-gray-300 mb-6 leading-relaxed flex-grow" style={{ fontSize: isExpanded ? "15px" : "14px" }}>
+                  {service.description}
                 </p>
 
-                {/* What's Included */}
-                <div className="mb-8">
-                  <h4 className="text-xl font-semibold text-white mb-4">What's Included:</h4>
-                  <div className="space-y-3">
-                    {expandedService.details &&
-                      expandedService.details.map((detail, idx) => (
-                        <div key={idx} className="flex items-start gap-3">
-                          <span style={{ color: "#4caf50" }} className="text-xl mt-0.5 flex-shrink-0">
-                            ✓
-                          </span>
-                          <span className="text-gray-300 text-base">{detail}</span>
-                        </div>
-                      ))}
+                {isExpanded && (
+                  <div className="mb-6">
+                    <h4 className="text-lg font-semibold text-white mb-3">What's Included:</h4>
+                    <div className="space-y-2">
+                      {service.details &&
+                        service.details.map((detail, idx) => (
+                          <div key={idx} className="flex items-start gap-2">
+                            <span style={{ color: "#4caf50" }} className="text-lg flex-shrink-0">
+                              ✓
+                            </span>
+                            <span className="text-gray-300 text-sm">{detail}</span>
+                          </div>
+                        ))}
+                    </div>
                   </div>
+                )}
+
+                <div className="flex items-center justify-between mt-auto">
+                  <div
+                    className="inline-flex items-center gap-2 font-semibold transition-all duration-200 group-hover:gap-3"
+                    style={{ color: "#4caf50" }}
+                  >
+                    {isExpanded ? "View Full" : "Learn More"} <FaArrowRight size={14} />
+                  </div>
+
+                  {isExpanded && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleGoToPage(service.id);
+                      }}
+                      className="px-4 py-2 rounded-lg font-semibold text-white text-sm transition-all duration-200"
+                      style={{ backgroundColor: "#4caf50" }}
+                    >
+                      Full Page
+                    </button>
+                  )}
                 </div>
-
-                {/* CTA Button */}
-                <button
-                  onClick={() => handleGoToPage(expandedService.id)}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all duration-200 hover:gap-3"
-                  style={{ backgroundColor: "#4caf50" }}
-                >
-                  View Full Service <FaArrowRight size={16} />
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Services Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {SERVICES.filter((service) => service.id !== "commercial-servicing").map((service) => (
-            <button
-              key={service.id}
-              onClick={() => handleCardClick(service.id)}
-              className="group rounded-2xl shadow-md border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col p-8 transition-all duration-300 text-left"
-              style={{
-                backgroundColor: "#1f2937",
-              }}
-            >
-              <div className="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors">
-                <div style={{ color: "#4caf50" }}>
-                  {iconMap[service.icon] || <FaCheckCircle size={36} />}
-                </div>
-              </div>
-
-              <h3 className="font-semibold text-xl mb-3 text-white">
-                {service.title}
-              </h3>
-
-              <p className="text-gray-300 mb-6 leading-relaxed flex-grow">
-                {service.description}
-              </p>
-
-              <div
-                className="inline-flex items-center gap-2 font-semibold transition-all duration-200 group-hover:gap-3"
-                style={{ color: "#4caf50" }}
-              >
-                Learn More <FaArrowRight size={14} />
-              </div>
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
       </div>
     </section>
