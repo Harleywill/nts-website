@@ -113,13 +113,7 @@ export default function ServicesBento() {
 
         {/* Desktop/Tablet: Traditional Grid */}
         <div className="hidden md:block">
-          <motion.div
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true, amount: 0.2 }}
-          >
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service) => {
               const Icon = service.icon;
               const isExpanded = expanded === service.id;
@@ -180,21 +174,16 @@ export default function ServicesBento() {
                 </div>
               );
             })}
-          </motion.div>
+          </div>
         </div>
 
         {/* Mobile: 2-Column Grid with Expand Animation */}
         <div className="md:hidden">
-          <motion.div
+          <div
             className="grid gap-4"
             style={{
               gridTemplateColumns: "repeat(2, 1fr)"
             }}
-            layout
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true, amount: 0.2 }}
           >
             {services.map((service, idx) => {
               const Icon = service.icon;
@@ -276,7 +265,7 @@ export default function ServicesBento() {
                 </motion.div>
               );
             })}
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>
