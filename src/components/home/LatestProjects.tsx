@@ -94,7 +94,7 @@ export default function LatestProjects() {
     <section className="py-16 sm:py-24 lg:py-32 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
       <div className="mx-auto max-w-7xl">
         <motion.div
-          className="mx-auto max-w-2xl lg:mx-0"
+          className="mx-auto max-w-2xl text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -113,16 +113,16 @@ export default function LatestProjects() {
         <div className="mt-8 sm:mt-10 border-t border-gray-700 pt-8 sm:pt-12">
           {/* Projects Grid - 3 on desktop, 2 on tablet, 1 on mobile */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {visibleProjects.map((project) => (
+            {visibleProjects.map((project, idx) => (
               <motion.div
                 key={project.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true, amount: 0.2 }}
-                className="flex flex-col rounded-2xl overflow-hidden border border-gray-700 shadow-md h-full"
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5, delay: idx * 0.12, ease: "easeOut" }}
+                viewport={{ once: true, amount: 0.3 }}
+                className="flex flex-col rounded-2xl overflow-hidden border border-gray-700 shadow-md h-full hover:border-green-500 hover:shadow-lg transition-all duration-300"
                 style={{ backgroundColor: "#1f2937" }}
-                whileHover={{ scale: 1.03, y: -4 }}
+                whileHover={{ scale: 1.05, y: -6, boxShadow: "0 20px 25px -5px rgba(76, 175, 80, 0.2)" }}
               >
                 <div className="relative w-full h-40 sm:h-56 overflow-hidden bg-gray-600 flex-shrink-0">
                   <motion.img
