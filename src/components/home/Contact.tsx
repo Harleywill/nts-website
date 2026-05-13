@@ -127,14 +127,21 @@ export default function Contact() {
         </p>
       </div>
 
-      <motion.form
-        onSubmit={handleSubmit}
-        className="mx-auto mt-16 max-w-xl sm:mt-20"
-        variants={staggerContainerVariants}
-        initial="hidden"
-        whileInView="visible"
+      <motion.div
+        className="mx-auto mt-16 max-w-xl sm:mt-20 bg-white rounded-2xl shadow-lg p-8 sm:p-12 border border-gray-200"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
         viewport={{ once: true, amount: 0.2 }}
       >
+        <motion.form
+          onSubmit={handleSubmit}
+          className="w-full"
+          variants={staggerContainerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
         {/* Error Message */}
         <AnimatePresence>
           {error && (
@@ -345,7 +352,8 @@ export default function Contact() {
             </AnimatePresence>
           </motion.button>
         </motion.div>
-      </motion.form>
+        </motion.form>
+      </motion.div>
     </section>
   );
 }
