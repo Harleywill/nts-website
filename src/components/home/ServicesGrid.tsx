@@ -23,10 +23,10 @@ export default function ServicesGrid() {
   return (
     <section
       className="py-16 sm:py-20 lg:py-28"
-      style={{ backgroundColor: "#101828" }}
+      style={{ backgroundColor: "#101828", pointerEvents: "auto", position: "relative", zIndex: 1 }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ pointerEvents: "auto", position: "relative", zIndex: 1 }}>
+        <div className="text-center mb-16" style={{ pointerEvents: "auto", position: "relative" }}>
           <h2
             className="text-3xl sm:text-4xl font-bold mb-4"
             style={{ color: "#ffffff" }}
@@ -38,13 +38,13 @@ export default function ServicesGrid() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 [&>:nth-child(4)]:md:col-start-2 [&>:nth-child(n+4)]:md:place-self-center">
+        <div className="grid md:grid-cols-3 gap-8 [&>:nth-child(4)]:md:col-start-2 [&>:nth-child(n+4)]:md:place-self-center" style={{ pointerEvents: "auto", position: "relative", zIndex: 1 }}>
           {SERVICES.filter((service) => service.id !== "commercial-servicing").map((service, idx) => (
             <button
               key={service.id}
               onClick={() => handleCardClick(service.id)}
               className="group rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col h-full hover:scale-105 hover:-translate-y-1 hover:shadow-lg w-full text-left bg-transparent"
-              style={{ backgroundColor: "#1f2937" }}
+              style={{ backgroundColor: "#1f2937", pointerEvents: "auto", position: "relative", zIndex: 1 }}
             >
               <div
                 className="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-lg transition-all duration-300 group-hover:bg-green-500/20"
