@@ -186,12 +186,12 @@ export default function ServicesBento() {
         {/* Mobile: 2-Column Grid with Expand Animation */}
         <div className="md:hidden">
           <motion.div
-            className="grid gap-4 auto-rows-max"
+            className="grid gap-4"
             style={{
               gridTemplateColumns: "repeat(2, 1fr)",
-              gridAutoFlow: "dense",
-              justifyItems: expanded ? "stretch" : "auto"
+              gridAutoFlow: "dense"
             }}
+            layout
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -205,12 +205,21 @@ export default function ServicesBento() {
               return (
                 <motion.div
                   key={service.id}
-                  className={`rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-4 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 cursor-pointer flex flex-col justify-between ${
-                    isExpanded ? "col-span-2 min-h-96" : ""
+                  className={`rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-4 border border-gray-700/50 hover:border-green-500/50 cursor-pointer flex flex-col justify-between ${
+                    isExpanded ? "col-span-2" : ""
                   } ${isLastOdd ? "col-span-2 mx-auto max-w-xs" : ""}`}
                   onClick={() => setExpanded(isExpanded ? null : service.id)}
                   layout
                   layoutId={`service-mobile-${service.id}`}
+                  transition={{
+                    layout: { duration: 0.4, ease: "easeInOut" },
+                  }}
+                  animate={{
+                    height: isExpanded ? "auto" : "auto"
+                  }}
+                  style={{
+                    minHeight: isExpanded ? "384px" : undefined
+                  }}
                 >
                   {!isExpanded ? (
                     <>
