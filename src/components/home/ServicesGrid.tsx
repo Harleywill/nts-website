@@ -76,8 +76,8 @@ export default function ServicesGrid() {
               >
                 <motion.button
                   onClick={(e) => handleCardClick(service.id, e)}
-                  className={`group rounded-2xl shadow-md transition-all duration-300 border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col w-full text-left bg-transparent relative ${
-                    isExpanded ? "p-8 sm:p-12 min-h-[600px]" : "p-8 h-full"
+                  className={`group rounded-2xl shadow-md border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col w-full text-left bg-transparent relative ${
+                    isExpanded ? "p-8 sm:p-12" : "p-8"
                   }`}
                   style={{
                     backgroundColor: "#1f2937",
@@ -85,17 +85,18 @@ export default function ServicesGrid() {
                     position: "relative",
                     zIndex: isExpanded ? 10 : 1,
                   }}
-                  initial={isExpanded ? { opacity: 0, scale: 0.8 } : { opacity: 0, y: 30, scale: 0.95 }}
+                  layout
+                  initial={false}
                   animate={{
                     opacity: isExpanded ? 1 : expandedId ? 0.3 : 1,
-                    y: 0,
-                    scale: 1,
+                    height: isExpanded ? "auto" : "100%",
                   }}
-                  transition={
-                    isExpanded
-                      ? { duration: 0.5, type: "spring", stiffness: 300, damping: 30 }
-                      : { duration: 0.3, delay: idx * 0.1 }
-                  }
+                  transition={{
+                    duration: 0.5,
+                    type: "spring",
+                    stiffness: isExpanded ? 300 : 100,
+                    damping: isExpanded ? 30 : 20,
+                  }}
                   viewport={{ once: true, amount: 0.3 }}
                   whileHover={!isExpanded ? { scale: 1.05, y: -4 } : {}}
                 >
