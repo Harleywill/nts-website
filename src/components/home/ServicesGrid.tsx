@@ -1,7 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { FaArrowRight, FaFaucet, FaWind, FaHome, FaBuilding, FaSnowflake, FaCheckCircle } from "react-icons/fa";
 import { SERVICES } from "@/lib/constants";
 import { useInView } from "react-intersection-observer";
@@ -16,6 +16,7 @@ const iconMap: { [key: string]: React.ReactNode } = {
 };
 
 export default function ServicesGrid() {
+  const router = useRouter();
   const { ref, inView } = useInView({
     threshold: 0.2,
     triggerOnce: true,
@@ -38,6 +39,10 @@ export default function ServicesGrid() {
       y: 0,
       transition: { duration: 0.5 },
     },
+  };
+
+  const handleCardClick = (serviceId: string) => {
+    router.push(`/services/${serviceId}`);
   };
 
   return (
@@ -71,42 +76,42 @@ export default function ServicesGrid() {
           animate={inView ? "visible" : "hidden"}
         >
           {SERVICES.filter((service) => service.id !== "commercial-servicing").map((service) => (
-            <Link key={service.id} href={`/services/${service.id}`}>
-              <motion.div
-                variants={cardVariants}
-                className="group rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col h-full"
-                style={{ backgroundColor: "#1f2937" }}
-                whileHover={{ scale: 1.05, y: -4 }}
+            <motion.div
+              key={service.id}
+              variants={cardVariants}
+              onClick={() => handleCardClick(service.id)}
+              className="group rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col h-full"
+              style={{ backgroundColor: "#1f2937" }}
+              whileHover={{ scale: 1.05, y: -4 }}
+            >
+              <div
+                className="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-lg transition-all duration-300 group-hover:bg-green-500/20"
+                style={{ backgroundColor: "rgba(76, 175, 80, 0.1)" }}
               >
-                <div
-                  className="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-lg transition-all duration-300 group-hover:bg-green-500/20"
-                  style={{ backgroundColor: "rgba(76, 175, 80, 0.1)" }}
-                >
-                  <div style={{ color: "#4caf50" }}>
-                    {iconMap[service.icon] || <FaCheckCircle size={36} />}
-                  </div>
+                <div style={{ color: "#4caf50" }}>
+                  {iconMap[service.icon] || <FaCheckCircle size={36} />}
                 </div>
+              </div>
 
-                <h3 className="text-xl font-semibold mb-3 text-white">
-                  {service.title}
-                </h3>
+              <h3 className="text-xl font-semibold mb-3 text-white">
+                {service.title}
+              </h3>
 
-                <p className="text-gray-300 mb-6 text-sm leading-relaxed flex-grow">
-                  {service.description}
-                </p>
+              <p className="text-gray-300 mb-6 text-sm leading-relaxed flex-grow">
+                {service.description}
+              </p>
 
-                <div
-                  className="inline-flex items-center gap-2 font-semibold transition-all duration-200 group-hover:gap-3"
-                  style={{ color: "#4caf50" }}
-                >
-                  Learn More
-                  <FaArrowRight
-                    size={14}
-                    className="transition-transform"
-                  />
-                </div>
-              </motion.div>
-            </Link>
+              <div
+                className="inline-flex items-center gap-2 font-semibold transition-all duration-200 group-hover:gap-3"
+                style={{ color: "#4caf50" }}
+              >
+                Learn More
+                <FaArrowRight
+                  size={14}
+                  className="transition-transform"
+                />
+              </div>
+            </motion.div>
           ))}
         </motion.div>
       </div>
