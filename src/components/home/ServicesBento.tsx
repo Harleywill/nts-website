@@ -188,8 +188,7 @@ export default function ServicesBento() {
           <motion.div
             className="grid gap-4"
             style={{
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gridAutoFlow: "dense"
+              gridTemplateColumns: "repeat(2, 1fr)"
             }}
             layout
             initial={{ opacity: 0, y: 20 }}
