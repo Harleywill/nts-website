@@ -42,16 +42,8 @@ const cardVariants = {
 // Variants for side panel slide
 const panelVariants = {
   hidden: { x: 400, opacity: 0 },
-  visible: {
-    x: 0,
-    opacity: 1,
-    transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] },
-  },
-  exit: {
-    x: 400,
-    opacity: 0,
-    transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] },
-  },
+  visible: { x: 0, opacity: 1 },
+  exit: { x: 400, opacity: 0 },
 };
 
 // Variants for backdrop fade
@@ -170,6 +162,7 @@ export default function ServicesGrid() {
               initial="hidden"
               animate="visible"
               exit="exit"
+              transition={{ duration: 0.4, type: "tween" }}
               className="fixed right-0 top-0 h-full w-full sm:w-96 bg-gray-900 shadow-2xl overflow-y-auto z-50"
               style={{ backgroundColor: "#1a1f2e" }}
             >
