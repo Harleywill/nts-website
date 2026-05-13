@@ -101,15 +101,19 @@ export default function LatestProjects() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 bg-white h-full"
+                className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-md bg-white h-full"
+                whileHover={{ scale: 1.03, y: -8, boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)" }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="relative w-full h-40 sm:h-56 lg:h-80 overflow-hidden bg-gray-200 flex-shrink-0">
-                  <img
+                <motion.div className="relative w-full h-40 sm:h-56 lg:h-80 overflow-hidden bg-gray-200 flex-shrink-0">
+                  <motion.img
                     src={currentProject.imageUrl || "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"}
                     alt={currentProject.title}
                     className="w-full h-full object-cover"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.4 }}
                   />
-                </div>
+                </motion.div>
 
                 <div className="p-4 sm:p-6 lg:p-8 flex flex-col grow overflow-y-auto">
                   <div className="flex items-center gap-x-3 text-xs sm:text-sm flex-shrink-0">
