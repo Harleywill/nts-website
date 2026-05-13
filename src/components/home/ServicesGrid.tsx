@@ -45,7 +45,7 @@ export default function ServicesGrid() {
     <section
       ref={ref}
       className="py-16 sm:py-20 lg:py-28"
-      style={{ backgroundColor: "#f5f5f5" }}
+      style={{ backgroundColor: "#101828" }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -58,9 +58,9 @@ export default function ServicesGrid() {
             text="Our Services"
             level="h2"
             className="text-3xl sm:text-4xl font-bold mb-4"
-            style={{ color: "#1a2f6e" }}
+            style={{ color: "#ffffff" }}
           />
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Comprehensive mechanical and electrical services tailored to your needs
           </p>
         </motion.div>
@@ -80,14 +80,14 @@ export default function ServicesGrid() {
             >
               <div
                 className="mb-4 inline-block p-3 rounded-lg"
-                style={{ backgroundColor: "#f5f5f5", color: "#4caf50" }}
+                style={{ backgroundColor: "#101828", color: "#4caf50" }}
               >
                 {iconMap[service.icon] || <FaCheckCircle size={40} />}
               </div>
 
               <h3
                 className="text-xl font-bold mb-3"
-                style={{ color: "#1a2f6e" }}
+                style={{ color: "#ffffff" }}
               >
                 {service.title}
               </h3>
