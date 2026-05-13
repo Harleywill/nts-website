@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { FaArrowRight, FaFaucet, FaWind, FaHome, FaBuilding, FaSnowflake, FaCheckCircle } from "react-icons/fa";
 import { SERVICES } from "@/lib/constants";
 
@@ -26,7 +27,14 @@ export default function ServicesGrid() {
       style={{ backgroundColor: "#101828", pointerEvents: "auto", position: "relative", zIndex: 1 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ pointerEvents: "auto", position: "relative", zIndex: 1 }}>
-        <div className="text-center mb-16" style={{ pointerEvents: "auto", position: "relative" }}>
+        <motion.div
+          className="text-center mb-16"
+          style={{ pointerEvents: "auto", position: "relative" }}
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <h2
             className="text-3xl sm:text-4xl font-bold mb-4"
             style={{ color: "#ffffff" }}
@@ -36,15 +44,20 @@ export default function ServicesGrid() {
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Comprehensive mechanical and electrical services tailored to your needs
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8 [&>:nth-child(4)]:md:col-start-2 [&>:nth-child(n+4)]:md:place-self-center" style={{ pointerEvents: "auto", position: "relative", zIndex: 1 }}>
           {SERVICES.filter((service) => service.id !== "commercial-servicing").map((service, idx) => (
-            <button
+            <motion.button
               key={service.id}
               onClick={() => handleCardClick(service.id)}
-              className="group rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col h-full hover:scale-105 hover:-translate-y-1 hover:shadow-lg w-full text-left bg-transparent"
+              className="group rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col h-full w-full text-left bg-transparent"
               style={{ backgroundColor: "#1f2937", pointerEvents: "auto", position: "relative", zIndex: 1 }}
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.5, delay: idx * 0.1, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.3 }}
+              whileHover={{ scale: 1.05, y: -4 }}
             >
               <div
                 className="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-lg transition-all duration-300 group-hover:bg-green-500/20"
@@ -73,7 +86,7 @@ export default function ServicesGrid() {
                   className="transition-transform"
                 />
               </div>
-            </button>
+            </motion.button>
           ))}
         </div>
       </div>
