@@ -111,38 +111,119 @@ export default function ServicesBento() {
           </p>
         </div>
 
-        {/* Services Grid - Mobile: 1 col, Tablet: 2 col, Desktop: 3 col */}
-        <motion.div
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          {services.map((service) => {
-            const Icon = service.icon;
-            const isExpanded = expanded === service.id;
+        {/* Desktop/Tablet: Traditional Grid */}
+        <div className="hidden md:block">
+          <motion.div
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            {services.map((service) => {
+              const Icon = service.icon;
+              const isExpanded = expanded === service.id;
 
-            return (
-              <div key={service.id}>
+              return (
+                <div key={service.id}>
+                  <motion.div
+                    className="h-full rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-6 sm:p-8 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 flex flex-col justify-between group cursor-pointer lg:cursor-auto"
+                    onClick={() => setExpanded(isExpanded ? null : service.id)}
+                    layoutId={`service-${service.id}`}
+                  >
+                    {!isExpanded ? (
+                      <>
+                        <div>
+                          <div className="inline-block p-3 rounded-lg bg-green-500/10 mb-4 group-hover:bg-green-500/20 transition-colors">
+                            <Icon size={28} style={{ color: "#4caf50" }} />
+                          </div>
+                          <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">{service.title}</h3>
+                          <p className="text-gray-300 text-sm sm:text-base leading-relaxed">{service.description}</p>
+                        </div>
+                        <button
+                          className="mt-4 h-11 sm:h-auto sm:mt-6 inline-flex items-center justify-center sm:justify-start w-full sm:w-auto gap-2 font-semibold transition-colors hover:text-green-400 sm:text-base text-sm py-2"
+                          style={{ color: "#4caf50" }}
+                          aria-expanded="false"
+                        >
+                          Learn More <span aria-hidden="true">→</span>
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <div>
+                          <div className="flex justify-between items-start mb-4">
+                            <h3 className="text-xl sm:text-2xl font-bold text-white flex-1">{service.title}</h3>
+                            <button onClick={(e) => { e.stopPropagation(); setExpanded(null); }} className="text-gray-400 hover:text-white ml-2">
+                              <FaTimes size={20} />
+                            </button>
+                          </div>
+                          <p className="text-gray-300 text-sm sm:text-base mb-4">{service.description}</p>
+                          <div className="space-y-2">
+                            {service.details.map((detail, idx) => (
+                              <div key={idx} className="flex items-start gap-2">
+                                <span style={{ color: "#4caf50" }}>✓</span>
+                                <span className="text-gray-300 text-sm">{detail}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <Link
+                          href={service.link}
+                          className="mt-4 sm:mt-6 inline-flex items-center gap-2 font-semibold text-sm sm:text-base transition-colors hover:text-green-400"
+                          style={{ color: "#4caf50" }}
+                        >
+                          Full Details <span aria-hidden="true">→</span>
+                        </Link>
+                      </>
+                    )}
+                  </motion.div>
+                </div>
+              );
+            })}
+          </motion.div>
+        </div>
+
+        {/* Mobile: 2-Column Grid with Expand Animation */}
+        <div className="md:hidden">
+          <motion.div
+            className="grid gap-4 auto-rows-max"
+            style={{
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gridAutoFlow: "dense",
+              justifyItems: expanded ? "stretch" : "auto"
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            {services.map((service, idx) => {
+              const Icon = service.icon;
+              const isExpanded = expanded === service.id;
+              const isLastOdd = idx === services.length - 1 && services.length % 2 === 1 && !expanded;
+
+              return (
                 <motion.div
-                  className="h-full rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-6 sm:p-8 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 flex flex-col justify-between group cursor-pointer lg:cursor-auto"
+                  key={service.id}
+                  className={`rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-4 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 cursor-pointer flex flex-col justify-between ${
+                    isExpanded ? "col-span-2 min-h-96" : ""
+                  } ${isLastOdd ? "col-span-2 mx-auto max-w-xs" : ""}`}
                   onClick={() => setExpanded(isExpanded ? null : service.id)}
-                  layoutId={`service-${service.id}`}
+                  layout
+                  layoutId={`service-mobile-${service.id}`}
                 >
                   {!isExpanded ? (
                     <>
                       <div>
-                        <div className="inline-block p-3 rounded-lg bg-green-500/10 mb-4 group-hover:bg-green-500/20 transition-colors">
-                          <Icon size={28} style={{ color: "#4caf50" }} />
+                        <div className="inline-block p-3 rounded-lg bg-green-500/10 mb-3">
+                          <Icon size={24} style={{ color: "#4caf50" }} />
                         </div>
-                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">{service.title}</h3>
-                        <p className="text-gray-300 text-sm sm:text-base leading-relaxed">{service.description}</p>
+                        <h3 className="text-lg font-bold text-white mb-2">{service.title}</h3>
+                        <p className="text-gray-300 text-sm leading-relaxed">{service.description}</p>
                       </div>
                       <button
-                        className="mt-4 h-11 sm:h-auto sm:mt-6 inline-flex items-center justify-center sm:justify-start w-full sm:w-auto gap-2 font-semibold transition-colors hover:text-green-400 sm:text-base text-sm py-2"
+                        className="mt-3 inline-flex items-center gap-2 font-semibold text-sm transition-colors hover:text-green-400"
                         style={{ color: "#4caf50" }}
-                        aria-expanded="false"
                       >
                         Learn More <span aria-hidden="true">→</span>
                       </button>
@@ -151,15 +232,24 @@ export default function ServicesBento() {
                     <>
                       <div>
                         <div className="flex justify-between items-start mb-4">
-                          <h3 className="text-xl sm:text-2xl font-bold text-white flex-1">{service.title}</h3>
-                          <button onClick={(e) => { e.stopPropagation(); setExpanded(null); }} className="text-gray-400 hover:text-white ml-2">
+                          <div className="inline-block p-3 rounded-lg bg-green-500/10">
+                            <Icon size={24} style={{ color: "#4caf50" }} />
+                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setExpanded(null);
+                            }}
+                            className="text-gray-400 hover:text-white"
+                          >
                             <FaTimes size={20} />
                           </button>
                         </div>
-                        <p className="text-gray-300 text-sm sm:text-base mb-4">{service.description}</p>
+                        <h3 className="text-xl font-bold text-white mb-3">{service.title}</h3>
+                        <p className="text-gray-300 text-sm mb-4">{service.description}</p>
                         <div className="space-y-2">
-                          {service.details.map((detail, idx) => (
-                            <div key={idx} className="flex items-start gap-2">
+                          {service.details.map((detail, didx) => (
+                            <div key={didx} className="flex items-start gap-2">
                               <span style={{ color: "#4caf50" }}>✓</span>
                               <span className="text-gray-300 text-sm">{detail}</span>
                             </div>
@@ -168,7 +258,7 @@ export default function ServicesBento() {
                       </div>
                       <Link
                         href={service.link}
-                        className="mt-4 sm:mt-6 inline-flex items-center gap-2 font-semibold text-sm sm:text-base transition-colors hover:text-green-400"
+                        className="mt-4 inline-flex items-center gap-2 font-semibold text-sm transition-colors hover:text-green-400"
                         style={{ color: "#4caf50" }}
                       >
                         Full Details <span aria-hidden="true">→</span>
@@ -176,10 +266,10 @@ export default function ServicesBento() {
                     </>
                   )}
                 </motion.div>
-              </div>
-            );
-          })}
-        </motion.div>
+              );
+            })}
+          </motion.div>
+        </div>
       </div>
     </div>
   );
