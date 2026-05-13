@@ -35,6 +35,21 @@ export default function ServicesGrid() {
       className="py-16 sm:py-20 lg:py-28"
       style={{ backgroundColor: "#101828", pointerEvents: "auto", position: "relative", zIndex: 1 }}
     >
+      {/* Backdrop overlay */}
+      <AnimatePresence>
+        {expandedId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setExpandedId(null)}
+            className="fixed inset-0 bg-black/40 z-40"
+            style={{ pointerEvents: "auto" }}
+          />
+        )}
+      </AnimatePresence>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ pointerEvents: "auto", position: "relative", zIndex: 1 }}>
         <motion.div
           className="text-center mb-16"
@@ -64,14 +79,24 @@ export default function ServicesGrid() {
                 key={service.id}
                 className={isExpanded ? "md:col-span-1" : ""}
                 style={isExpanded ? {
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  width: "100%",
-                  zIndex: 20,
+                  position: "fixed",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: "calc(100% - 32px)",
+                  maxWidth: "1000px",
+                  zIndex: 50,
+                  maxHeight: "80vh",
                 } : {
                   position: "relative",
+                }}
+                animate={{
+                  opacity: isExpanded ? 1 : 0.3,
+                  scale: isExpanded ? 1 : 0.95,
+                }}
+                transition={{
+                  duration: 0.3,
+                  ease: "easeOut",
                 }}
               >
                 <motion.button
@@ -83,21 +108,9 @@ export default function ServicesGrid() {
                     backgroundColor: "#1f2937",
                     pointerEvents: "auto",
                     position: "relative",
-                    zIndex: isExpanded ? 10 : 1,
+                    zIndex: 10,
                   }}
-                  layout
                   initial={false}
-                  animate={{
-                    opacity: isExpanded ? 1 : expandedId ? 0.3 : 1,
-                    height: isExpanded ? "auto" : "100%",
-                  }}
-                  transition={{
-                    duration: 0.5,
-                    type: "spring",
-                    stiffness: isExpanded ? 300 : 100,
-                    damping: isExpanded ? 30 : 20,
-                  }}
-                  viewport={{ once: true, amount: 0.3 }}
                   whileHover={!isExpanded ? { scale: 1.05, y: -4 } : {}}
                 >
                   <div
