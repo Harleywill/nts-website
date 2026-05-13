@@ -67,6 +67,9 @@ export default function ServicesGrid() {
                   backgroundColor: "#1f2937",
                   gridColumn: isExpanded ? "span 2" : "span 1",
                   minHeight: isExpanded ? "500px" : "auto",
+                  pointerEvents: "auto",
+                  position: "relative",
+                  zIndex: 10,
                 }}
               >
                 <div className="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors flex-shrink-0">
