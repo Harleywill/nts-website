@@ -61,20 +61,25 @@ export default function ServicesGrid() {
               <motion.div
                 key={service.id}
                 animate={{
-                  scale: isExpanded ? 1.3 : 1,
+                  width: isExpanded ? "900px" : "100%",
+                  height: isExpanded ? "600px" : "auto",
+                  position: isExpanded ? "fixed" : "relative",
+                  top: isExpanded ? "50%" : "auto",
+                  left: isExpanded ? "50%" : "auto",
+                  x: isExpanded ? "-50%" : "0%",
+                  y: isExpanded ? "-50%" : "0%",
                   zIndex: isExpanded ? 50 : 10,
                 }}
                 transition={{
-                  duration: 0.4,
+                  duration: 0.5,
                   ease: "easeInOut",
                 }}
               >
                 <motion.button
                   onClick={() => handleCardClick(service.id)}
-                  className={`group rounded-2xl shadow-md border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col w-full text-left bg-transparent relative p-8 transition-all duration-300`}
+                  className={`group rounded-2xl shadow-md border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col w-full text-left bg-transparent relative p-8 transition-all duration-300 h-full`}
                   style={{
                     backgroundColor: "#1f2937",
-                    minHeight: isExpanded ? "600px" : "auto",
                   }}
                 >
                   <div
