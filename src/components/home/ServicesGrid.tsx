@@ -62,9 +62,17 @@ export default function ServicesGrid() {
             return (
               <motion.div
                 key={service.id}
-                className={`${isExpanded ? "md:col-span-3" : ""}`}
-                layout
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className={isExpanded ? "md:col-span-1" : ""}
+                style={isExpanded ? {
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  width: "100%",
+                  zIndex: 20,
+                } : {
+                  position: "relative",
+                }}
               >
                 <motion.button
                   onClick={(e) => handleCardClick(service.id, e)}
