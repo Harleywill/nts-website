@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AnimatedHeading from "@/components/common/AnimatedHeading";
 import Image from "next/image";
@@ -17,6 +17,9 @@ interface Testimonial {
 export default function Testimonials() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsToShow, setItemsToShow] = useState(3);
+  const touchStartX = useRef(0);
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -34,23 +37,33 @@ export default function Testimonials() {
 
     fetchTestimonials();
   }, []);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const touchStartX = useRef(0);
+
+  // Detect screen size for responsive behavior
+  useEffect(() => {
+    const checkScreenSize = () => {
+      if (window.innerWidth < 768) {
+        setItemsToShow(1);
+      } else if (window.innerWidth < 1024) {
+        setItemsToShow(2);
+      } else {
+        setItemsToShow(3);
+      }
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   const goToPrevious = () => {
     setCurrentIndex((prev) =>
-      prev === 0 ? testimonials.length - 1 : prev - 1
+      prev === 0 ? Math.max(0, testimonials.length - itemsToShow) : prev - 1
     );
   };
 
   const goToNext = () => {
-    setCurrentIndex((prev) =>
-      prev === testimonials.length - 1 ? 0 : prev + 1
-    );
-  };
-
-  const goToPage = (index: number) => {
-    setCurrentIndex(index);
+    const maxIndex = Math.max(0, testimonials.length - itemsToShow);
+    setCurrentIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -72,10 +85,11 @@ export default function Testimonials() {
     return null;
   }
 
-  const currentTestimonial = testimonials[currentIndex];
+  const visibleTestimonials = testimonials.slice(currentIndex, currentIndex + itemsToShow);
+  const maxIndex = Math.max(0, testimonials.length - itemsToShow);
 
   return (
-    <section className="relative isolate overflow-hidden px-6 py-16 sm:py-24 lg:py-32 lg:px-8" style={{ backgroundColor: "#101828" }}>
+    <section className="py-16 sm:py-24 lg:py-32 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
       <div className="mx-auto max-w-7xl">
         {/* NTS Logo */}
         <motion.div
@@ -83,7 +97,7 @@ export default function Testimonials() {
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, amount: 0.2 }}
-          className="flex justify-center mb-12"
+          className="flex justify-center mb-8 sm:mb-12"
         >
           <Image
             src="/images/ntsLogo.png"
@@ -99,95 +113,103 @@ export default function Testimonials() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, amount: 0.2 }}
-          className="text-center mb-8 sm:mb-12 lg:mb-16"
+          className="mx-auto max-w-2xl lg:mx-0 text-center mb-8 sm:mb-12"
         >
           <AnimatedHeading
             text="What Our Clients Say"
             level="h2"
-            className="text-3xl sm:text-4xl font-bold tracking-tight text-white lg:text-5xl mb-2 sm:mb-4"
+            className="text-3xl sm:text-4xl font-semibold tracking-tight text-white lg:text-5xl"
           />
-          <p className="text-base sm:text-lg text-gray-300">
+          <p className="mt-2 text-base sm:text-lg text-gray-300">
             Real feedback from satisfied customers across the UK
           </p>
         </motion.div>
 
-        <div
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          className="cursor-grab active:cursor-grabbing max-w-2xl mx-auto h-80 sm:h-[380px] lg:h-[420px]"
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentTestimonial.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="flex flex-col rounded-2xl p-4 sm:p-6 lg:p-10 border h-full overflow-y-auto"
-              style={{ backgroundColor: "#1f2937", borderColor: "#374151" }}
-              whileHover={{ scale: 1.03, y: -8, boxShadow: "0 20px 25px -5px rgba(76, 175, 80, 0.2)" }}
-            >
-              <div className="flex gap-1 mb-4 sm:mb-6 flex-shrink-0">
-                {[...Array(currentTestimonial.rating || 5)].map((_, i) => (
-                  <FaStar key={i} size={16} className="sm:w-5 sm:h-5" style={{ color: "#4caf50" }} />
-                ))}
-              </div>
-
-              <p className="text-sm sm:text-base lg:text-lg leading-relaxed text-gray-100 mb-6 sm:mb-8">
-                "{currentTestimonial.text}"
-              </p>
-
-              <div className="border-t border-gray-700 pt-4 sm:pt-6 flex-shrink-0">
-                <p className="font-semibold text-white text-sm sm:text-base">
-                  {currentTestimonial.name}
-                </p>
-                <p className="text-xs sm:text-sm text-gray-400 mt-1">
-                  {currentTestimonial.company}
-                </p>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <div className="mt-6 sm:mt-8 flex items-center justify-between sm:justify-center gap-4 sm:gap-8 max-w-2xl mx-auto">
-          <button
-            onClick={goToPrevious}
-            className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95 flex-shrink-0"
-            style={{ color: "#4caf50" }}
-            aria-label="Previous testimonial"
+        <div className="mt-8 sm:mt-10 border-t border-gray-700 pt-8 sm:pt-12">
+          {/* Testimonials Grid with Sliding Animation */}
+          <motion.div
+            ref={{ current: null }}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+            layout
           >
-            <FaChevronLeft size={20} className="sm:w-6 sm:h-6" />
-          </button>
+            {visibleTestimonials.map((testimonial, idx) => (
+              <motion.div
+                key={testimonial.id}
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                viewport={{ once: true, amount: 0.2 }}
+                className="flex flex-col rounded-2xl overflow-hidden border border-gray-700 shadow-md h-full"
+                style={{ backgroundColor: "#1f2937" }}
+                whileHover={{ scale: 1.03, y: -4 }}
+              >
+                <div className="p-4 sm:p-6 lg:p-6 flex flex-col grow">
+                  <div className="flex gap-1 mb-4 sm:mb-6 flex-shrink-0">
+                    {[...Array(testimonial.rating || 5)].map((_, i) => (
+                      <FaStar key={i} size={16} className="sm:w-5 sm:h-5" style={{ color: "#4caf50" }} />
+                    ))}
+                  </div>
 
-          <div className="flex gap-2 flex-wrap justify-center">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToPage(index)}
-                className={`rounded-full transition-all duration-300 ${
-                  index === currentIndex ? "w-8 h-2" : "w-2 h-2"
-                }`}
-                style={{
-                  backgroundColor:
-                    index === currentIndex ? "#4caf50" : "rgba(0, 0, 0, 0.2)",
-                }}
-                aria-label={`Go to testimonial ${index + 1}`}
-              />
+                  <p className="text-sm sm:text-base text-gray-300 leading-relaxed line-clamp-4 mb-4 sm:mb-6 flex-grow">
+                    "{testimonial.text}"
+                  </p>
+
+                  <div className="border-t border-gray-700 pt-4 sm:pt-6 flex-shrink-0">
+                    <p className="font-semibold text-white text-sm sm:text-base">
+                      {testimonial.name}
+                    </p>
+                    <p className="text-xs sm:text-sm text-gray-400 mt-1">
+                      {testimonial.company}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
             ))}
+          </motion.div>
+
+          {/* Navigation Controls */}
+          <div className="mt-8 flex items-center justify-center gap-4 sm:gap-6">
+            <button
+              onClick={goToPrevious}
+              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95 flex-shrink-0"
+              style={{ color: "#4caf50" }}
+              aria-label="Previous testimonials"
+            >
+              <FaChevronLeft size={20} className="sm:w-6 sm:h-6" />
+            </button>
+
+            <div className="flex gap-2 flex-wrap justify-center">
+              {Array.from({ length: Math.max(1, maxIndex + 1) }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`rounded-full transition-all duration-300 ${
+                    index === currentIndex ? "w-8 h-2" : "w-2 h-2"
+                  }`}
+                  style={{
+                    backgroundColor:
+                      index === currentIndex ? "#4caf50" : "rgba(255, 255, 255, 0.2)",
+                  }}
+                  aria-label={`Go to testimonial set ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={goToNext}
+              className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95 flex-shrink-0"
+              style={{ color: "#4caf50" }}
+              aria-label="Next testimonials"
+            >
+              <FaChevronRight size={20} className="sm:w-6 sm:h-6" />
+            </button>
           </div>
 
-          <button
-            onClick={goToNext}
-            className="p-2 rounded-full transition-all duration-200 hover:scale-110 active:scale-95 flex-shrink-0"
-            style={{ color: "#4caf50" }}
-            aria-label="Next testimonial"
-          >
-            <FaChevronRight size={20} className="sm:w-6 sm:h-6" />
-          </button>
-        </div>
-
-        <div className="mt-4 text-center text-xs sm:text-sm text-gray-400">
-          {currentIndex + 1} of {testimonials.length}
+          <div className="mt-4 text-center text-xs sm:text-sm text-gray-400">
+            {currentIndex + 1}-{Math.min(currentIndex + itemsToShow, testimonials.length)} of {testimonials.length}
+          </div>
         </div>
       </div>
     </section>

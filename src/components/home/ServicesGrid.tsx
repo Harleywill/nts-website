@@ -75,36 +75,36 @@ export default function ServicesGrid() {
             <motion.div
               key={service.id}
               variants={cardVariants}
-              className="group bg-white rounded-lg shadow-md p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-l-4"
-              style={{ borderColor: "#4caf50" }}
+              className="group rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col h-full"
+              style={{ backgroundColor: "#1f2937" }}
+              whileHover={{ scale: 1.05, y: -4 }}
             >
               <div
-                className="mb-4 inline-block p-3 rounded-lg"
-                style={{ backgroundColor: "#101828", color: "#4caf50" }}
+                className="mb-4 inline-block p-3 rounded-lg transition-all duration-300 group-hover:bg-green-500/20"
+                style={{ backgroundColor: "rgba(76, 175, 80, 0.1)" }}
               >
-                {iconMap[service.icon] || <FaCheckCircle size={40} />}
+                <div style={{ color: "#4caf50" }}>
+                  {iconMap[service.icon] || <FaCheckCircle size={40} />}
+                </div>
               </div>
 
-              <h3
-                className="text-xl font-bold mb-3"
-                style={{ color: "#ffffff" }}
-              >
+              <h3 className="text-xl font-bold mb-3 text-white">
                 {service.title}
               </h3>
 
-              <p className="text-gray-600 mb-6 text-sm leading-relaxed">
+              <p className="text-gray-300 mb-6 text-sm leading-relaxed flex-grow">
                 {service.description}
               </p>
 
               <Link
                 href={`/services/${service.id}`}
-                className="inline-flex items-center gap-2 font-semibold transition-colors duration-200 group-hover:text-green-600"
+                className="inline-flex items-center gap-2 font-semibold transition-all duration-200 group-hover:gap-3"
                 style={{ color: "#4caf50" }}
               >
                 Learn More
                 <FaArrowRight
                   size={14}
-                  className="group-hover:translate-x-1 transition-transform"
+                  className="transition-transform"
                 />
               </Link>
             </motion.div>
