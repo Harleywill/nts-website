@@ -73,7 +73,7 @@ export default function FeaturedNews() {
   const currentNews = news[currentIndex];
 
   return (
-    <section className="bg-white py-16 sm:py-24 lg:py-32 px-6 lg:px-8">
+    <section className="py-16 sm:py-24 lg:py-32 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
       <div className="mx-auto max-w-7xl">
         <motion.div
           className="mx-auto max-w-2xl lg:mx-0"
@@ -85,14 +85,14 @@ export default function FeaturedNews() {
           <AnimatedHeading
             text="Latest News"
             level="h2"
-            className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 lg:text-5xl"
+            className="text-3xl sm:text-4xl font-semibold tracking-tight text-white lg:text-5xl"
           />
-          <p className="mt-2 text-base sm:text-lg text-gray-600">
+          <p className="mt-2 text-base sm:text-lg text-gray-300">
             Stay updated with our latest news and announcements.
           </p>
         </motion.div>
 
-        <div className="mt-8 sm:mt-10 border-t border-gray-200 pt-8 sm:pt-12">
+        <div className="mt-8 sm:mt-10 border-t border-gray-700 pt-8 sm:pt-12">
           <div
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
@@ -105,7 +105,7 @@ export default function FeaturedNews() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-md bg-white h-full"
+                className="flex flex-col rounded-2xl overflow-hidden border border-gray-700 shadow-md h-full" style={{ backgroundColor: "#1f2937" }}
                 whileHover={{ scale: 1.03, y: -8, boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)" }}
               >
                 {currentNews.imageUrl && (
@@ -122,7 +122,7 @@ export default function FeaturedNews() {
 
                 <div className="p-4 sm:p-6 lg:p-8 flex flex-col grow overflow-y-auto">
                   <div className="flex items-center gap-x-3 text-xs sm:text-sm flex-shrink-0">
-                    <time dateTime={currentNews.createdAt} className="text-gray-500 font-medium">
+                    <time dateTime={currentNews.createdAt} className="text-gray-400 font-medium">
                       {new Date(currentNews.createdAt).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
@@ -137,11 +137,11 @@ export default function FeaturedNews() {
                     </span>
                   </div>
 
-                  <h3 className="mt-3 sm:mt-4 text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
+                  <h3 className="mt-3 sm:mt-4 text-xl sm:text-2xl lg:text-3xl font-semibold text-white">
                     {currentNews.title}
                   </h3>
 
-                  <p className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed">
+                  <p className="mt-3 text-sm sm:text-base text-gray-300 leading-relaxed">
                     {currentNews.content}
                   </p>
 
