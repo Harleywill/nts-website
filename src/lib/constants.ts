@@ -23,36 +23,84 @@ export const SERVICES = [
     title: "Plumbing & Heating",
     description: "Professional plumbing and heating solutions for domestic and commercial properties.",
     icon: "FaFaucet",
+    details: [
+      "Gas Safe registered engineers",
+      "Boiler installations & maintenance",
+      "Emergency repair service 24/7",
+      "Heating system design & optimization",
+      "Commercial heating solutions",
+      "Warranty & aftercare support"
+    ]
   },
   {
     id: "ventilation",
     title: "Ventilation",
     description: "Expert ventilation systems to ensure optimal air quality and circulation.",
     icon: "FaWind",
+    details: [
+      "Indoor air quality assessment",
+      "System design & installation",
+      "Regular maintenance & cleaning",
+      "Commercial ventilation solutions",
+      "Energy-efficient systems",
+      "Compliance with building regulations"
+    ]
   },
   {
     id: "domestic-servicing",
     title: "Domestic Servicing",
     description: "Regular maintenance and servicing for residential heating systems.",
     icon: "FaHome",
+    details: [
+      "Annual boiler servicing",
+      "System checks & diagnostics",
+      "Parts replacement & upgrades",
+      "Warranty & aftercare support",
+      "Energy efficiency improvements",
+      "Emergency call-out available"
+    ]
   },
   {
     id: "commercial-servicing",
     title: "Commercial Servicing",
     description: "Large-scale HVAC solutions tailored for commercial facilities.",
     icon: "FaBuilding",
+    details: [
+      "Multi-site support available",
+      "Planned maintenance programs",
+      "Emergency response teams",
+      "Compliance & certification support",
+      "24/7 monitoring available",
+      "Tailored service agreements"
+    ]
   },
   {
     id: "air-conditioning",
     title: "Air Conditioning",
     description: "Installation and maintenance of efficient air conditioning systems.",
     icon: "FaSnowflake",
+    details: [
+      "Energy-efficient cooling systems",
+      "Installation & maintenance",
+      "Preventative maintenance programs",
+      "Emergency repairs available",
+      "F-Gas certified technicians",
+      "Year-round climate control"
+    ]
   },
   {
     id: "commissioning",
     title: "Commissioning",
     description: "Professional system commissioning and optimization services.",
     icon: "FaCheckCircle",
+    details: [
+      "System startup & testing",
+      "Performance verification",
+      "Documentation & handover",
+      "Staff training provided",
+      "Optimization & tuning",
+      "Compliance certification"
+    ]
   },
 ];
 

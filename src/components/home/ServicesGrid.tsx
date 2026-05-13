@@ -124,32 +124,16 @@ export default function ServicesGrid() {
                       transition={{ delay: 0.2 }}
                       className="space-y-4 mb-8"
                     >
-                      <h4 className="text-lg font-semibold text-white">Key Features:</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-start gap-3">
-                          <span style={{ color: "#4caf50" }} className="text-lg mt-1 flex-shrink-0">
-                            ✓
-                          </span>
-                          <span className="text-gray-300">Professional expertise and certified engineers</span>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <span style={{ color: "#4caf50" }} className="text-lg mt-1 flex-shrink-0">
-                            ✓
-                          </span>
-                          <span className="text-gray-300">24/7 emergency support available</span>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <span style={{ color: "#4caf50" }} className="text-lg mt-1 flex-shrink-0">
-                            ✓
-                          </span>
-                          <span className="text-gray-300">Comprehensive solutions tailored to your needs</span>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <span style={{ color: "#4caf50" }} className="text-lg mt-1 flex-shrink-0">
-                            ✓
-                          </span>
-                          <span className="text-gray-300">Competitive pricing with no hidden costs</span>
-                        </div>
+                      <h4 className="text-lg font-semibold text-white">What's Included:</h4>
+                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                        {service.details && service.details.map((detail, idx) => (
+                          <div key={idx} className="flex items-start gap-3">
+                            <span style={{ color: "#4caf50" }} className="text-lg mt-1 flex-shrink-0">
+                              ✓
+                            </span>
+                            <span className="text-gray-300 text-sm">{detail}</span>
+                          </div>
+                        ))}
                       </div>
                     </motion.div>
                   )}
