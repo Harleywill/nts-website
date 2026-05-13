@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import AnimatedHeading from "@/components/common/AnimatedHeading";
+import Parallax from "@/components/common/Parallax";
 
 export default function AboutSection() {
   const features = [
@@ -76,13 +77,15 @@ export default function AboutSection() {
           </div>
         </div>
 
-        {/* Right Column - Image */}
+        {/* Right Column - Image with Parallax */}
         <div className="-mt-12 -ml-12 p-12 lg:sticky lg:top-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:overflow-hidden">
-          <img
-            src="/images/hvac-installation.jpg"
-            alt="HVAC Services"
-            className="w-3xl max-w-none rounded-xl bg-gray-800 shadow-xl ring-1 ring-white/10 sm:w-228"
-          />
+          <Parallax speed={0.3} className="origin-top">
+            <img
+              src="/images/hvac-installation.jpg"
+              alt="HVAC Services"
+              className="w-3xl max-w-none rounded-xl bg-gray-800 shadow-xl ring-1 ring-white/10 sm:w-228"
+            />
+          </Parallax>
         </div>
 
         {/* Bottom Left - Features List */}
