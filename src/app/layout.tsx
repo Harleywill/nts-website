@@ -5,6 +5,7 @@ import "./globals.css";
 import FaviconManager from "@/components/common/FaviconManager";
 import QuickEnquiryModal from "@/components/common/QuickEnquiryModal";
 import StickyButtonClient from "@/components/common/StickyButtonClient";
+import ScrollProgress from "@/components/common/ScrollProgress";
 import PageTransition from "@/components/layout/PageTransition";
 
 const inter = Inter({
@@ -89,6 +90,7 @@ gtag('config', 'G-PEK7PKH64Z');`,
           ></iframe>
         </noscript>
         {/* End Google Tag Manager (noscript) */}
+        <ScrollProgress />
         <FaviconManager />
         <PageTransition>{children}</PageTransition>
         <StickyButtonClient />
