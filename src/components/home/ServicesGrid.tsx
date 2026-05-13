@@ -15,6 +15,30 @@ const iconMap: { [key: string]: React.ReactNode } = {
   FaCheckCircle: <FaCheckCircle size={36} />,
 };
 
+// Variants for staggered container
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+// Variants for individual cards
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+    },
+  },
+};
+
 export default function ServicesGrid() {
   const router = useRouter();
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -37,7 +61,13 @@ export default function ServicesGrid() {
       style={{ backgroundColor: "#101828" }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true, amount: 0.2 }}
+          className="text-center mb-16"
+        >
           <h2
             className="text-3xl sm:text-4xl font-bold mb-4"
             style={{ color: "#ffffff" }}
@@ -47,22 +77,28 @@ export default function ServicesGrid() {
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Comprehensive mechanical and electrical services tailored to your needs
           </p>
-        </div>
+        </motion.div>
 
         {/* Services Grid */}
-        <div
+        <motion.div
           className="grid gap-8"
           style={{
             gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
           }}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
         >
           {SERVICES.filter((service) => service.id !== "commercial-servicing").map((service) => {
             const isExpanded = expandedId === service.id;
 
             return (
-              <div
+              <motion.div
                 key={service.id}
+                variants={cardVariants}
                 onClick={() => handleCardClick(service.id)}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 className="group rounded-2xl shadow-md border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col p-8 transition-all duration-300 text-left"
                 style={{
                   backgroundColor: "#1f2937",
@@ -130,10 +166,10 @@ export default function ServicesGrid() {
                     </motion.button>
                   )}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
