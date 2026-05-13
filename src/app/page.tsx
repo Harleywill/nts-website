@@ -4,6 +4,7 @@ import HeroMobile from "@/components/home/HeroMobile";
 import HeroDesktop from "@/components/home/HeroDesktop";
 import AboutSection from "@/components/home/AboutSection";
 import ServicesBento from "@/components/home/ServicesBento";
+import ServicesGrid from "@/components/home/ServicesGrid";
 import AccreditationsStrip from "@/components/home/AccreditationsStrip";
 import LatestProjects from "@/components/home/LatestProjects";
 import Testimonials from "@/components/home/Testimonials";
@@ -22,7 +23,13 @@ export default function Home() {
           <HeroDesktop />
         </div>
         <AboutSection />
-        <ServicesBento />
+        {/* Services: Bento layout on mobile, Grid on desktop */}
+        <div className="block md:hidden">
+          <ServicesBento />
+        </div>
+        <div className="hidden md:block">
+          <ServicesGrid />
+        </div>
         <AccreditationsStrip />
         <LatestProjects />
         <Testimonials />
