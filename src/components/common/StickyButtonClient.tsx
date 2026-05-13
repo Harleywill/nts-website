@@ -50,7 +50,6 @@ export default function StickyButtonClient() {
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" },
     },
     hover: {
       boxShadow: "0 -4px 20px rgba(76, 175, 80, 0.4)",
@@ -86,6 +85,7 @@ export default function StickyButtonClient() {
           variants={buttonVariants}
           initial="hidden"
           animate="visible"
+          transition={{ duration: 0.5, type: "spring", damping: 20 }}
           whileHover="hover"
           whileTap={{ scale: 0.95 }}
           aria-label="Get Free Quote"

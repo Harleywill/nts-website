@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { FaPaperPlane } from "react-icons/fa";
 import { SERVICES } from "@/lib/constants";
 import { useInView } from "react-intersection-observer";
+import { staggerContainerVariants, staggerItemVariants } from "@/lib/animations";
 
 export default function QuickEnquiry() {
   const { ref, inView } = useInView({
@@ -120,24 +121,38 @@ export default function QuickEnquiry() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <motion.form
+            onSubmit={handleSubmit}
+            className="space-y-6"
+            variants={staggerContainerVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {/* Error Message */}
-            {error && (
-              <div className="p-4 bg-red-500 bg-opacity-20 border border-red-400 rounded-lg text-red-200">
-                {error}
-              </div>
-            )}
+            <AnimatePresence>
+              {error && (
+                <motion.div
+                  className="p-4 bg-red-500 bg-opacity-20 border border-red-400 rounded-lg text-red-200"
+                  initial={{ opacity: 0 }}
+                  animate={{ x: [0, -10, 10, -10, 0], opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  {error}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <motion.div className="grid md:grid-cols-2 gap-6" variants={staggerContainerVariants}>
               {/* Name */}
-              <div>
+              <motion.div variants={staggerItemVariants}>
                 <label
                   htmlFor="name"
                   className="block text-sm font-semibold mb-2"
                 >
                   Name
                 </label>
-                <input
+                <motion.input
                   type="text"
                   id="name"
                   name="name"
@@ -146,24 +161,26 @@ export default function QuickEnquiry() {
                   placeholder="Your name"
                   className="w-full px-4 py-3 rounded-lg text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-green-400 transition-all"
                   style={{ color: "#333333" }}
+                  whileFocus={{ scale: 1.02, backgroundColor: "#f0fdf4" }}
                 />
-              </div>
+              </motion.div>
 
               {/* Service */}
-              <div>
+              <motion.div variants={staggerItemVariants}>
                 <label
                   htmlFor="service"
                   className="block text-sm font-semibold mb-2"
                 >
                   Service Required
                 </label>
-                <select
+                <motion.select
                   id="service"
                   name="service"
                   value={formData.service}
                   onChange={handleChange}
                   className="w-full px-4 py-3 rounded-lg text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-green-400 transition-all"
                   style={{ color: "#333333" }}
+                  whileFocus={{ scale: 1.02, backgroundColor: "#f0fdf4" }}
                 >
                   <option value="">Select a service...</option>
                   {SERVICES.map((service) => (
@@ -171,16 +188,16 @@ export default function QuickEnquiry() {
                       {service.title}
                     </option>
                   ))}
-                </select>
-              </div>
-            </div>
+                </motion.select>
+              </motion.div>
+            </motion.div>
 
             {/* Contact */}
-            <div>
+            <motion.div variants={staggerItemVariants}>
               <label htmlFor="contact" className="block text-sm font-semibold mb-2">
                 Phone / Email
               </label>
-              <input
+              <motion.input
                 type="text"
                 id="contact"
                 name="contact"
@@ -189,15 +206,16 @@ export default function QuickEnquiry() {
                 placeholder="Your phone number or email"
                 className="w-full px-4 py-3 rounded-lg text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-green-400 transition-all"
                 style={{ color: "#333333" }}
+                whileFocus={{ scale: 1.02, backgroundColor: "#f0fdf4" }}
               />
-            </div>
+            </motion.div>
 
             {/* Message */}
-            <div>
+            <motion.div variants={staggerItemVariants}>
               <label htmlFor="message" className="block text-sm font-semibold mb-2">
                 Message
               </label>
-              <textarea
+              <motion.textarea
                 id="message"
                 name="message"
                 value={formData.message}
@@ -206,35 +224,59 @@ export default function QuickEnquiry() {
                 rows={5}
                 className="w-full px-4 py-3 rounded-lg text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-green-400 transition-all resize-none"
                 style={{ color: "#333333" }}
+                whileFocus={{ scale: 1.02, backgroundColor: "#f0fdf4" }}
               />
-            </div>
+            </motion.div>
 
             {/* Submit Button */}
             <motion.button
               type="submit"
               disabled={submitted || loading}
+              variants={staggerItemVariants}
               whileHover={{ scale: submitted || loading ? 1 : 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="w-full sm:w-auto px-8 py-4 rounded-lg font-semibold text-white transition-all duration-200 flex items-center justify-center gap-2"
               style={{ backgroundColor: submitted ? "#10b981" : "#4caf50", opacity: loading ? 0.7 : 1 }}
             >
-              {submitted ? (
-                <>
-                  <span>✓ Thank you! We'll be in touch soon</span>
-                </>
-              ) : loading ? (
-                <>
-                  <span>Sending...</span>
-                  <div className="animate-spin">⏳</div>
-                </>
-              ) : (
-                <>
-                  <span>Send Enquiry</span>
-                  <FaPaperPlane size={16} />
-                </>
-              )}
+              <AnimatePresence mode="wait">
+                {submitted ? (
+                  <motion.span
+                    key="success"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    ✓ Thank you! We'll be in touch soon
+                  </motion.span>
+                ) : loading ? (
+                  <motion.div
+                    key="loading"
+                    className="flex items-center gap-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <span>Sending...</span>
+                    <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity }}>
+                      ⏳
+                    </motion.div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="default"
+                    className="flex items-center gap-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <span>Send Enquiry</span>
+                    <FaPaperPlane size={16} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.button>
-          </form>
+          </motion.form>
         </motion.div>
       </div>
     </section>

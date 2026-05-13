@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { staggerContainerVariants, staggerItemVariants, slideUpVariants } from "@/lib/animations";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -122,96 +124,123 @@ export default function Contact() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="mx-auto mt-16 max-w-xl sm:mt-20">
+      <motion.form
+        onSubmit={handleSubmit}
+        className="mx-auto mt-16 max-w-xl sm:mt-20"
+        variants={staggerContainerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         {/* Error Message */}
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-            {error}
-          </div>
-        )}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm"
+              initial={{ opacity: 0 }}
+              animate={{ x: [0, -10, 10, -10, 0], opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Success Message */}
-        {submitted && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
-            ✓ Thank you! We'll be in touch soon.
-          </div>
-        )}
+        <AnimatePresence>
+          {submitted && (
+            <motion.div
+              className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ type: "spring", damping: 20 }}
+            >
+              ✓ Thank you! We'll be in touch soon.
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-          <div>
+        <motion.div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2" variants={staggerContainerVariants}>
+          <motion.div variants={staggerItemVariants}>
             <label htmlFor="firstName" className="block text-sm/6 font-semibold text-gray-900">
               First name
             </label>
             <div className="mt-2.5">
-              <input
+              <motion.input
                 id="firstName"
                 name="firstName"
                 type="text"
                 autoComplete="given-name"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 border border-gray-300"
+                className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 border border-gray-300 transition-all"
+                whileFocus={{ scale: 1.02, backgroundColor: "#f0fdf4" }}
               />
             </div>
-          </div>
+          </motion.div>
 
-          <div>
+          <motion.div variants={staggerItemVariants}>
             <label htmlFor="lastName" className="block text-sm/6 font-semibold text-gray-900">
               Last name
             </label>
             <div className="mt-2.5">
-              <input
+              <motion.input
                 id="lastName"
                 name="lastName"
                 type="text"
                 autoComplete="family-name"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 border border-gray-300"
+                className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 border border-gray-300 transition-all"
+                whileFocus={{ scale: 1.02, backgroundColor: "#f0fdf4" }}
               />
             </div>
-          </div>
+          </motion.div>
 
-          <div className="sm:col-span-2">
+          <motion.div className="sm:col-span-2" variants={staggerItemVariants}>
             <label htmlFor="company" className="block text-sm/6 font-semibold text-gray-900">
               Company
             </label>
             <div className="mt-2.5">
-              <input
+              <motion.input
                 id="company"
                 name="company"
                 type="text"
                 autoComplete="organization"
                 value={formData.company}
                 onChange={handleChange}
-                className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 border border-gray-300"
+                className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 border border-gray-300 transition-all"
+                whileFocus={{ scale: 1.02, backgroundColor: "#f0fdf4" }}
               />
             </div>
-          </div>
+          </motion.div>
 
-          <div className="sm:col-span-2">
+          <motion.div className="sm:col-span-2" variants={staggerItemVariants}>
             <label htmlFor="email" className="block text-sm/6 font-semibold text-gray-900">
               Email
             </label>
             <div className="mt-2.5">
-              <input
+              <motion.input
                 id="email"
                 name="email"
                 type="email"
                 autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 border border-gray-300"
+                className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 border border-gray-300 transition-all"
+                whileFocus={{ scale: 1.02, backgroundColor: "#f0fdf4" }}
               />
             </div>
-          </div>
+          </motion.div>
 
-          <div className="sm:col-span-2">
+          <motion.div className="sm:col-span-2" variants={staggerItemVariants}>
             <label htmlFor="phone" className="block text-sm/6 font-semibold text-gray-900">
               Phone number
             </label>
             <div className="mt-2.5">
-              <input
+              <motion.input
                 id="phone"
                 name="phone"
                 type="tel"
@@ -219,32 +248,38 @@ export default function Contact() {
                 placeholder="123-456-7890"
                 value={formData.phone}
                 onChange={handleChange}
-                className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 border border-gray-300"
+                className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 border border-gray-300 transition-all"
+                whileFocus={{ scale: 1.02, backgroundColor: "#f0fdf4" }}
               />
             </div>
-          </div>
+          </motion.div>
 
-          <div className="sm:col-span-2">
+          <motion.div className="sm:col-span-2" variants={staggerItemVariants}>
             <label htmlFor="message" className="block text-sm/6 font-semibold text-gray-900">
               Message
             </label>
             <div className="mt-2.5">
-              <textarea
+              <motion.textarea
                 id="message"
                 name="message"
                 rows={4}
                 placeholder="Tell us about your project or inquiry..."
                 value={formData.message}
                 onChange={handleChange}
-                className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 border border-gray-300"
+                className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-500 border border-gray-300 transition-all"
+                whileFocus={{ scale: 1.02, backgroundColor: "#f0fdf4" }}
               />
             </div>
-          </div>
+          </motion.div>
 
-          <div className="flex gap-x-4 sm:col-span-2">
+          <motion.div className="flex gap-x-4 sm:col-span-2" variants={staggerItemVariants}>
             <div className="flex h-6 items-center">
               <div className="group relative inline-flex w-8 shrink-0 rounded-full bg-gray-200 p-px ring ring-gray-300 outline-offset-2 outline-green-500 transition-colors duration-200 ease-in-out has-checked:bg-green-500 has-focus-visible:outline-2">
-                <span className="size-4 rounded-full bg-white shadow-xs ring-1 ring-gray-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-3.5" />
+                <motion.span
+                  className="size-4 rounded-full bg-white shadow-xs ring-1 ring-gray-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-3.5"
+                  animate={formData.agreed ? { x: 16 } : { x: 0 }}
+                  transition={{ duration: 0.2 }}
+                />
                 <input
                   id="agreed"
                   name="agreed"
@@ -263,30 +298,51 @@ export default function Contact() {
               </a>
               .
             </label>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="mt-10">
-          <button
+        <motion.div className="mt-10" variants={staggerItemVariants}>
+          <motion.button
             type="submit"
             disabled={loading || submitted}
-            className="block w-full rounded-md px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500 disabled:opacity-70"
-            style={{ backgroundColor: submitted ? "#10b981" : "#4caf50" }}
-            onMouseEnter={(e) => {
-              if (!loading && !submitted) {
-                e.currentTarget.style.opacity = "0.9";
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!loading && !submitted) {
-                e.currentTarget.style.opacity = "1";
-              }
-            }}
+            className="block w-full rounded-md px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
+            style={{ backgroundColor: submitted ? "#10b981" : "#4caf50", opacity: loading ? 0.7 : 1 }}
+            whileHover={{ scale: submitted || loading ? 1 : 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            {submitted ? "✓ Message Sent!" : loading ? "Sending..." : "Send Message"}
-          </button>
-        </div>
-      </form>
+            <AnimatePresence mode="wait">
+              {submitted ? (
+                <motion.span
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                >
+                  ✓ Message Sent!
+                </motion.span>
+              ) : loading ? (
+                <motion.span
+                  key="loading"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  Sending...
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="default"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  Send Message
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        </motion.div>
+      </motion.form>
     </section>
   );
 }

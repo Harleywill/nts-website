@@ -103,7 +103,6 @@ export default function LatestProjects() {
                 transition={{ duration: 0.3 }}
                 className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-md bg-white h-full"
                 whileHover={{ scale: 1.03, y: -8, boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)" }}
-                transition={{ duration: 0.3 }}
               >
                 <motion.div className="relative w-full h-40 sm:h-56 lg:h-80 overflow-hidden bg-gray-200 flex-shrink-0">
                   <motion.img
