@@ -6,19 +6,31 @@ import QuickEnquiryModal from "./QuickEnquiryModal";
 export default function StickyButtonClient() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showButton, setShowButton] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const heroRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // Check if screen is mobile (< 768px)
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     // Get the hero section
     const heroSection = document.querySelector('div[style*="1a2f6e"]') || document.querySelector('[class*="Hero"]');
-    
+
     if (!heroSection) return;
 
     // Create intersection observer to detect when hero is out of view
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Show sticky button only when hero is NOT visible
-        setShowButton(!entry.isIntersecting);
+        // Show sticky button only when hero is NOT visible AND on mobile
+        setShowButton(!entry.isIntersecting && isMobile);
       },
       {
         threshold: 0,
@@ -28,7 +40,7 @@ export default function StickyButtonClient() {
     observer.observe(heroSection);
 
     return () => observer.disconnect();
-  }, []);
+  }, [isMobile]);
 
   if (!showButton) return null;
 
