@@ -113,7 +113,7 @@ export default function Testimonials() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, amount: 0.2 }}
-          className="mx-auto max-w-2xl lg:mx-0 text-center mb-8 sm:mb-12"
+          className="mx-auto max-w-2xl text-center mb-8 sm:mb-12"
         >
           <AnimatedHeading
             text="What Our Clients Say"
@@ -137,13 +137,13 @@ export default function Testimonials() {
             {visibleTestimonials.map((testimonial, idx) => (
               <motion.div
                 key={testimonial.id}
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-                viewport={{ once: true, amount: 0.2 }}
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5, delay: idx * 0.12, ease: "easeOut" }}
+                viewport={{ once: true, amount: 0.3 }}
                 className="flex flex-col rounded-2xl overflow-hidden border border-gray-700 shadow-md h-full"
                 style={{ backgroundColor: "#1f2937" }}
-                whileHover={{ scale: 1.03, y: -4 }}
+                whileHover={{ scale: 1.05, y: -6, boxShadow: "0 20px 25px -5px rgba(76, 175, 80, 0.2)" }}
               >
                 <div className="p-4 sm:p-6 lg:p-6 flex flex-col grow">
                   <div className="flex gap-1 mb-4 sm:mb-6 flex-shrink-0">

@@ -95,7 +95,7 @@ export default function FeaturedNews() {
     <section className="py-16 sm:py-24 lg:py-32 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
       <div className="mx-auto max-w-7xl">
         <motion.div
-          className="mx-auto max-w-2xl lg:mx-0"
+          className="mx-auto max-w-2xl text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -122,13 +122,13 @@ export default function FeaturedNews() {
             {visibleNews.map((newsItem, idx) => (
               <motion.article
                 key={newsItem.id}
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-                viewport={{ once: true, amount: 0.2 }}
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5, delay: idx * 0.12, ease: "easeOut" }}
+                viewport={{ once: true, amount: 0.3 }}
                 className="flex flex-col rounded-2xl overflow-hidden border border-gray-700 shadow-md h-full"
                 style={{ backgroundColor: "#1f2937" }}
-                whileHover={{ scale: 1.03, y: -4 }}
+                whileHover={{ scale: 1.05, y: -6, boxShadow: "0 20px 25px -5px rgba(76, 175, 80, 0.2)" }}
               >
                 {newsItem.imageUrl && (
                   <div className="relative w-full h-40 sm:h-56 overflow-hidden bg-gray-600 flex-shrink-0">
