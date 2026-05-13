@@ -95,9 +95,11 @@ export default function ServicesGrid() {
             return (
               <motion.div
                 key={service.id}
+                layout
                 variants={cardVariants}
                 onClick={() => handleCardClick(service.id)}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                transition={{ layout: { duration: 0.4, ease: "easeInOut" } }}
                 className="group rounded-2xl shadow-md border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col p-8 transition-all duration-300 text-left"
                 style={{
                   backgroundColor: "#1f2937",
