@@ -74,7 +74,7 @@ export default function Testimonials() {
   const currentTestimonial = testimonials[currentIndex];
 
   return (
-    <section className="relative isolate overflow-hidden bg-white px-6 py-16 sm:py-24 lg:py-32 lg:px-8">
+    <section className="relative isolate overflow-hidden px-6 py-16 sm:py-24 lg:py-32 lg:px-8" style={{ backgroundColor: "#101828" }}>
       <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -86,9 +86,9 @@ export default function Testimonials() {
           <AnimatedHeading
             text="What Our Clients Say"
             level="h2"
-            className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 lg:text-5xl mb-2 sm:mb-4"
+            className="text-3xl sm:text-4xl font-bold tracking-tight text-white lg:text-5xl mb-2 sm:mb-4"
           />
-          <p className="text-base sm:text-lg text-gray-600">
+          <p className="text-base sm:text-lg text-gray-300">
             Real feedback from satisfied customers across the UK
           </p>
         </motion.div>
@@ -105,7 +105,8 @@ export default function Testimonials() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="flex flex-col rounded-2xl bg-gray-50 p-4 sm:p-6 lg:p-10 border border-gray-200 h-full overflow-y-auto"
+              className="flex flex-col rounded-2xl p-4 sm:p-6 lg:p-10 border h-full overflow-y-auto"
+              style={{ backgroundColor: "#1f2937", borderColor: "#374151" }}
               whileHover={{ scale: 1.03, y: -8, boxShadow: "0 20px 25px -5px rgba(76, 175, 80, 0.2)" }}
             >
               <div className="flex gap-1 mb-4 sm:mb-6 flex-shrink-0">
@@ -114,15 +115,15 @@ export default function Testimonials() {
                 ))}
               </div>
 
-              <p className="text-sm sm:text-base lg:text-lg leading-relaxed text-gray-700 mb-6 sm:mb-8">
+              <p className="text-sm sm:text-base lg:text-lg leading-relaxed text-gray-100 mb-6 sm:mb-8">
                 "{currentTestimonial.text}"
               </p>
 
-              <div className="border-t border-gray-200 pt-4 sm:pt-6 flex-shrink-0">
-                <p className="font-semibold text-gray-900 text-sm sm:text-base">
+              <div className="border-t border-gray-700 pt-4 sm:pt-6 flex-shrink-0">
+                <p className="font-semibold text-white text-sm sm:text-base">
                   {currentTestimonial.name}
                 </p>
-                <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                <p className="text-xs sm:text-sm text-gray-400 mt-1">
                   {currentTestimonial.company}
                 </p>
               </div>
@@ -167,7 +168,7 @@ export default function Testimonials() {
           </button>
         </div>
 
-        <div className="mt-4 text-center text-xs sm:text-sm text-gray-600">
+        <div className="mt-4 text-center text-xs sm:text-sm text-gray-400">
           {currentIndex + 1} of {testimonials.length}
         </div>
       </div>
