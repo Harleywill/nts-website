@@ -104,7 +104,6 @@ export default function Testimonials() {
               transition={{ duration: 0.3 }}
               className="flex flex-col rounded-2xl bg-gray-50 p-4 sm:p-6 lg:p-10 border border-gray-200 h-full overflow-y-auto"
               whileHover={{ scale: 1.03, y: -8, boxShadow: "0 20px 25px -5px rgba(76, 175, 80, 0.2)" }}
-              transition={{ duration: 0.3 }}
             >
               <div className="flex gap-1 mb-4 sm:mb-6 flex-shrink-0">
                 {[...Array(currentTestimonial.rating || 5)].map((_, i) => (
