@@ -89,8 +89,8 @@ export default function ServicesGrid() {
                   ...(isExpanded && cardRect ? {
                     top: "50%",
                     left: "50%",
-                    width: "calc(100% - 32px)",
-                    maxWidth: "1000px",
+                    marginLeft: "-500px",
+                    width: "1000px",
                     zIndex: 50,
                   } : {}),
                 }}
@@ -104,6 +104,9 @@ export default function ServicesGrid() {
                 transition={{
                   duration: 0.5,
                   ease: "easeInOut",
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30,
                 }}
               >
                 <motion.button
