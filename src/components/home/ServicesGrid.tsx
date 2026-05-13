@@ -18,6 +18,7 @@ const iconMap: { [key: string]: React.ReactNode } = {
 export default function ServicesGrid() {
   const router = useRouter();
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [cardRect, setCardRect] = useState<DOMRect | null>(null);
 
   const handleCardClick = (serviceId: string, e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -25,6 +26,11 @@ export default function ServicesGrid() {
       // If clicking the expanded card's button, navigate
       router.push(`/services/${serviceId}`);
     } else {
+      // Get the card's position before expanding
+      const target = e?.currentTarget as HTMLElement;
+      if (target) {
+        setCardRect(target.getBoundingClientRect());
+      }
       // If clicking a collapsed card, expand it
       setExpandedId(serviceId);
     }
@@ -78,37 +84,45 @@ export default function ServicesGrid() {
               <motion.div
                 key={service.id}
                 className={isExpanded ? "md:col-span-1" : ""}
-                style={isExpanded ? {
-                  position: "fixed",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  width: "calc(100% - 32px)",
-                  maxWidth: "1000px",
-                  zIndex: 50,
-                  maxHeight: "80vh",
-                } : {
-                  position: "relative",
+                style={{
+                  position: isExpanded ? "fixed" : "relative",
+                  ...(isExpanded && cardRect ? {
+                    top: "50%",
+                    left: "50%",
+                    width: "calc(100% - 32px)",
+                    maxWidth: "1000px",
+                    zIndex: 50,
+                  } : {}),
                 }}
-                animate={{
-                  opacity: isExpanded ? 1 : 0.3,
-                  scale: isExpanded ? 1 : 0.95,
+                animate={isExpanded ? {
+                  x: cardRect ? window.innerWidth / 2 - cardRect.left - cardRect.width / 2 : 0,
+                  y: cardRect ? window.innerHeight / 2 - cardRect.top - cardRect.height / 2 : 0,
+                } : {
+                  x: 0,
+                  y: 0,
                 }}
                 transition={{
-                  duration: 0.3,
-                  ease: "easeOut",
+                  duration: 0.5,
+                  ease: "easeInOut",
                 }}
               >
                 <motion.button
                   onClick={(e) => handleCardClick(service.id, e)}
-                  className={`group rounded-2xl shadow-md border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col w-full text-left bg-transparent relative ${
-                    isExpanded ? "p-8 sm:p-12" : "p-8"
-                  }`}
+                  className={`group rounded-2xl shadow-md border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col w-full text-left bg-transparent relative p-8`}
                   style={{
                     backgroundColor: "#1f2937",
                     pointerEvents: "auto",
                     position: "relative",
                     zIndex: 10,
+                  }}
+                  animate={{
+                    minHeight: isExpanded ? "600px" : "auto",
+                    paddingTop: isExpanded ? "48px" : "32px",
+                    paddingBottom: isExpanded ? "48px" : "32px",
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    ease: "easeInOut",
                   }}
                   initial={false}
                   whileHover={!isExpanded ? { scale: 1.05, y: -4 } : {}}
@@ -122,13 +136,31 @@ export default function ServicesGrid() {
                     </div>
                   </div>
 
-                  <h3 className={`font-semibold mb-3 text-white ${isExpanded ? "text-3xl" : "text-xl"}`}>
+                  <motion.h3
+                    className="font-semibold mb-3 text-white"
+                    animate={{
+                      fontSize: isExpanded ? "28px" : "20px",
+                    }}
+                    transition={{
+                      duration: 0.5,
+                      ease: "easeInOut",
+                    }}
+                  >
                     {service.title}
-                  </h3>
+                  </motion.h3>
 
-                  <p className={`text-gray-300 mb-6 leading-relaxed flex-grow ${isExpanded ? "text-base" : "text-sm"}`}>
+                  <motion.p
+                    className="text-gray-300 mb-6 leading-relaxed flex-grow"
+                    animate={{
+                      fontSize: isExpanded ? "16px" : "14px",
+                    }}
+                    transition={{
+                      duration: 0.5,
+                      ease: "easeInOut",
+                    }}
+                  >
                     {service.description}
-                  </p>
+                  </motion.p>
 
                   {isExpanded && (
                     <motion.div
