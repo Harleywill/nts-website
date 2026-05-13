@@ -72,7 +72,7 @@ export default function LatestProjects() {
   const currentProject = projects[currentIndex];
 
   return (
-    <section className="bg-white py-16 sm:py-24 lg:py-32 px-6 lg:px-8">
+    <section className="py-16 sm:py-24 lg:py-32 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
       <div className="mx-auto max-w-7xl">
         <motion.div
           className="mx-auto max-w-2xl lg:mx-0"
@@ -84,14 +84,14 @@ export default function LatestProjects() {
           <AnimatedHeading
             text="Latest Projects"
             level="h2"
-            className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 lg:text-5xl"
+            className="text-3xl sm:text-4xl font-semibold tracking-tight text-white lg:text-5xl"
           />
-          <p className="mt-2 text-base sm:text-lg text-gray-600">
+          <p className="mt-2 text-base sm:text-lg text-gray-300">
             View our recent work and see what we can do for you.
           </p>
         </motion.div>
 
-        <div className="mt-8 sm:mt-10 border-t border-gray-200 pt-8 sm:pt-12">
+        <div className="mt-8 sm:mt-10 border-t border-gray-700 pt-8 sm:pt-12">
           <div
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
@@ -191,7 +191,7 @@ export default function LatestProjects() {
             </button>
           </div>
 
-          <div className="mt-4 text-center text-xs sm:text-sm text-gray-600">
+          <div className="mt-4 text-center text-xs sm:text-sm text-gray-400">
             {currentIndex + 1} of {projects.length}
           </div>
         </div>

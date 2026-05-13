@@ -26,7 +26,7 @@ export default function AccreditationsStrip() {
   ];
 
   return (
-    <div className="bg-gray-900 py-24 sm:py-32">
+    <div className="py-24 sm:py-32" style={{ backgroundColor: "#101828" }}>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <motion.h2
           className="text-center text-lg/8 font-semibold text-white"
