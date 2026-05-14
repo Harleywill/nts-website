@@ -5,7 +5,7 @@ import HeroDesktop from "@/components/home/HeroDesktop";
 import AboutSection from "@/components/home/AboutSection";
 import ServicesBento from "@/components/home/ServicesBento";
 import ServicesGrid from "@/components/home/ServicesGrid";
-import AccreditationsStrip from "@/components/home/AccreditationsStrip";
+import AccreditationsSection from "@/components/home/AccreditationsSection";
 import LatestProjects from "@/components/home/LatestProjects";
 import Testimonials from "@/components/home/Testimonials";
 import FeaturedNews from "@/components/home/FeaturedNews";
@@ -30,7 +30,7 @@ export default function Home() {
         <div className="hidden md:block">
           <ServicesGrid />
         </div>
-        <AccreditationsStrip />
+        <AccreditationsSection />
         <LatestProjects />
         <Testimonials />
         <FeaturedNews />
