@@ -11,8 +11,51 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Simple in-memory rate limiting: 5 requests per 15 minutes per IP
+const requestLog = new Map<string, { count: number; resetTime: number }>();
+
+function getClientIP(request: NextRequest): string {
+  return (
+    request.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+    request.headers.get("x-real-ip") ||
+    "unknown"
+  );
+}
+
+function checkRateLimit(ip: string): { allowed: boolean; message?: string } {
+  const now = Date.now();
+  const record = requestLog.get(ip);
+
+  if (!record || now > record.resetTime) {
+    requestLog.set(ip, { count: 1, resetTime: now + 15 * 60 * 1000 }); // 15 minutes
+    return { allowed: true };
+  }
+
+  if (record.count >= 5) {
+    const remainingTime = Math.ceil((record.resetTime - now) / 60 / 1000);
+    return {
+      allowed: false,
+      message: `Too many requests. Please try again in ${remainingTime} minutes.`,
+    };
+  }
+
+  record.count++;
+  return { allowed: true };
+}
+
 export async function POST(request: NextRequest) {
   try {
+    // Check rate limit
+    const clientIP = getClientIP(request);
+    const rateLimit = checkRateLimit(clientIP);
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: rateLimit.message },
+        { status: 429 } // Too Many Requests
+      );
+    }
+
     const body = await request.json();
     const { name, service, contact, message } = body;
 
