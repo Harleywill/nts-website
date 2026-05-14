@@ -20,13 +20,36 @@ const companyAccreditations = [
 
 export default function AccreditationsSection() {
   return (
-    <section className="py-16 bg-light-gray">
-      <div className="max-w-6xl mx-auto px-6">
+    <section className="relative isolate py-16 overflow-hidden" style={{ backgroundColor: "#1a2f6e" }}>
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 -z-10 bg-black/40" />
+
+      {/* Top Gradient Blob */}
+      <div aria-hidden="true" className="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl">
+        <div
+          style={{
+            clipPath: "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+          }}
+          className="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#4caf50] to-[#1a2f6e] opacity-20"
+        />
+      </div>
+
+      {/* Bottom Gradient Blob */}
+      <div aria-hidden="true" className="absolute -top-52 left-1/2 -z-10 -translate-x-1/2 transform-gpu blur-3xl sm:-top-80 sm:ml-16 sm:translate-x-0">
+        <div
+          style={{
+            clipPath: "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+          }}
+          className="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#4caf50] to-[#1a2f6e] opacity-20"
+        />
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-3">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
             Industry Certifications & Partnerships
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-200 max-w-2xl mx-auto">
             Fully qualified, certified, and trusted by leading industry bodies and manufacturers
           </p>
         </div>
