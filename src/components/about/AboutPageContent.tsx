@@ -14,11 +14,6 @@ const directors = [
     image: "/images/directors/Matthew-Gartland.jpg",
   },
   {
-    name: "Nick Porter",
-    title: "Director",
-    image: "/images/directors/Nick-Porter.jpg",
-  },
-  {
     name: "Richard Tinker",
     title: "Director",
     image: "/images/directors/Richard-Tinker-768x768.jpg",
@@ -207,7 +202,7 @@ export default function AboutPageContent() {
                   </div>
                   <div className="flex items-center gap-3">
                     <span style={{ color: "#4caf50" }} className="text-2xl">✓</span>
-                    <span className="text-gray-700">50+ qualified engineers</span>
+                    <span className="text-gray-700">25+ qualified engineers</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <span style={{ color: "#4caf50" }} className="text-2xl">✓</span>

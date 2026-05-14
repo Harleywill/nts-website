@@ -8,6 +8,7 @@ import {
   staggerItemVariants,
   staggerContainerVariants,
 } from "@/lib/animations";
+import HeroCarousel from "./HeroCarousel";
 
 export default function HeroMobile() {
   const words = "Professional HVAC Services You Can Trust".split(" ");
@@ -21,15 +22,8 @@ export default function HeroMobile() {
 
   return (
     <div className="relative isolate overflow-hidden min-h-screen flex items-center justify-center pt-20 lg:pt-0" style={{ backgroundColor: "#1a2f6e" }}>
-      {/* Background Image */}
-      <motion.img
-        src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=2830&h=1500&q=80"
-        alt="HVAC Services"
-        className="absolute inset-0 -z-10 size-full object-cover object-center"
-        initial={{ scale: 1.1, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      />
+      {/* Background Image Carousel */}
+      <HeroCarousel className="absolute inset-0 -z-10 size-full object-cover object-center" />
 
       {/* Dark Overlay */}
       <div className="absolute inset-0 -z-10 bg-black/40" />

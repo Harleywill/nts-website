@@ -203,6 +203,23 @@ export const fadeCarouselVariants = {
   },
 };
 
+// ============ HERO IMAGE CAROUSEL FADE ============
+// Custom fade transition for hero section image cycling
+// Smooth simultaneous crossfade with pure opacity (no scale)
+// Extended duration for slower, more elegant transitions
+
+export const heroCrossfadeVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 2 },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 2 },
+  },
+};
+
 // ============ MODAL ANIMATIONS ============
 
 export const modalBackdropVariants = {
