@@ -144,6 +144,60 @@ export default function RootLayout({
           }}
         />
 
+        {/* FAQ Schema - Optimized for AI Assistants (Claude, ChatGPT, Perplexity) */}
+        <Script
+          id="schema-faq"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What services does NTS Ltd provide?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "NTS Ltd provides comprehensive HVAC and mechanical services including heating systems, air conditioning installation and maintenance, ventilation solutions, plumbing services, domestic and commercial servicing, and system commissioning. All work is carried out by Gas Safe registered engineers with 15+ years of experience."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Are your engineers Gas Safe registered?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, all our engineers are Gas Safe registered, with additional F-Gas certification, CHAS accreditation, and SafeContractor certification."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Do you offer 24/7 emergency services?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, we provide 24/7 emergency breakdown and repair services across Hull and surrounding regions with response times typically under 2 hours."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What areas do you service?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "We serve Hull, East Yorkshire, Yorkshire, and the Humber region, providing services to domestic properties, commercial businesses, industrial facilities, and healthcare premises."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Do you provide maintenance plans?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, we offer comprehensive planned maintenance programs for both domestic and commercial clients including annual servicing and preventative maintenance."
+                  }
+                }
+              ]
+            }),
+          }}
+        />
+
         {/* Google Tag Manager */}
         <Script
           id="gtm-script"

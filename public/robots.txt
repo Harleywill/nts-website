@@ -43,3 +43,36 @@ Disallow: /
 
 User-agent: SemrushBot
 Disallow: /
+
+# AI Crawler Permissions
+# These crawlers power AI search, ChatGPT, Claude, Perplexity, and other AI tools
+
+# Claude (Anthropic)
+User-agent: Claude-Web
+Allow: /
+
+# GPT (OpenAI)
+User-agent: GPTBot
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# Diffbot
+User-agent: Diffbot
+Allow: /
+
+# Common AI/ML crawlers
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+# Ensure all content is crawlable for AI
+Allow: /api/
+Allow: /images/
