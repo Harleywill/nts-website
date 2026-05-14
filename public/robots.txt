@@ -1,0 +1,45 @@
+# NTS Ltd - Robots.txt File
+# https://nevilletuckerservices.co.uk/
+
+# Allow all search engines
+User-agent: *
+Allow: /
+
+# Specific paths to allow crawling
+Allow: /images/
+Allow: /api/
+
+# Disallow admin and private areas (if applicable)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /.env
+Disallow: /.git/
+
+# Sitemap location
+Sitemap: https://nevilletuckerservices.co.uk/sitemap.xml
+
+# Crawl delay (optional - time in seconds between requests)
+Crawl-delay: 1
+
+# User-agent specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
