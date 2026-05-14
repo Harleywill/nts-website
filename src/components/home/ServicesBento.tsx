@@ -138,10 +138,10 @@ export default function ServicesBento() {
 
         {/* Bento Grid */}
         <motion.div
-          className="relative z-50 grid grid-cols-1 gap-4 sm:grid-cols-2"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          className="relative z-[100] grid grid-cols-1 gap-4 sm:grid-cols-2"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
           viewport={{ once: true, amount: 0.2 }}
           style={{ pointerEvents: "auto" }}
         >
@@ -151,10 +151,14 @@ export default function ServicesBento() {
             return (
               <motion.button
                 key={service.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true, amount: 0.2 }}
                 onClick={() => setSelectedId(service.id)}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 whileTap={{ scale: 0.98 }}
-                className="h-full rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-8 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 flex flex-col justify-between group text-left"
+                className="relative z-[9999] h-full rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-8 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 flex flex-col justify-between group text-left"
                 style={{ pointerEvents: "auto" }}
               >
                 <div>
