@@ -32,15 +32,22 @@ export default function AccreditationsSection() {
         </div>
 
         {/* Two-column carousel grid */}
-        <div className="grid md:grid-cols-2 gap-12">
-          <AccreditationsCarousel
-            title="Safety Qualifications"
-            accreditations={safetyQualifications}
-          />
-          <AccreditationsCarousel
-            title="Company Accreditations"
-            accreditations={companyAccreditations}
-          />
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+          {/* Safety Qualifications Card */}
+          <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-200">
+            <AccreditationsCarousel
+              title="Safety Qualifications"
+              accreditations={safetyQualifications}
+            />
+          </div>
+
+          {/* Company Accreditations Card */}
+          <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-200">
+            <AccreditationsCarousel
+              title="Company Accreditations"
+              accreditations={companyAccreditations}
+            />
+          </div>
         </div>
       </div>
     </section>
