@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import AnimatedHeading from "@/components/common/AnimatedHeading";
-import Parallax from "@/components/common/Parallax";
 
 export default function AboutSection() {
   const features = [
@@ -49,86 +48,76 @@ export default function AboutSection() {
         />
       </div>
 
-      {/* Main Content Grid */}
+      {/* Simple Linear Layout - Mobile First */}
       <motion.div
-        className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-start lg:gap-y-10"
+        className="mx-auto max-w-2xl"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true, amount: 0.2 }}
       >
-        {/* Left Column - Text Content */}
-        <div className="lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
-          <div className="lg:pr-4">
-            <div className="lg:max-w-lg">
-              <p className="text-base/7 font-semibold" style={{ color: "#4caf50" }}>
-                About NTS Ltd
-              </p>
-              <AnimatedHeading
-                text="Your Trusted HVAC Partner"
-                level="h2"
-                className="mt-2 text-4xl font-semibold tracking-tight text-pretty"
-                delay={0.2}
-              />
-              <p className="mt-6 text-xl/8 text-gray-700">
-                For over 15 years, NTS Ltd has been delivering exceptional heating, cooling, and ventilation services to homes and businesses across Hull. We're committed to keeping your systems running smoothly, efficiently, and safely.
-              </p>
-            </div>
-          </div>
+        {/* Text Content */}
+        <div className="mb-8">
+          <p className="text-base/7 font-semibold" style={{ color: "#4caf50" }}>
+            About NTS Ltd
+          </p>
+          <AnimatedHeading
+            text="Your Trusted HVAC Partner"
+            level="h2"
+            className="mt-2 text-4xl font-semibold tracking-tight text-pretty"
+            delay={0.2}
+          />
+          <p className="mt-6 text-xl/8 text-gray-700">
+            For over 15 years, NTS Ltd has been delivering exceptional heating, cooling, and ventilation services to homes and businesses across Hull. We're committed to keeping your systems running smoothly, efficiently, and safely.
+          </p>
         </div>
 
-        {/* Right Column - Image with Parallax */}
-        <div className="-mt-12 -ml-12 p-12 lg:sticky lg:top-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:overflow-hidden">
-          <Parallax speed={0.3} className="origin-top">
-            <img
-              src="/images/hvac-installation.jpg"
-              alt="HVAC Services"
-              className="w-3xl max-w-none rounded-xl bg-gray-800 shadow-xl ring-1 ring-white/10 sm:w-228"
-            />
-          </Parallax>
+        {/* Image - NO PARALLAX */}
+        <div className="mb-8 -mx-6">
+          <img
+            src="/images/hvac-installation.jpg"
+            alt="HVAC Services"
+            className="w-full rounded-xl bg-gray-800 shadow-xl ring-1 ring-white/10"
+          />
         </div>
 
-        {/* Bottom Left - Features List */}
-        <div className="lg:col-span-2 lg:col-start-1 lg:row-start-2 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
-          <div className="lg:pr-4">
-            <div className="max-w-xl text-base/7 text-gray-700 lg:max-w-lg">
-              <p>
-                Whether you need a new boiler installation, routine maintenance, emergency repairs, or a complete commercial HVAC system, NTS Ltd has the expertise and experience to handle it. We work with both domestic and commercial clients, from small residential properties to large industrial facilities.
-              </p>
+        {/* Rest of Content */}
+        <div className="text-base/7 text-gray-700">
+          <p className="mb-8">
+            Whether you need a new boiler installation, routine maintenance, emergency repairs, or a complete commercial HVAC system, NTS Ltd has the expertise and experience to handle it. We work with both domestic and commercial clients, from small residential properties to large industrial facilities.
+          </p>
 
-              {/* Features List */}
-              <ul role="list" className="mt-8 space-y-8 text-gray-700">
-                {features.map((feature, index) => (
-                  <li key={index} className="flex gap-x-3">
-                    <svg
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                      className="mt-1 size-5 flex-none"
-                      style={{ color: "#4caf50" }}
-                    >
-                      <path d="M10.894 2.553a.75.75 0 00-1.788 0l-7 140a.75.75 0 001.721.813l6.157-7.348h5.25l6.157 7.348a.75.75 0 001.722-.812l-7-140z" />
-                    </svg>
-                    <span>
-                      <strong className="font-semibold" style={{ color: "#1a2f6e" }}>{feature.name}.</strong> {feature.description}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+          {/* Features List */}
+          <ul role="list" className="space-y-8 text-gray-700 mb-8">
+            {features.map((feature, index) => (
+              <li key={index} className="flex gap-x-3">
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  className="mt-1 size-5 flex-none"
+                  style={{ color: "#4caf50" }}
+                >
+                  <path d="M10.894 2.553a.75.75 0 00-1.788 0l-7 140a.75.75 0 001.721.813l6.157-7.348h5.25l6.157 7.348a.75.75 0 001.722-.812l-7-140z" />
+                </svg>
+                <span>
+                  <strong className="font-semibold" style={{ color: "#1a2f6e" }}>{feature.name}.</strong> {feature.description}
+                </span>
+              </li>
+            ))}
+          </ul>
 
-              <p className="mt-8">
-                We take pride in our professionalism, reliability, and attention to detail. Every member of our team is trained to the highest standards, and we're committed to providing outstanding customer service at every stage of your project.
-              </p>
+          <p className="mb-8">
+            We take pride in our professionalism, reliability, and attention to detail. Every member of our team is trained to the highest standards, and we're committed to providing outstanding customer service at every stage of your project.
+          </p>
 
-              <h3 className="mt-16 text-2xl font-bold tracking-tight" style={{ color: "#1a2f6e" }}>
-                Let's improve your comfort today
-              </h3>
+          <h3 className="text-2xl font-bold tracking-tight mb-6" style={{ color: "#1a2f6e" }}>
+            Let's improve your comfort today
+          </h3>
 
-              <p className="mt-6">
-                Get in touch with our team to discuss your heating, cooling, and ventilation needs. We'll provide expert advice and a competitive quote for your project.
-              </p>
-            </div>
-          </div>
+          <p>
+            Get in touch with our team to discuss your heating, cooling, and ventilation needs. We'll provide expert advice and a competitive quote for your project.
+          </p>
         </div>
       </motion.div>
     </section>
