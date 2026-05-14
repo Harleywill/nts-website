@@ -7,7 +7,7 @@ export default function AboutSection() {
   const features = [
     {
       name: "Expert Engineering",
-      description: "Our Gas Safe registered engineers bring 15+ years of experience to every project, ensuring reliable installations and repairs.",
+      description: "Our Gas Safe registered engineers bring 45+ years of experience to every project, ensuring reliable installations and repairs.",
     },
     {
       name: "Rapid Response",
@@ -52,7 +52,7 @@ export default function AboutSection() {
             delay={0.2}
           />
           <p className="mt-6 text-xl/8 text-gray-700">
-            For over 15 years, NTS Ltd has been delivering exceptional heating, cooling, and ventilation services to homes and businesses across Hull. We're committed to keeping your systems running smoothly, efficiently, and safely.
+            For over 45 years, NTS Ltd has been delivering exceptional heating, cooling, and ventilation services to homes and businesses across Hull. We're committed to keeping your systems running smoothly, efficiently, and safely.
           </p>
         </div>
 
