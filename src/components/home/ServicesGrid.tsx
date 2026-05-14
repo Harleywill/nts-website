@@ -93,20 +93,24 @@ export default function ServicesGrid() {
 
         {/* Services Grid */}
         <motion.div
-          className="relative z-50 grid md:grid-cols-3 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
+          className="relative z-[100] grid md:grid-cols-3 gap-8"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          viewport={{ once: true, amount: 0.2 }}
           style={{ pointerEvents: "auto" }}
         >
           {SERVICES.filter((service) => service.id !== "commercial-servicing").map((service) => (
             <motion.button
               key={service.id}
-              variants={cardVariants}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.2 }}
               onClick={() => handleCardClick(service.id)}
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
               whileTap={{ scale: 0.98 }}
-              className="group rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col h-full w-full text-left bg-transparent"
+              className="group relative z-[9999] rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col h-full w-full text-left bg-transparent"
               style={{ backgroundColor: "#1f2937", pointerEvents: "auto" }}
             >
               <div
