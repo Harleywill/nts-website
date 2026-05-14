@@ -93,7 +93,7 @@ export default function ServicesGrid() {
 
         {/* Services Grid */}
         <motion.div
-          className="relative z-[100] grid md:grid-cols-3 gap-8"
+          className="relative grid md:grid-cols-3 gap-8 z-0"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
