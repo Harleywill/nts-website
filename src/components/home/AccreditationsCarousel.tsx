@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Image from "next/image";
 
 interface AccreditationsCarouselProps {
@@ -11,14 +12,16 @@ export default function AccreditationsCarousel({
   title,
   accreditations,
 }: AccreditationsCarouselProps) {
-  // Duplicate array multiple times for seamless looping
+  // Duplicate array for seamless infinite loop
   const repeatedAccreditations = [
+    ...accreditations,
     ...accreditations,
     ...accreditations,
     ...accreditations,
   ];
 
-  const animationDuration = accreditations.length * 4; // 4 seconds per logo
+  const logoWidth = 160; // 160px per logo + gap
+  const totalWidth = accreditations.length * logoWidth;
 
   return (
     <div className="flex flex-col items-center gap-6">
@@ -32,19 +35,22 @@ export default function AccreditationsCarousel({
         {/* Right fade gradient */}
         <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
-        {/* Scrolling logos */}
-        <div
+        {/* Scrolling logos with Framer Motion */}
+        <motion.div
           className="flex gap-8 py-8 px-6"
-          style={{
-            animation: `scroll ${animationDuration}s linear infinite`,
-            width: "fit-content",
+          style={{ width: "fit-content" }}
+          animate={{ x: -totalWidth }}
+          transition={{
+            duration: accreditations.length * 4, // 4 seconds per logo
+            ease: "linear",
+            repeat: Infinity,
           }}
         >
           {repeatedAccreditations.map((accred, index) => (
             <div
               key={index}
               className="flex-shrink-0 flex items-center justify-center"
-              style={{ minWidth: "160px", height: "100px" }}
+              style={{ minWidth: `${logoWidth}px`, height: "100px" }}
             >
               <Image
                 src={accred.path}
@@ -56,20 +62,8 @@ export default function AccreditationsCarousel({
               />
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
-
-      {/* CSS animation */}
-      <style>{`
-        @keyframes scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(calc(-${accreditations.length} * 160px));
-          }
-        }
-      `}</style>
     </div>
   );
 }
