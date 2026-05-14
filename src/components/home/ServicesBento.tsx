@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { FaFire, FaWind, FaSnowflake, FaCheckCircle, FaTimes } from "react-icons/fa";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const services = [
   {
@@ -86,16 +86,41 @@ const services = [
   }
 ];
 
+// Variants for side panel slide
+const panelVariants = {
+  hidden: { x: 400, opacity: 0 },
+  visible: { x: 0, opacity: 1 },
+  exit: { x: 400, opacity: 0 },
+};
+
+// Variants for backdrop fade
+const backdropVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+  exit: { opacity: 0 },
+};
+
 export default function ServicesBento() {
-  const [expanded, setExpanded] = useState<string | null>(null);
+  const router = useRouter();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const selectedService = selectedId ? services.find((s) => s.id === selectedId) : null;
+
+  const handleGoToPage = (link: string) => {
+    router.push(link);
+  };
 
   return (
     <div className="relative py-24 sm:py-32 overflow-hidden bg-gray-900">
       {/* Gradient Blob Background */}
-      <div aria-hidden="true" className="absolute inset-x-0 top-0 -z-10 transform-gpu overflow-hidden blur-3xl">
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 -z-10 transform-gpu overflow-hidden blur-3xl"
+      >
         <div
           style={{
-            clipPath: "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+            clipPath:
+              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
           }}
           className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[72.1875rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#4caf50] to-[#64b5f6] opacity-15 sm:left-[calc(50%-30rem)] sm:w-[143.75rem]"
         />
@@ -111,163 +136,163 @@ export default function ServicesBento() {
           </p>
         </div>
 
-        {/* Desktop/Tablet: Traditional Grid */}
-        <div className="hidden md:block">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service) => {
-              const Icon = service.icon;
-              const isExpanded = expanded === service.id;
+        {/* Bento Grid */}
+        <motion.div
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true, amount: 0.2 }}
+          style={{ pointerEvents: "auto" }}
+        >
+          {services.map((service) => {
+            const Icon = service.icon;
 
-              return (
-                <div key={service.id}>
-                  <motion.div
-                    className="h-full rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-6 sm:p-8 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 flex flex-col justify-between group cursor-pointer lg:cursor-auto"
-                    onClick={() => setExpanded(isExpanded ? null : service.id)}
-                    layoutId={`service-${service.id}`}
-                  >
-                    {!isExpanded ? (
-                      <>
-                        <div>
-                          <div className="inline-block p-3 rounded-lg bg-green-500/10 mb-4 group-hover:bg-green-500/20 transition-colors">
-                            <Icon size={28} style={{ color: "#4caf50" }} />
-                          </div>
-                          <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">{service.title}</h3>
-                          <p className="text-gray-300 text-sm sm:text-base leading-relaxed">{service.description}</p>
-                        </div>
-                        <button
-                          className="mt-4 h-11 sm:h-auto sm:mt-6 inline-flex items-center justify-center sm:justify-start w-full sm:w-auto gap-2 font-semibold transition-colors hover:text-green-400 sm:text-base text-sm py-2"
-                          style={{ color: "#4caf50" }}
-                          aria-expanded="false"
-                        >
-                          Learn More <span aria-hidden="true">→</span>
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <div>
-                          <div className="flex justify-between items-start mb-4">
-                            <h3 className="text-xl sm:text-2xl font-bold text-white flex-1">{service.title}</h3>
-                            <button onClick={(e) => { e.stopPropagation(); setExpanded(null); }} className="text-gray-400 hover:text-white ml-2">
-                              <FaTimes size={20} />
-                            </button>
-                          </div>
-                          <p className="text-gray-300 text-sm sm:text-base mb-4">{service.description}</p>
-                          <div className="space-y-2">
-                            {service.details.map((detail, idx) => (
-                              <div key={idx} className="flex items-start gap-2">
-                                <span style={{ color: "#4caf50" }}>✓</span>
-                                <span className="text-gray-300 text-sm">{detail}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <Link
-                          href={service.link}
-                          className="mt-4 sm:mt-6 inline-flex items-center gap-2 font-semibold text-sm sm:text-base transition-colors hover:text-green-400"
-                          style={{ color: "#4caf50" }}
-                        >
-                          Full Details <span aria-hidden="true">→</span>
-                        </Link>
-                      </>
-                    )}
-                  </motion.div>
+            return (
+              <motion.button
+                key={service.id}
+                onClick={() => setSelectedId(service.id)}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                whileTap={{ scale: 0.98 }}
+                className="h-full rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-8 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 flex flex-col justify-between group text-left"
+                style={{ pointerEvents: "auto" }}
+              >
+                <div>
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-lg bg-green-500/10 mb-6 group-hover:bg-green-500/20 transition-colors">
+                    <Icon size={32} style={{ color: "#4caf50" }} />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4">{service.title}</h3>
+                  <p className="text-gray-300 leading-relaxed">
+                    {service.description}
+                  </p>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Mobile: 2-Column Grid with Expand Animation */}
-        <div className="md:hidden">
-          <div
-            className="grid gap-4"
-            style={{
-              gridTemplateColumns: "repeat(2, 1fr)"
-            }}
-          >
-            {services.map((service, idx) => {
-              const Icon = service.icon;
-              const isExpanded = expanded === service.id;
-              const isLastOdd = idx === services.length - 1 && services.length % 2 === 1 && !expanded;
-
-              return (
-                <motion.div
-                  key={service.id}
-                  className={`rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-4 border border-gray-700/50 hover:border-green-500/50 cursor-pointer flex flex-col justify-between ${
-                    isExpanded ? "col-span-2" : ""
-                  } ${isLastOdd ? "col-span-2 mx-auto max-w-xs" : ""}`}
-                  onClick={() => setExpanded(isExpanded ? null : service.id)}
-                  layout
-                  layoutId={`service-mobile-${service.id}`}
-                  transition={{
-                    layout: { duration: 0.4, ease: "easeInOut" },
-                  }}
-                  animate={{
-                    height: isExpanded ? "auto" : "auto"
-                  }}
-                  style={{
-                    minHeight: isExpanded ? "384px" : undefined
-                  }}
-                >
-                  {!isExpanded ? (
-                    <>
-                      <div>
-                        <div className="inline-block p-3 rounded-lg bg-green-500/10 mb-3">
-                          <Icon size={24} style={{ color: "#4caf50" }} />
-                        </div>
-                        <h3 className="text-lg font-bold text-white mb-2">{service.title}</h3>
-                        <p className="text-gray-300 text-sm leading-relaxed">{service.description}</p>
-                      </div>
-                      <button
-                        className="mt-3 inline-flex items-center gap-2 font-semibold text-sm transition-colors hover:text-green-400"
-                        style={{ color: "#4caf50" }}
-                      >
-                        Learn More <span aria-hidden="true">→</span>
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <div>
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="inline-block p-3 rounded-lg bg-green-500/10">
-                            <Icon size={24} style={{ color: "#4caf50" }} />
-                          </div>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setExpanded(null);
-                            }}
-                            className="text-gray-400 hover:text-white"
-                          >
-                            <FaTimes size={20} />
-                          </button>
-                        </div>
-                        <h3 className="text-xl font-bold text-white mb-3">{service.title}</h3>
-                        <p className="text-gray-300 text-sm mb-4">{service.description}</p>
-                        <div className="space-y-2">
-                          {service.details.map((detail, didx) => (
-                            <div key={didx} className="flex items-start gap-2">
-                              <span style={{ color: "#4caf50" }}>✓</span>
-                              <span className="text-gray-300 text-sm">{detail}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <Link
-                        href={service.link}
-                        className="mt-4 inline-flex items-center gap-2 font-semibold text-sm transition-colors hover:text-green-400"
-                        style={{ color: "#4caf50" }}
-                      >
-                        Full Details <span aria-hidden="true">→</span>
-                      </Link>
-                    </>
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
+                <div style={{ color: "#4caf50" }} className="mt-6 inline-flex items-center gap-2 font-semibold transition-colors hover:text-green-400">
+                  Learn More <span aria-hidden="true">→</span>
+                </div>
+              </motion.button>
+            );
+          })}
+        </motion.div>
       </div>
+
+      {/* Side Panel with AnimatePresence */}
+      <AnimatePresence mode="sync">
+        {selectedService && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="backdrop"
+              variants={backdropVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              onClick={() => setSelectedId(null)}
+              className="fixed left-0 top-0 bottom-0 bg-black/50 z-40"
+              style={{ width: "calc(100% - 100%)" }}
+            />
+
+            {/* Side Panel - Full screen on mobile */}
+            <motion.div
+              key="panel"
+              variants={panelVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              transition={{ duration: 0.4, type: "tween" }}
+              className="fixed right-0 top-0 h-full w-full bg-gray-900 shadow-2xl overflow-y-auto z-50"
+              style={{ backgroundColor: "#1a1f2e", pointerEvents: "auto" }}
+            >
+              <div className="p-8">
+                {/* Close Button */}
+                <motion.button
+                  onClick={() => setSelectedId(null)}
+                  className="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <FaTimes size={24} />
+                </motion.button>
+
+                {/* Icon */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-lg"
+                  style={{ backgroundColor: "rgba(76, 175, 80, 0.1)" }}
+                >
+                  <selectedService.icon size={40} style={{ color: "#4caf50" }} />
+                </motion.div>
+
+                {/* Title */}
+                <motion.h3
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.15 }}
+                  className="text-3xl font-bold text-white mb-2"
+                >
+                  {selectedService.title}
+                </motion.h3>
+
+                {/* Description */}
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-gray-300 mb-8 leading-relaxed"
+                >
+                  {selectedService.description}
+                </motion.p>
+
+                {/* What's Included */}
+                {selectedService.details && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.25 }}
+                  >
+                    <h4 className="text-lg font-semibold text-white mb-4">What's Included:</h4>
+                    <motion.div
+                      className="space-y-3"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ staggerChildren: 0.05, delayChildren: 0.3 }}
+                    >
+                      {selectedService.details.map((detail, idx) => (
+                        <motion.div
+                          key={idx}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className="flex items-start gap-3"
+                        >
+                          <span style={{ color: "#4caf50" }} className="text-lg flex-shrink-0 mt-0.5">
+                            ✓
+                          </span>
+                          <span className="text-gray-300">{detail}</span>
+                        </motion.div>
+                      ))}
+                    </motion.div>
+                  </motion.div>
+                )}
+
+                {/* Full Page Button */}
+                <motion.button
+                  onClick={() => handleGoToPage(selectedService.link)}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(76, 175, 80, 0.6)" }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full mt-8 px-6 py-3 rounded-lg font-semibold text-white text-center transition-all"
+                  style={{ backgroundColor: "#4caf50", pointerEvents: "auto" }}
+                >
+                  View Full Details
+                </motion.button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
