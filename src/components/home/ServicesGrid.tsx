@@ -144,7 +144,7 @@ export default function ServicesGrid() {
       <AnimatePresence mode="sync">
         {selectedService && (
           <>
-            {/* Backdrop */}
+            {/* Backdrop - only covers left side (grid area) */}
             <motion.div
               key="backdrop"
               variants={backdropVariants}
@@ -152,7 +152,8 @@ export default function ServicesGrid() {
               animate="visible"
               exit="exit"
               onClick={() => setSelectedId(null)}
-              className="fixed inset-0 bg-black/50 z-40"
+              className="fixed left-0 top-0 bottom-0 bg-black/50 z-40"
+              style={{ width: "calc(100% - 384px)" }}
             />
 
             {/* Side Panel */}
