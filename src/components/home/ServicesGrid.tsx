@@ -93,7 +93,7 @@ export default function ServicesGrid() {
 
         {/* Services Grid */}
         <motion.div
-          className="grid md:grid-cols-3 gap-8"
+          className="relative z-50 grid md:grid-cols-3 gap-8"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
