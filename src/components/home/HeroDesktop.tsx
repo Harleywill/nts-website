@@ -1,20 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import HeroCarousel from "./HeroCarousel";
 
 export default function HeroDesktop() {
   return (
     <div className="relative isolate overflow-hidden min-h-screen flex items-center justify-center" style={{ backgroundColor: "#1a2f6e" }}>
-      {/* Background Image */}
-      <Image
-        src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=2830&h=1500&q=80"
-        alt="HVAC Services - Professional heating and cooling systems"
-        fill
-        priority
-        className="absolute inset-0 -z-10 object-cover object-center"
-        unoptimized
-      />
+      {/* Background Image Carousel */}
+      <HeroCarousel className="absolute inset-0 -z-10 object-cover object-center" />
 
       {/* Dark Overlay */}
       <div className="absolute inset-0 -z-10 bg-black/40" />
@@ -46,7 +39,7 @@ export default function HeroDesktop() {
             Professional HVAC Solutions
           </h2>
           <p className="mt-8 text-lg font-medium text-pretty text-gray-200 sm:text-xl/8">
-            Over 15 years of expertise in heating, cooling, and ventilation. Gas Safe registered engineers delivering reliable, professional solutions for domestic and commercial clients across Hull and beyond.
+            Over 45 years of expertise in heating, cooling, and ventilation. Gas Safe registered engineers delivering reliable, professional solutions for domestic and commercial clients across Hull and beyond.
           </p>
         </div>
 
@@ -70,11 +63,11 @@ export default function HeroDesktop() {
           <dl className="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div className="flex flex-col-reverse gap-1">
               <dt className="text-base/7 text-gray-300">Years in Business</dt>
-              <dd className="text-4xl font-semibold tracking-tight text-white">15+</dd>
+              <dd className="text-4xl font-semibold tracking-tight text-white">45+</dd>
             </div>
             <div className="flex flex-col-reverse gap-1">
               <dt className="text-base/7 text-gray-300">Projects Completed</dt>
-              <dd className="text-4xl font-semibold tracking-tight text-white">500+</dd>
+              <dd className="text-4xl font-semibold tracking-tight text-white">3000+</dd>
             </div>
             <div className="flex flex-col-reverse gap-1">
               <dt className="text-base/7 text-gray-300">Qualified Engineers</dt>

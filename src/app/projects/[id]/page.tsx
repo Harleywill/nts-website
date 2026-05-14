@@ -77,13 +77,6 @@ export default function ProjectDetailPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                {/* Back Button */}
-                <Link
-                  href="/"
-                  className="text-green-500 hover:text-green-400 font-semibold mb-8 inline-block transition-colors"
-                >
-                  ← Back to Home
-                </Link>
 
                 {/* Header */}
                 <div className="mb-12">
@@ -112,7 +105,17 @@ export default function ProjectDetailPage() {
           </div>
 
           {/* Content Section */}
-          <div className="bg-white py-16 sm:py-24 px-6 lg:px-8">
+          <div className="bg-white py-16 sm:py-24 px-6 lg:px-8"
+            style={{
+              backgroundImage: `
+                conic-gradient(from 90deg at 0.5px 0.5px, #0000 25%, #f0f0f0 0),
+                linear-gradient(45deg, #0000 calc(50% - 0.25px), #f0f0f0 0 calc(50% + 0.25px), #0000 0),
+                linear-gradient(-45deg, #0000 calc(50% - 0.25px), #f0f0f0 0 calc(50% + 0.25px), #0000 0)
+              `,
+              backgroundSize: '1em 1em, 2em 2em, 2em 2em',
+              backgroundPosition: 'calc(-1 * 0.25px) calc(-1 * 0.25px), 0 0, 0 0'
+            }}
+          >
             <div className="mx-auto max-w-4xl">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
