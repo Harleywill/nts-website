@@ -57,8 +57,18 @@ export default function TestimonialsPage() {
         </section>
 
         {/* Testimonials Grid */}
-        <section className="py-24 sm:py-32 px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
+        <section className="relative isolate overflow-hidden py-24 sm:py-32 px-6 lg:px-8 bg-white"
+          style={{
+            backgroundImage: `
+              conic-gradient(from 90deg at 0.5px 0.5px, #0000 25%, #f0f0f0 0),
+              linear-gradient(45deg, #0000 calc(50% - 0.25px), #f0f0f0 0 calc(50% + 0.25px), #0000 0),
+              linear-gradient(-45deg, #0000 calc(50% - 0.25px), #f0f0f0 0 calc(50% + 0.25px), #0000 0)
+            `,
+            backgroundSize: '1em 1em, 2em 2em, 2em 2em',
+            backgroundPosition: 'calc(-1 * 0.25px) calc(-1 * 0.25px), 0 0, 0 0'
+          }}
+        >
+          <div className="mx-auto max-w-7xl relative z-10">
             {/* Title Section */}
             <motion.div
               className="mb-12"
