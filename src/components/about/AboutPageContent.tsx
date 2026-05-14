@@ -121,7 +121,7 @@ export default function AboutPageContent() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-12 justify-items-center">
+          <div className="grid grid-cols-2 lg:grid-cols-2 gap-12 justify-items-center">
             {directors.map((director, index) => (
               <motion.div
                 key={index}
@@ -129,7 +129,7 @@ export default function AboutPageContent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true, amount: 0.2 }}
-                className={`flex flex-col items-center ${index === directors.length - 1 ? 'col-span-2 lg:col-span-1 lg:col-start-2' : ''}`}
+                className="flex flex-col items-center"
               >
                 <div className="relative mb-6">
                   <div
