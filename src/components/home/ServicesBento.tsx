@@ -158,7 +158,7 @@ export default function ServicesBento() {
                 onClick={() => setSelectedId(service.id)}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 whileTap={{ scale: 0.98 }}
-                className="relative z-[9999] h-full rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-8 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 flex flex-col justify-between group text-left"
+                className="h-full rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-8 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 flex flex-col justify-between group text-left"
                 style={{ pointerEvents: "auto" }}
               >
                 <div>

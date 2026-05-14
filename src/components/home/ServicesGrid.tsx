@@ -110,7 +110,7 @@ export default function ServicesGrid() {
               onClick={() => handleCardClick(service.id)}
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
               whileTap={{ scale: 0.98 }}
-              className="group relative z-[9999] rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col h-full w-full text-left bg-transparent"
+              className="group rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col h-full w-full text-left bg-transparent"
               style={{ backgroundColor: "#1f2937", pointerEvents: "auto" }}
             >
               <div
