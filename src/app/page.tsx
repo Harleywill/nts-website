@@ -22,6 +22,7 @@ export default function Home() {
         <div className="hidden md:block">
           <HeroDesktop />
         </div>
+        <AccreditationsSection />
         <AboutSection />
         {/* Services: Bento layout on mobile, Grid on desktop */}
         <div className="block md:hidden">
@@ -30,7 +31,6 @@ export default function Home() {
         <div className="hidden md:block">
           <ServicesGrid />
         </div>
-        <AccreditationsSection />
         <LatestProjects />
         <Testimonials />
         <FeaturedNews />
