@@ -10,7 +10,7 @@ const heroImages = [
   "/images/hero-rooftop-hvac.jpg", // HVAC rooftop units
   "/images/hero-hvac-equipment.webp", // HVAC cooling equipment
   "/images/hero-electrical-testing.jpg", // Electrical testing with multimeter
-  "/images/hero-circuit-board.jpg", // Circuit board and electronics
+  "/images/hero-circuit-board.avif", // Circuit board and electronics
 ];
 
 interface HeroCarouselProps {
