@@ -97,6 +97,7 @@ export default function ServicesGrid() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
+          style={{ pointerEvents: "auto" }}
         >
           {SERVICES.filter((service) => service.id !== "commercial-servicing").map((service) => (
             <motion.button
@@ -106,7 +107,7 @@ export default function ServicesGrid() {
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
               whileTap={{ scale: 0.98 }}
               className="group rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col h-full w-full text-left bg-transparent"
-              style={{ backgroundColor: "#1f2937" }}
+              style={{ backgroundColor: "#1f2937", pointerEvents: "auto" }}
             >
               <div
                 className="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-lg transition-all duration-300 group-hover:bg-green-500/20"
