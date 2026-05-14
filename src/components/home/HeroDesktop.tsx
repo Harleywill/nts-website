@@ -1,39 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import Counter from "@/components/common/Counter";
-import {
-  wordStaggerContainerVariants,
-  wordVariants,
-  slideUpVariants,
-  staggerContainerVariants,
-  staggerItemVariants,
-  hoverLiftVariants,
-} from "@/lib/animations";
+import Image from "next/image";
 
 export default function HeroDesktop() {
-  const words = "Professional HVAC Solutions".split(" ");
-
-  const statVariants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: (custom: number) => ({
-      opacity: 1,
-      x: 0,
-      transition: { delay: custom * 0.1, duration: 0.6 },
-    }),
-  };
-
   return (
     <div className="relative isolate overflow-hidden min-h-screen flex items-center justify-center" style={{ backgroundColor: "#1a2f6e" }}>
       {/* Background Image */}
-      <motion.img
+      <Image
         src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=2830&h=1500&q=80"
-        alt="HVAC Services"
-        className="absolute inset-0 -z-10 size-full object-cover object-center"
-        initial={{ scale: 1.1, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.8 }}
+        alt="HVAC Services - Professional heating and cooling systems"
+        fill
+        priority
+        className="absolute inset-0 -z-10 object-cover object-center"
+        unoptimized
       />
 
       {/* Dark Overlay */}
@@ -61,117 +41,51 @@ export default function HeroDesktop() {
 
       {/* Content */}
       <div className="mx-auto max-w-7xl px-6 lg:px-8 w-full">
-        <motion.div
-          className="mx-auto max-w-2xl lg:mx-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          {/* Word-by-word heading animation */}
-          <motion.h2
-            className="text-5xl font-semibold tracking-tight text-white sm:text-7xl"
-            variants={wordStaggerContainerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            {words.map((word, index) => (
-              <motion.span key={index} variants={wordVariants} className="inline-block mr-3">
-                {word}
-              </motion.span>
-            ))}
-          </motion.h2>
-
-          {/* Description paragraph */}
-          <motion.p
-            className="mt-8 text-lg font-medium text-pretty text-gray-200 sm:text-xl/8"
-            variants={slideUpVariants}
-            initial="hidden"
-            animate="visible"
-            transition={{ delay: 0.3, duration: 0.6 }}
-          >
+        <div className="mx-auto max-w-2xl lg:mx-0">
+          <h2 className="text-5xl font-semibold tracking-tight text-white sm:text-7xl">
+            Professional HVAC Solutions
+          </h2>
+          <p className="mt-8 text-lg font-medium text-pretty text-gray-200 sm:text-xl/8">
             Over 15 years of expertise in heating, cooling, and ventilation. Gas Safe registered engineers delivering reliable, professional solutions for domestic and commercial clients across Hull and beyond.
-          </motion.p>
-        </motion.div>
+          </p>
+        </div>
 
-        <motion.div
-          className="mx-auto mt-10 max-w-2xl lg:mx-0 lg:max-w-none"
-          variants={staggerContainerVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.2 }}
-        >
-          {/* CTA Links */}
+        <div className="mx-auto mt-10 max-w-2xl lg:mx-0 lg:max-w-none">
           <div className="grid grid-cols-1 gap-x-8 gap-y-6 text-base/7 font-semibold text-white sm:grid-cols-2 md:flex lg:gap-x-10">
-            <motion.div
-              variants={staggerItemVariants}
-              whileHover={{ scale: 1.08, color: "#4caf50" }}
-              transition={{ duration: 0.3 }}
-            >
-              <Link href="/contact" className="transition-colors">
-                Get a Free Quote <span aria-hidden="true">&rarr;</span>
-              </Link>
-            </motion.div>
-            <motion.div
-              variants={staggerItemVariants}
-              whileHover={{ scale: 1.08, color: "#4caf50" }}
-              transition={{ duration: 0.3 }}
-            >
-              <Link href="/services" className="transition-colors">
-                View Our Services <span aria-hidden="true">&rarr;</span>
-              </Link>
-            </motion.div>
-            <motion.div
-              variants={staggerItemVariants}
-              whileHover={{ scale: 1.08, color: "#4caf50" }}
-              transition={{ duration: 0.3 }}
-            >
-              <Link href="/projects" className="transition-colors">
-                Recent Projects <span aria-hidden="true">&rarr;</span>
-              </Link>
-            </motion.div>
-            <motion.div
-              variants={staggerItemVariants}
-              whileHover={{ scale: 1.08, color: "#4caf50" }}
-              transition={{ duration: 0.3 }}
-            >
-              <Link href="/about" className="transition-colors">
-                About Us <span aria-hidden="true">&rarr;</span>
-              </Link>
-            </motion.div>
+            <Link href="/contact" className="hover:text-green-400 transition-colors">
+              Get a Free Quote <span aria-hidden="true">&rarr;</span>
+            </Link>
+            <Link href="/services" className="hover:text-green-400 transition-colors">
+              View Our Services <span aria-hidden="true">&rarr;</span>
+            </Link>
+            <Link href="/projects" className="hover:text-green-400 transition-colors">
+              Recent Projects <span aria-hidden="true">&rarr;</span>
+            </Link>
+            <Link href="/about" className="hover:text-green-400 transition-colors">
+              About Us <span aria-hidden="true">&rarr;</span>
+            </Link>
           </div>
 
-          {/* Stats with cascade animation */}
-          <motion.dl
-            className="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4"
-            initial="hidden"
-            animate="visible"
-            transition={{ staggerChildren: 0.1, delayChildren: 0.4 }}
-          >
-            {[
-              { label: "Years in Business", value: 15, suffix: "+" },
-              { label: "Projects Completed", value: 500, suffix: "+" },
-              { label: "Qualified Engineers", value: 25, suffix: "+" },
-              { label: "24/7 Support", value: "Always", suffix: "" },
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                className="flex flex-col-reverse gap-1"
-                variants={statVariants}
-                custom={index}
-                whileHover={{ scale: 1.05, y: -4 }}
-              >
-                <motion.dt className="text-base/7 text-gray-300">{stat.label}</motion.dt>
-                <motion.dd className="text-4xl font-semibold tracking-tight text-white">
-                  {typeof stat.value === "number" ? (
-                    <Counter to={stat.value} suffix={stat.suffix} duration={2.5} />
-                  ) : (
-                    stat.value
-                  )}
-                </motion.dd>
-              </motion.div>
-            ))}
-          </motion.dl>
-        </motion.div>
+          {/* Stats */}
+          <dl className="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="flex flex-col-reverse gap-1">
+              <dt className="text-base/7 text-gray-300">Years in Business</dt>
+              <dd className="text-4xl font-semibold tracking-tight text-white">15+</dd>
+            </div>
+            <div className="flex flex-col-reverse gap-1">
+              <dt className="text-base/7 text-gray-300">Projects Completed</dt>
+              <dd className="text-4xl font-semibold tracking-tight text-white">500+</dd>
+            </div>
+            <div className="flex flex-col-reverse gap-1">
+              <dt className="text-base/7 text-gray-300">Qualified Engineers</dt>
+              <dd className="text-4xl font-semibold tracking-tight text-white">25+</dd>
+            </div>
+            <div className="flex flex-col-reverse gap-1">
+              <dt className="text-base/7 text-gray-300">24/7 Support</dt>
+              <dd className="text-4xl font-semibold tracking-tight text-white">Always</dd>
+            </div>
+          </dl>
+        </div>
       </div>
     </div>
   );

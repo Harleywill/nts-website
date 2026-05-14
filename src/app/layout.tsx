@@ -1,37 +1,58 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import FaviconManager from "@/components/common/FaviconManager";
-import QuickEnquiryModal from "@/components/common/QuickEnquiryModal";
-import StickyButtonClient from "@/components/common/StickyButtonClient";
-import ScrollProgress from "@/components/common/ScrollProgress";
-import { ToastProvider } from "@/components/common/ToastContainer";
-import PageTransition from "@/components/layout/PageTransition";
+import StickyButton from "@/components/common/StickyButton";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nevilletuckerservices.co.uk";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
 
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 5,
-  userScalable: true,
-};
-
 export const metadata: Metadata = {
-  title: "NTS Ltd | Heating & Air Conditioning Services",
-  description: "Professional heating, ventilation, and air conditioning services for domestic and commercial clients in Hull, UK. Gas Safe registered.",
-  keywords: "heating, air conditioning, ventilation, plumbing, Hull, Gas Safe",
+  title: "NTS Ltd | Heating & Air Conditioning Services in Hull",
+  description: "Professional heating, ventilation, and air conditioning services for domestic and commercial clients in Hull, UK. Gas Safe registered. Over 15 years of expertise.",
+  keywords: "heating services Hull, air conditioning Hull, HVAC Hull, ventilation systems, plumbing Hull, Gas Safe registered, commercial HVAC, domestic heating",
+  authors: [{ name: "NTS Ltd" }],
+  viewport: "width=device-width, initial-scale=1.0, maximum-scale=5.0",
   icons: {
     icon: "/favicon.png",
   },
+  metadataBase: new URL(siteUrl),
+  alternates: {
+    canonical: siteUrl,
+  },
   openGraph: {
-    title: "NTS Ltd | Reliable Heating & Air Conditioning Services",
-    description: "Professional HVAC and mechanical services in Hull, UK",
+    title: "NTS Ltd | Professional Heating & Air Conditioning Services",
+    description: "Expert HVAC and mechanical solutions for Hull and beyond. Gas Safe registered with 15+ years of experience.",
     type: "website",
+    url: siteUrl,
+    siteName: "NTS Ltd",
+    locale: "en_GB",
+    images: [
+      {
+        url: `${siteUrl}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "NTS Ltd - Professional HVAC Services",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NTS Ltd | Heating & Air Conditioning Services",
+    description: "Professional HVAC and mechanical services in Hull, UK",
+    images: [`${siteUrl}/og-image.jpg`],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    "max-image-preview": "large",
+    "max-snippet": -1,
+    "max-video-preview": -1,
   },
 };
 
@@ -48,6 +69,81 @@ export default function RootLayout({
       className={`${inter.variable} scroll-smooth`}
     >
       <head>
+        {/* Structured Data - JSON-LD Schema */}
+        <Script
+          id="schema-org"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "NTS Ltd",
+              "image": `${siteUrl}/og-image.jpg`,
+              "description": "Professional heating, ventilation, and air conditioning services for domestic and commercial clients",
+              "url": siteUrl,
+              "telephone": "01482 838080",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Hull, East Yorkshire",
+                "addressLocality": "Hull",
+                "addressRegion": "East Yorkshire",
+                "postalCode": "",
+                "addressCountry": "GB"
+              },
+              "areaServed": ["Hull", "East Yorkshire", "Yorkshire", "Humber"],
+              "serviceType": [
+                "Heating Services",
+                "Air Conditioning",
+                "Ventilation",
+                "HVAC",
+                "Plumbing",
+                "Commissioning"
+              ],
+              "priceRange": "$$",
+              "openingHoursSpecification": [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                  "opens": "08:00",
+                  "closes": "17:00"
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": ["Saturday", "Sunday"],
+                  "opens": "09:00",
+                  "closes": "13:00"
+                }
+              ],
+              "sameAs": [
+                "https://www.facebook.com/ntslimited",
+                "https://www.linkedin.com/company/nts-ltd"
+              ]
+            }),
+          }}
+        />
+
+        {/* Organization Schema */}
+        <Script
+          id="schema-organization"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "NTS Ltd",
+              "url": siteUrl,
+              "logo": `${siteUrl}/images/ntsLogo.png`,
+              "description": "Professional HVAC and mechanical solutions for domestic and commercial clients",
+              "foundingDate": "1981",
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "Customer Service",
+                "telephone": "01482 838080"
+              }
+            }),
+          }}
+        />
+
         {/* Google Tag Manager */}
         <Script
           id="gtm-script"
@@ -91,12 +187,9 @@ gtag('config', 'G-PEK7PKH64Z');`,
           ></iframe>
         </noscript>
         {/* End Google Tag Manager (noscript) */}
-        <ToastProvider>
-          <ScrollProgress />
-          <FaviconManager />
-          <PageTransition>{children}</PageTransition>
-          <StickyButtonClient />
-        </ToastProvider>
+        <FaviconManager />
+        {children}
+        <StickyButton />
       </body>
     </html>
   );
