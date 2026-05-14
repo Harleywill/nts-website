@@ -138,7 +138,7 @@ export default function ServicesBento() {
 
         {/* Bento Grid */}
         <motion.div
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+          className="relative z-50 grid grid-cols-1 gap-4 sm:grid-cols-2"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
