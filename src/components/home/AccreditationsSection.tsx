@@ -21,28 +21,23 @@ const companyAccreditations = [
 export default function AccreditationsSection() {
   return (
     <section className="relative isolate py-16 overflow-hidden" style={{ backgroundColor: "#1a2f6e" }}>
+      {/* SVG Animated Pattern Background */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <svg aria-hidden="true" className="absolute top-0 left-[max(50%,25rem)] h-256 w-512 -translate-x-1/2 mask-[radial-gradient(64rem_64rem_at_top,white,transparent)] stroke-gray-700">
+          <defs>
+            <pattern id="accred-pattern" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
+              <path d="M100 200V.5M.5 .5H200" fill="none" />
+            </pattern>
+          </defs>
+          <svg x="50%" y="-1" className="overflow-visible fill-gray-700/30">
+            <path d="M-100.5 0h201v201h-201Z M699.5 0h201v201h-201Z M499.5 400h201v201h-201Z M-300.5 600h201v201h-201Z" strokeWidth="0" />
+          </svg>
+          <rect width="100%" height="100%" fill="url(#accred-pattern)" strokeWidth="0" />
+        </svg>
+      </div>
+
       {/* Dark Overlay */}
-      <div className="absolute inset-0 -z-10 bg-black/40" />
-
-      {/* Top Gradient Blob */}
-      <div aria-hidden="true" className="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl">
-        <div
-          style={{
-            clipPath: "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-          }}
-          className="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#4caf50] to-[#1a2f6e] opacity-20"
-        />
-      </div>
-
-      {/* Bottom Gradient Blob */}
-      <div aria-hidden="true" className="absolute -top-52 left-1/2 -z-10 -translate-x-1/2 transform-gpu blur-3xl sm:-top-80 sm:ml-16 sm:translate-x-0">
-        <div
-          style={{
-            clipPath: "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-          }}
-          className="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#4caf50] to-[#1a2f6e] opacity-20"
-        />
-      </div>
+      <div className="absolute inset-0 -z-10 bg-black/20" />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div className="text-center mb-12">
