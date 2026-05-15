@@ -99,9 +99,11 @@ export default function Services() {
           }}
         >
           <div className="mx-auto max-w-4xl">
-            <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-16 text-center">
-              What We Offer
-            </h2>
+            <div className="bg-white rounded-2xl p-8 shadow-lg mb-16">
+              <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center">
+                What We Offer
+              </h2>
+            </div>
             <div className="space-y-12">
               {serviceInfo.map((service, index) => (
                 <div key={index} className="border-l-4 border-green-500 pl-8">
@@ -118,11 +120,24 @@ export default function Services() {
         </section>
 
         {/* Services Grid */}
-        <section className="relative py-24 sm:py-32 overflow-hidden bg-gray-50 px-6 lg:px-8">
+        <section className="relative py-24 sm:py-32 overflow-hidden bg-white px-6 lg:px-8"
+          style={{
+            backgroundColor: '#ffffff',
+            backgroundImage: `
+              conic-gradient(from 90deg at 1px 1px, #0000 25%, #e0e0e0 0),
+              linear-gradient(45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0),
+              linear-gradient(-45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0)
+            `,
+            backgroundSize: '1em 1em, 2em 2em, 2em 2em',
+            backgroundPosition: '-0.5px -0.5px, 0 0, 0 0'
+          }}
+        >
           <div className="mx-auto max-w-7xl">
-            <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-16 text-center">
-              Explore Our Services
-            </h2>
+            <div className="bg-white rounded-2xl p-8 shadow-lg mb-16">
+              <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center">
+                Explore Our Services
+              </h2>
+            </div>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
               {services.map((service) => {
                 const Icon = service.icon;
