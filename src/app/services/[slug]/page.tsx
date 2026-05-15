@@ -196,13 +196,14 @@ export default function ServicePage() {
         {/* Content Section - Image Left, Text Right */}
         <section className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:px-8"
           style={{
+            backgroundColor: '#ffffff',
             backgroundImage: `
-              conic-gradient(from 90deg at 0.5px 0.5px, #0000 25%, #f0f0f0 0),
-              linear-gradient(45deg, #0000 calc(50% - 0.25px), #f0f0f0 0 calc(50% + 0.25px), #0000 0),
-              linear-gradient(-45deg, #0000 calc(50% - 0.25px), #f0f0f0 0 calc(50% + 0.25px), #0000 0)
+              conic-gradient(from 90deg at 1px 1px, #0000 25%, #e0e0e0 0),
+              linear-gradient(45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0),
+              linear-gradient(-45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0)
             `,
             backgroundSize: '1em 1em, 2em 2em, 2em 2em',
-            backgroundPosition: 'calc(-1 * 0.25px) calc(-1 * 0.25px), 0 0, 0 0'
+            backgroundPosition: '-0.5px -0.5px, 0 0, 0 0'
           }}
         >
           <div className="mx-auto max-w-7xl">
