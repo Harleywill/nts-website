@@ -7,7 +7,7 @@ set -e  # Exit on error
 
 REMOTE_USER="root"
 REMOTE_HOST="72.62.6.180"
-REMOTE_PATH="/var/www/ntsltd"
+REMOTE_PATH="/root/nts-website"
 SSH_KEY="$HOME/.ssh/hostinger_key"
 BRANCH="${1:-main}"
 
@@ -21,7 +21,7 @@ ssh -i "$SSH_KEY" "$REMOTE_USER@$REMOTE_HOST" <<'DEPLOY_SCRIPT'
 set -e
 
 echo "📂 Navigating to project directory..."
-cd /var/www/ntsltd
+cd /root/nts-website
 
 echo "📥 Pulling latest code from git..."
 # Clean up any local database files that might block the pull
@@ -44,8 +44,10 @@ cp -r public/* .next/standalone/public/
 echo "📦 Copying static CSS/JS to standalone build..."
 cp -r .next/static .next/standalone/.next/
 
-echo "🔄 Restarting PM2 process..."
-pm2 restart nts-website
+echo "🔄 Setting up PM2 process..."
+pm2 delete nts-website 2>/dev/null || true
+cd /root/nts-website
+pm2 start "node .next/standalone/server.js" --name nts-website --cwd /root/nts-website
 
 echo "⏳ Waiting for app to start..."
 sleep 3
