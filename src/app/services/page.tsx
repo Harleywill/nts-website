@@ -106,7 +106,7 @@ export default function Services() {
             </div>
             <div className="space-y-12">
               {serviceInfo.map((service, index) => (
-                <div key={index} className="border-l-4 border-green-500 pl-8">
+                <div key={index} className="bg-white rounded-2xl p-8 shadow-lg">
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">
                     {service.title}
                   </h3>
