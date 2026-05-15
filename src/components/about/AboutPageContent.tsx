@@ -178,16 +178,18 @@ export default function AboutPageContent() {
               Our Story
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div className="space-y-6 text-lg text-gray-600 leading-relaxed">
-                <p>
-                  NTS department was formed in 1981 as part of the heating company, providing design, installation and servicing to a wide range of customers, both commercial and domestic. In 2011, it became an independent company providing the same level of service gained over the preceding years of experience.
-                </p>
-                <p>
-                  Our vast experience has taught us that "right first time" is the only way to ensure high levels of customer retention and operational efficiency. We pride ourselves on our quality focus over and above commercial, physical and time constraints.
-                </p>
-                <p>
-                  Our long-standing, loyal client base is testament to good service and quality of workmanship, approaching each project from the client stand-point and looking at the entire project life cycle from installation, through to commissioning and service.
-                </p>
+              <div className="bg-white rounded-2xl p-8 shadow-lg">
+                <div className="space-y-6 text-lg text-gray-600 leading-relaxed">
+                  <p>
+                    NTS department was formed in 1981 as part of the heating company, providing design, installation and servicing to a wide range of customers, both commercial and domestic. In 2011, it became an independent company providing the same level of service gained over the preceding years of experience.
+                  </p>
+                  <p>
+                    Our vast experience has taught us that "right first time" is the only way to ensure high levels of customer retention and operational efficiency. We pride ourselves on our quality focus over and above commercial, physical and time constraints.
+                  </p>
+                  <p>
+                    Our long-standing, loyal client base is testament to good service and quality of workmanship, approaching each project from the client stand-point and looking at the entire project life cycle from installation, through to commissioning and service.
+                  </p>
+                </div>
               </div>
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
