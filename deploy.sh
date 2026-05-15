@@ -44,9 +44,19 @@ cp -r public/* .next/standalone/public/
 echo "📦 Copying static CSS/JS to standalone build..."
 cp -r .next/static .next/standalone/.next/
 
+echo "📦 Copying prisma folder to standalone build..."
+cp -r prisma .next/standalone/
+
+echo "🗄️  Running Prisma migrations in standalone build..."
+cd /root/nts-website/.next/standalone
+npx prisma migrate deploy || echo "Migrations already applied"
+
+echo "🌱 Seeding database with initial data..."
+npx prisma db seed || echo "Database already seeded"
+
 echo "🔄 Setting up PM2 process..."
-pm2 delete nts-website 2>/dev/null || true
 cd /root/nts-website
+pm2 delete nts-website 2>/dev/null || true
 pm2 start "node .next/standalone/server.js" --name nts-website --cwd /root/nts-website
 
 echo "⏳ Waiting for app to start..."
