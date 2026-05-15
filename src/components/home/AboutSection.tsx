@@ -61,7 +61,7 @@ export default function AboutSection() {
           </div>
         </div>
         <div className="-mt-12 -ml-12 p-12 lg:sticky lg:top-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:overflow-hidden">
-          <img src="/images/hvac-installation.jpg" alt="HVAC Services" className="w-[26rem] max-w-none rounded-xl bg-gray-900 shadow-xl ring-1 ring-white/10" />
+          <img src="/images/hvac-installation.jpg" alt="HVAC Services" className="w-[36rem] max-w-none rounded-xl bg-gray-900 shadow-xl ring-1 ring-white/10" />
         </div>
         <div className="lg:col-span-2 lg:col-start-1 lg:row-start-2 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
           <div className="lg:pr-4">
