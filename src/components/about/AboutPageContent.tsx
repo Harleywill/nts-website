@@ -110,7 +110,7 @@ export default function AboutPageContent() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true, amount: 0.2 }}
-            className="text-center mb-16"
+            className="bg-white rounded-2xl p-8 shadow-lg text-center mb-16"
           >
             <h2 className="text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl mb-6">
               Meet the Directors
@@ -174,9 +174,11 @@ export default function AboutPageContent() {
             viewport={{ once: true, amount: 0.3 }}
             className="mb-20"
           >
-            <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl mb-8">
-              Our Story
-            </h2>
+            <div className="bg-white rounded-2xl p-8 shadow-lg mb-8">
+              <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+                Our Story
+              </h2>
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="bg-white rounded-2xl p-8 shadow-lg">
                 <div className="space-y-6 text-lg text-gray-600 leading-relaxed">
@@ -230,7 +232,7 @@ export default function AboutPageContent() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true, amount: 0.2 }}
-            className="mb-20"
+            className="mb-20 bg-white rounded-2xl p-8 shadow-lg"
           >
             <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl mb-8">
               Our Comprehensive Services
@@ -251,7 +253,7 @@ export default function AboutPageContent() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true, amount: 0.2 }}
-            className="mb-20 bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-12"
+            className="mb-20 bg-white rounded-2xl p-8 shadow-lg"
           >
             <h3 className="text-3xl font-bold text-gray-900 mb-6">Sustainability & Innovation</h3>
             <div className="space-y-4 text-gray-700 text-lg leading-relaxed">
@@ -313,7 +315,7 @@ export default function AboutPageContent() {
           backgroundPosition: '-0.5px -0.5px, 0 0, 0 0'
         }}
       >
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="mx-auto max-w-2xl text-center bg-white rounded-2xl p-8 shadow-lg">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
