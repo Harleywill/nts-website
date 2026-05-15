@@ -21,23 +21,6 @@ const companyAccreditations = [
 export default function AccreditationsSection() {
   return (
     <section className="relative isolate py-16 overflow-hidden bg-gray-900">
-      {/* SVG Animated Pattern Background */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <svg aria-hidden="true" className="absolute top-0 left-[max(50%,25rem)] h-256 w-512 -translate-x-1/2 mask-[radial-gradient(64rem_64rem_at_top,white,transparent)] stroke-gray-700">
-          <defs>
-            <pattern id="accred-pattern" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
-              <path d="M100 200V.5M.5 .5H200" fill="none" />
-            </pattern>
-          </defs>
-          <svg x="50%" y="-1" className="overflow-visible fill-gray-700/50">
-            <path d="M-100.5 0h201v201h-201Z M699.5 0h201v201h-201Z M499.5 400h201v201h-201Z M-300.5 600h201v201h-201Z" strokeWidth="0" />
-          </svg>
-          <rect width="100%" height="100%" fill="url(#accred-pattern)" strokeWidth="0" />
-        </svg>
-      </div>
-
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 -z-10 bg-black/20" />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div className="text-center mb-12">
