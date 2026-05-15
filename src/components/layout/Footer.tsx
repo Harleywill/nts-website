@@ -44,8 +44,8 @@ export default function Footer() {
                 <Image
                   src="/images/ntsLogo.png"
                   alt="NTS Ltd Logo"
-                  width={280}
-                  height={140}
+                  width={340}
+                  height={51}
                   className="h-10 sm:h-12 w-auto"
                 />
               </Link>
