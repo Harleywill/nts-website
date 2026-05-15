@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { FaFacebook, FaInstagram, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { COMPANY, SERVICES } from "@/lib/constants";
@@ -39,7 +40,15 @@ export default function Footer() {
         >
           <div className="flex flex-col sm:flex-row items-start justify-between gap-8">
             <div className="flex-1">
-              <h3 className="text-2xl font-bold mb-4">{COMPANY.name}</h3>
+              <Link href="/" className="inline-block mb-4">
+                <Image
+                  src="/images/ntsLogo.png"
+                  alt="NTS Ltd Logo"
+                  width={280}
+                  height={140}
+                  className="h-10 sm:h-12 w-auto"
+                />
+              </Link>
               <p className="text-gray-300 text-sm leading-relaxed max-w-md">
                 Professional heating, cooling, and ventilation solutions for residential and commercial clients.
               </p>
