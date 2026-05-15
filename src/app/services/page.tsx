@@ -1,7 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
-import { FaFire, FaWind, FaSnowflake, FaTools, FaCheckCircle } from "react-icons/fa";
+import { FaFire, FaWind, FaSnowflake, FaTools, FaCheckCircle, FaTint } from "react-icons/fa";
 
 export const metadata = {
   title: "Services - NTS Ltd",
@@ -34,6 +34,11 @@ const services = [
     title: "Commissioning",
     icon: FaCheckCircle,
   },
+  {
+    id: "rpz-testing",
+    title: "RPZ Testing",
+    icon: FaTint,
+  },
 ];
 
 const serviceInfo = [
@@ -56,6 +61,10 @@ const serviceInfo = [
   {
     title: "Commissioning",
     description: "Thorough system testing, verification, and optimization of HVAC and mechanical systems. We ensure your systems operate at peak performance and energy efficiency before handover and throughout their lifespan.",
+  },
+  {
+    title: "RPZ Testing",
+    description: "Professional testing and certification of Reduced Pressure Zone (RPZ) devices to protect water quality and comply with regulations. We ensure your backflow prevention devices are functioning correctly and safely protecting your water supply.",
   },
 ];
 

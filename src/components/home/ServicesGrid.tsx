@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaArrowRight, FaTimes, FaFaucet, FaWind, FaHome, FaBuilding, FaSnowflake, FaCheckCircle } from "react-icons/fa";
+import { FaArrowRight, FaTimes, FaFaucet, FaWind, FaHome, FaBuilding, FaSnowflake, FaCheckCircle, FaTint } from "react-icons/fa";
 import { SERVICES } from "@/lib/constants";
 
 const iconMap: { [key: string]: React.ReactNode } = {
@@ -13,6 +13,7 @@ const iconMap: { [key: string]: React.ReactNode } = {
   FaBuilding: <FaBuilding size={36} />,
   FaSnowflake: <FaSnowflake size={36} />,
   FaCheckCircle: <FaCheckCircle size={36} />,
+  FaTint: <FaTint size={36} />,
 };
 
 // Variants for staggered container
