@@ -128,17 +128,7 @@ export default function AboutPageContent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true, amount: 0.2 }}
-                className="flex flex-col items-center p-8 rounded-2xl"
-                style={{
-                  backgroundColor: '#ffffff',
-                  backgroundImage: `
-                    conic-gradient(from 90deg at 1px 1px, #0000 25%, #e0e0e0 0),
-                    linear-gradient(45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0),
-                    linear-gradient(-45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0)
-                  `,
-                  backgroundSize: '1em 1em, 2em 2em, 2em 2em',
-                  backgroundPosition: '-0.5px -0.5px, 0 0, 0 0'
-                }}
+                className="flex flex-col items-center"
               >
                 <div className="relative mb-6">
                   <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-blue-600 shadow-lg">
@@ -165,13 +155,14 @@ export default function AboutPageContent() {
       {/* About Section with Comprehensive Services */}
       <section className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:px-8"
         style={{
+          backgroundColor: '#ffffff',
           backgroundImage: `
-            conic-gradient(from 90deg at 0.5px 0.5px, #0000 25%, #f0f0f0 0),
-            linear-gradient(45deg, #0000 calc(50% - 0.25px), #f0f0f0 0 calc(50% + 0.25px), #0000 0),
-            linear-gradient(-45deg, #0000 calc(50% - 0.25px), #f0f0f0 0 calc(50% + 0.25px), #0000 0)
+            conic-gradient(from 90deg at 1px 1px, #0000 25%, #e0e0e0 0),
+            linear-gradient(45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0),
+            linear-gradient(-45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0)
           `,
           backgroundSize: '1em 1em, 2em 2em, 2em 2em',
-          backgroundPosition: 'calc(-1 * 0.25px) calc(-1 * 0.25px), 0 0, 0 0'
+          backgroundPosition: '-0.5px -0.5px, 0 0, 0 0'
         }}
       >
         <div className="mx-auto max-w-7xl">
