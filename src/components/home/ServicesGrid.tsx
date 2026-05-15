@@ -40,11 +40,11 @@ const cardVariants = {
   },
 };
 
-// Variants for side panel slide
-const panelVariants = {
-  hidden: { x: 400, opacity: 0 },
-  visible: { x: 0, opacity: 1 },
-  exit: { x: 400, opacity: 0 },
+// Variants for inline card expansion
+const overlayCardVariants = {
+  hidden: { opacity: 0, scale: 0.9, y: 20 },
+  visible: { opacity: 1, scale: 1, y: 0 },
+  exit: { opacity: 0, scale: 0.9, y: 20 },
 };
 
 // Variants for backdrop fade
@@ -64,6 +64,16 @@ export default function ServicesGrid() {
 
   const handleGoToPage = (serviceId: string) => {
     router.push(`/services/${serviceId}`);
+  };
+
+  const handleCloseExpanded = () => {
+    setSelectedId(null);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      handleCloseExpanded();
+    }
   };
 
   const selectedService = selectedId ? SERVICES.find((s) => s.id === selectedId) : null;
@@ -146,122 +156,121 @@ export default function ServicesGrid() {
         </motion.div>
       </div>
 
-      {/* Side Panel with AnimatePresence */}
-      <AnimatePresence mode="sync">
+      {/* Inline Card Expansion with AnimatePresence */}
+      <AnimatePresence mode="wait">
         {selectedService && (
           <>
-            {/* Backdrop - only covers left side (grid area) */}
+            {/* Backdrop */}
             <motion.div
               key="backdrop"
               variants={backdropVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              onClick={() => setSelectedId(null)}
-              className="fixed left-0 top-0 bottom-0 bg-black/50 z-40"
-              style={{ width: "calc(100% - 384px)" }}
+              onClick={handleCloseExpanded}
+              onKeyDown={handleKeyDown}
+              className="fixed inset-0 bg-black/40 z-40"
+              tabIndex={-1}
             />
 
-            {/* Side Panel */}
+            {/* Inline Expanded Card */}
             <motion.div
-              key="panel"
-              variants={panelVariants}
+              key="card"
+              variants={overlayCardVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              transition={{ duration: 0.4, type: "tween" }}
-              className="fixed right-0 top-0 h-full w-full sm:w-96 bg-gray-900 shadow-2xl overflow-y-auto z-50"
-              style={{ backgroundColor: "#1a1f2e" }}
+              transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 30 }}
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full mx-4 sm:mx-0 sm:w-auto max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl p-8"
+              style={{ backgroundColor: "#1f2937", maxWidth: "650px" }}
             >
-              <div className="p-8">
-                {/* Close Button */}
-                <motion.button
-                  onClick={() => setSelectedId(null)}
-                  className="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <FaTimes size={24} />
-                </motion.button>
+              {/* Close Button */}
+              <motion.button
+                onClick={handleCloseExpanded}
+                className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <FaTimes size={24} />
+              </motion.button>
 
-                {/* Icon */}
+              {/* Icon */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-lg"
+                style={{ backgroundColor: "rgba(76, 175, 80, 0.1)" }}
+              >
+                <div style={{ color: "#4caf50" }}>
+                  {iconMap[selectedService.icon] || <FaCheckCircle size={40} />}
+                </div>
+              </motion.div>
+
+              {/* Title */}
+              <motion.h3
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.15 }}
+                className="text-3xl font-bold text-white mb-2"
+              >
+                {selectedService.title}
+              </motion.h3>
+
+              {/* Description */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="text-gray-300 mb-8 leading-relaxed"
+              >
+                {selectedService.description}
+              </motion.p>
+
+              {/* What's Included */}
+              {selectedService.details && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-lg"
-                  style={{ backgroundColor: "rgba(76, 175, 80, 0.1)" }}
-                >
-                  <div style={{ color: "#4caf50" }}>
-                    {iconMap[selectedService.icon] || <FaCheckCircle size={40} />}
-                  </div>
-                </motion.div>
-
-                {/* Title */}
-                <motion.h3
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.15 }}
-                  className="text-3xl font-bold text-white mb-2"
+                  transition={{ delay: 0.25 }}
                 >
-                  {selectedService.title}
-                </motion.h3>
-
-                {/* Description */}
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-gray-300 mb-8 leading-relaxed"
-                >
-                  {selectedService.description}
-                </motion.p>
-
-                {/* What's Included */}
-                {selectedService.details && (
+                  <h4 className="text-lg font-semibold text-white mb-4">What's Included:</h4>
                   <motion.div
+                    className="space-y-3"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.25 }}
+                    transition={{ staggerChildren: 0.05, delayChildren: 0.3 }}
                   >
-                    <h4 className="text-lg font-semibold text-white mb-4">What's Included:</h4>
-                    <motion.div
-                      className="space-y-3"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ staggerChildren: 0.05, delayChildren: 0.3 }}
-                    >
-                      {selectedService.details.map((detail, idx) => (
-                        <motion.div
-                          key={idx}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          className="flex items-start gap-3"
-                        >
-                          <span style={{ color: "#4caf50" }} className="text-lg flex-shrink-0 mt-0.5">
-                            ✓
-                          </span>
-                          <span className="text-gray-300">{detail}</span>
-                        </motion.div>
-                      ))}
-                    </motion.div>
+                    {selectedService.details.map((detail, idx) => (
+                      <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="flex items-start gap-3"
+                      >
+                        <span style={{ color: "#4caf50" }} className="text-lg flex-shrink-0 mt-0.5">
+                          ✓
+                        </span>
+                        <span className="text-gray-300">{detail}</span>
+                      </motion.div>
+                    ))}
                   </motion.div>
-                )}
+                </motion.div>
+              )}
 
-                {/* Full Page Button */}
-                <motion.button
-                  onClick={() => handleGoToPage(selectedService.id)}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(76, 175, 80, 0.6)" }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full mt-8 px-6 py-3 rounded-lg font-semibold text-white text-center transition-all"
-                  style={{ backgroundColor: "#4caf50" }}
-                >
-                  View Full Details
-                </motion.button>
-              </div>
+              {/* Full Page Button */}
+              <motion.button
+                onClick={() => handleGoToPage(selectedService.id)}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(76, 175, 80, 0.6)" }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full mt-8 px-6 py-3 rounded-lg font-semibold text-white text-center transition-all"
+                style={{ backgroundColor: "#4caf50" }}
+              >
+                View Full Details
+              </motion.button>
             </motion.div>
           </>
         )}
