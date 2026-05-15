@@ -42,7 +42,7 @@ export default function AboutSection() {
         viewport={{ once: true, amount: 0.2 }}
       >
         {/* Text Content */}
-        <div className="mb-8">
+        <div className="mb-8 bg-white rounded-2xl p-8 shadow-lg">
           <p className="text-base/7 font-semibold" style={{ color: "#4caf50" }}>
             About NTS Ltd
           </p>
@@ -67,7 +67,7 @@ export default function AboutSection() {
         </div>
 
         {/* Rest of Content */}
-        <div className="text-base/7 text-gray-700">
+        <div className="text-base/7 text-gray-700 bg-white rounded-2xl p-8 shadow-lg">
           <p className="mb-8">
             Whether you need a new boiler installation, routine maintenance, emergency repairs, or a complete commercial HVAC system, NTS Ltd has the expertise and experience to handle it. We work with both domestic and commercial clients, from small residential properties to large industrial facilities.
           </p>
