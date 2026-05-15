@@ -134,6 +134,30 @@ const serviceData: Record<
     ],
     whyChoose:
       "Our engineers provide unique expertise spanning both the control systems and the mechanical systems themselves. This integrated approach ensures your systems are perfectly optimized for performance and efficiency, delivering ongoing energy savings and reliable operation.",
+    },
+  "rpz-testing": {
+    title: "RPZ Testing",
+    description:
+      "Professional testing and certification of Reduced Pressure Zone devices for water safety compliance",
+    imageUrl: "/images/services/rpz-testing.jpg",
+    content:
+      "Reduced Pressure Zone (RPZ) devices are critical components in protecting water quality and preventing contamination through backflow. Our certified engineers provide professional testing and certification of RPZ devices to ensure they are functioning correctly and meeting all regulatory requirements. We conduct thorough inspections, functional tests, and documentation to keep your water supply safe and compliant with Water Regulations.",
+    features: [
+      "Professional RPZ device testing and inspection",
+      "Annual certification and re-certification",
+      "Functional performance testing",
+      "Compliance with Water Regulations",
+      "Detailed testing documentation and reports",
+      "Backflow prevention verification",
+      "Device maintenance recommendations",
+      "Installation of new RPZ devices",
+      "Emergency testing services available",
+      "Scheduled maintenance programs",
+      "Expert regulatory guidance",
+      "Full traceability and record keeping",
+    ],
+    whyChoose:
+      "Our certified engineers specialise in water safety and regulatory compliance. We ensure your RPZ devices protect your water supply effectively while meeting all legal requirements. With comprehensive testing, clear documentation, and expert guidance, we provide complete peace of mind for your water safety.",
   },
 };
 
