@@ -175,7 +175,7 @@ export default function AboutPageContent() {
             className="mb-20"
           >
             <div className="bg-white rounded-2xl p-8 shadow-lg mb-8">
-              <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+              <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl text-center">
                 Our Story
               </h2>
             </div>
