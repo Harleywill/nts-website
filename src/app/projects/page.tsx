@@ -42,6 +42,19 @@ export default function Projects() {
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 px-6 pt-24 pb-24 sm:py-32 lg:px-8 lg:pt-24 min-h-[550px] flex items-center">
+          <div className="absolute inset-0 -z-10 overflow-hidden">
+            <svg aria-hidden="true" className="absolute top-0 left-[max(50%,25rem)] h-256 w-512 -translate-x-1/2 mask-[radial-gradient(64rem_64rem_at_top,white,transparent)] stroke-gray-800">
+              <defs>
+                <pattern id="pattern-projects" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
+                  <path d="M100 200V.5M.5 .5H200" fill="none" />
+                </pattern>
+              </defs>
+              <svg x="50%" y="-1" className="overflow-visible fill-gray-800/50">
+                <path d="M-100.5 0h201v201h-201Z M699.5 0h201v201h-201Z M499.5 400h201v201h-201Z M-300.5 600h201v201h-201Z" strokeWidth="0" />
+              </svg>
+              <rect width="100%" height="100%" fill="url(#pattern-projects)" strokeWidth="0" />
+            </svg>
+          </div>
           <div className="mx-auto max-w-2xl text-center">
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
               Our Projects
