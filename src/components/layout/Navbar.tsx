@@ -160,8 +160,8 @@ export default function Navbar() {
             <Image
               src="/images/ntsLogo.png"
               alt="NTS Ltd Logo"
-              width={280}
-              height={140}
+              width={320}
+              height={48}
               priority
               className="h-9 sm:h-10 lg:h-12 w-auto"
             />
