@@ -92,7 +92,18 @@ export default function AboutPageContent() {
       </section>
 
       {/* Meet the Directors Section */}
-      <section className="bg-gradient-to-b from-gray-50 to-white px-6 py-24 sm:py-32 lg:px-8">
+      <section className="bg-gradient-to-b from-gray-50 to-white px-6 py-24 sm:py-32 lg:px-8"
+        style={{
+          backgroundColor: '#ffffff',
+          backgroundImage: `
+            conic-gradient(from 90deg at 1px 1px, #0000 25%, #e0e0e0 0),
+            linear-gradient(45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0),
+            linear-gradient(-45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0)
+          `,
+          backgroundSize: '1em 1em, 2em 2em, 2em 2em',
+          backgroundPosition: '-0.5px -0.5px, 0 0, 0 0'
+        }}
+      >
         <div className="mx-auto max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -287,7 +298,18 @@ export default function AboutPageContent() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-white px-6 py-24 sm:py-32 lg:px-8">
+      <section className="bg-white px-6 py-24 sm:py-32 lg:px-8"
+        style={{
+          backgroundColor: '#ffffff',
+          backgroundImage: `
+            conic-gradient(from 90deg at 1px 1px, #0000 25%, #e0e0e0 0),
+            linear-gradient(45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0),
+            linear-gradient(-45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0)
+          `,
+          backgroundSize: '1em 1em, 2em 2em, 2em 2em',
+          backgroundPosition: '-0.5px -0.5px, 0 0, 0 0'
+        }}
+      >
         <div className="mx-auto max-w-2xl text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
