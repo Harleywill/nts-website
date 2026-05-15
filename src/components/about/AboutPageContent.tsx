@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 const directors = [
@@ -25,39 +26,6 @@ const directors = [
   },
 ];
 
-const process = [
-  {
-    number: "01",
-    title: "Consultation",
-    description: "We meet with you to understand your needs, property specifications, and budget requirements.",
-  },
-  {
-    number: "02",
-    title: "Assessment",
-    description: "Our engineers conduct a thorough evaluation to design the optimal solution for your space.",
-  },
-  {
-    number: "03",
-    title: "Planning",
-    description: "We provide detailed proposals, timelines, and transparent pricing with no hidden costs.",
-  },
-  {
-    number: "04",
-    title: "Installation",
-    description: "Professional installation with minimal disruption, using only quality materials and proven techniques.",
-  },
-  {
-    number: "05",
-    title: "Testing",
-    description: "Comprehensive system testing and commissioning to ensure peak performance and efficiency.",
-  },
-  {
-    number: "06",
-    title: "Support",
-    description: "Ongoing maintenance plans and 24/7 support to keep your systems running smoothly.",
-  },
-];
-
 export default function AboutPageContent() {
   return (
     <>
@@ -75,7 +43,7 @@ export default function AboutPageContent() {
                 About NTS Ltd
               </h1>
               <p className="text-lg leading-8 text-gray-300 mb-8">
-                Leading provider of professional HVAC and mechanical solutions across Hull and beyond. With over 15 years of expertise, we're committed to delivering reliability, quality, and excellence in every project.
+                For more than 45 years, NTS Limited has delivered trusted mechanical and electrical solutions to businesses and organisations across the UK. Based in East Yorkshire and operating nationwide, we combine decades of industry experience with a forward-thinking approach to modern building services.
               </p>
             </motion.div>
 
@@ -86,17 +54,37 @@ export default function AboutPageContent() {
               transition={{ duration: 0.8 }}
               className="grid grid-cols-2 gap-4"
             >
-              <div className="rounded-lg w-full h-56 overflow-hidden">
-                <img src="/images/team-member.jpg" alt="Team Member" className="w-full h-full object-cover" />
+              <div className="rounded-lg w-full h-56 overflow-hidden relative">
+                <Image
+                  src="/images/team-member.jpg"
+                  alt="Team Member - NTS Ltd professional team"
+                  fill
+                  className="object-cover"
+                />
               </div>
-              <div className="rounded-lg w-full h-56 overflow-hidden">
-                <img src="/images/work-in-progress.jpg" alt="Work in Progress" className="w-full h-full object-cover" />
+              <div className="rounded-lg w-full h-56 overflow-hidden relative">
+                <Image
+                  src="/images/work-in-progress.jpg"
+                  alt="Work in Progress - Professional HVAC installation"
+                  fill
+                  className="object-cover"
+                />
               </div>
-              <div className="rounded-lg w-full h-56 overflow-hidden">
-                <img src="/images/team-collaboration.jpg" alt="Team Collaboration" className="w-full h-full object-cover" />
+              <div className="rounded-lg w-full h-56 overflow-hidden relative">
+                <Image
+                  src="/images/team-collaboration.jpg"
+                  alt="Team Collaboration - NTS Ltd team working together"
+                  fill
+                  className="object-cover"
+                />
               </div>
-              <div className="rounded-lg w-full h-56 overflow-hidden">
-                <img src="/images/office-space.jpg" alt="Office Space" className="w-full h-full object-cover" />
+              <div className="rounded-lg w-full h-56 overflow-hidden relative">
+                <Image
+                  src="/images/office-space.jpg"
+                  alt="Office Space - NTS Ltd headquarters"
+                  fill
+                  className="object-cover"
+                />
               </div>
             </motion.div>
           </div>
@@ -132,13 +120,12 @@ export default function AboutPageContent() {
                 className="flex flex-col items-center"
               >
                 <div className="relative mb-6">
-                  <div
-                    className="w-48 h-48 rounded-full overflow-hidden border-4 border-blue-600 shadow-lg"
-                  >
-                    <img
+                  <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-blue-600 shadow-lg">
+                    <Image
                       src={director.image}
-                      alt={director.name}
-                      className="w-full h-full object-cover"
+                      alt={`${director.name} - ${director.title}`}
+                      fill
+                      className="object-cover"
                     />
                   </div>
                 </div>
@@ -154,10 +141,20 @@ export default function AboutPageContent() {
         </div>
       </section>
 
-      {/* Cohesive Main Section: Our Story & Why We're Different */}
-      <section className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:px-8">
+      {/* About Section with Comprehensive Services */}
+      <section className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:px-8"
+        style={{
+          backgroundImage: `
+            conic-gradient(from 90deg at 0.5px 0.5px, #0000 25%, #f0f0f0 0),
+            linear-gradient(45deg, #0000 calc(50% - 0.25px), #f0f0f0 0 calc(50% + 0.25px), #0000 0),
+            linear-gradient(-45deg, #0000 calc(50% - 0.25px), #f0f0f0 0 calc(50% + 0.25px), #0000 0)
+          `,
+          backgroundSize: '1em 1em, 2em 2em, 2em 2em',
+          backgroundPosition: 'calc(-1 * 0.25px) calc(-1 * 0.25px), 0 0, 0 0'
+        }}
+      >
         <div className="mx-auto max-w-7xl">
-          {/* Our History */}
+          {/* Our Story */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -202,7 +199,7 @@ export default function AboutPageContent() {
                   </div>
                   <div className="flex items-center gap-3">
                     <span style={{ color: "#4caf50" }} className="text-2xl">✓</span>
-                    <span className="text-gray-700">25+ qualified engineers</span>
+                    <span className="text-gray-700">50+ qualified engineers</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <span style={{ color: "#4caf50" }} className="text-2xl">✓</span>
@@ -213,8 +210,7 @@ export default function AboutPageContent() {
             </div>
           </motion.div>
 
-
-          {/* Services & Our Philosophy */}
+          {/* Comprehensive Services */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -222,15 +218,39 @@ export default function AboutPageContent() {
             viewport={{ once: true, amount: 0.2 }}
             className="mb-20"
           >
-            <h3 className="text-3xl font-bold text-gray-900 text-center mb-12">
+            <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl mb-8">
               Our Comprehensive Services
-            </h3>
-            <p className="text-center text-lg text-gray-600 max-w-3xl mx-auto mb-8">
-              We provide installation, service and maintenance of Plumbing and heating, Air Conditioning, Ventilation, Building and energy management systems, and RPZ testing. Constant training and sharing best practice ensures we are at the forefront of emerging technology, presenting clients with multiple options to fulfill their needs.
-            </p>
+            </h2>
+            <div className="space-y-6 text-gray-600 text-lg leading-relaxed max-w-4xl">
+              <p>
+                Our expertise covers a complete range of mechanical and electrical solutions, including plumbing, heating, ventilation, air conditioning, electrical controls, and renewable technologies. From large-scale commercial projects to specialist installations and ongoing maintenance, we provide reliable systems designed to improve efficiency, performance, and long-term sustainability.
+              </p>
+              <p>
+                At NTS Limited, we understand that every project is different. That's why we work closely with clients from concept through to completion, ensuring every solution is tailored to meet operational requirements, compliance standards, and future energy demands. Our skilled engineers and technical teams are committed to delivering high-quality workmanship, innovative thinking, and dependable service at every stage.
+              </p>
+            </div>
           </motion.div>
 
-          {/* Our Commitment */}
+          {/* Sustainability & Innovation */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.2 }}
+            className="mb-20 bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-12"
+          >
+            <h3 className="text-3xl font-bold text-gray-900 mb-6">Sustainability & Innovation</h3>
+            <div className="space-y-4 text-gray-700 text-lg leading-relaxed">
+              <p>
+                As the industry continues to evolve, renewable and energy-efficient technologies are becoming increasingly important. We are proud to support clients with sustainable solutions that help reduce environmental impact while improving energy performance and operational cost efficiency.
+              </p>
+              <p>
+                Our commitment to innovation means we stay at the forefront of emerging technologies, continuously training our teams and exploring new approaches that benefit both our clients' operations and the environment.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Our Core Values */}
           <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-12 lg:p-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
