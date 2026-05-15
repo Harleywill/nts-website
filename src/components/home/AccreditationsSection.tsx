@@ -20,7 +20,7 @@ const companyAccreditations = [
 
 export default function AccreditationsSection() {
   return (
-    <section className="relative isolate py-16 overflow-hidden" style={{ backgroundColor: "#1a2f6e" }}>
+    <section className="relative isolate py-16 overflow-hidden bg-gray-900">
       {/* SVG Animated Pattern Background */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <svg aria-hidden="true" className="absolute top-0 left-[max(50%,25rem)] h-256 w-512 -translate-x-1/2 mask-[radial-gradient(64rem_64rem_at_top,white,transparent)] stroke-gray-700">
