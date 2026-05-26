@@ -267,6 +267,31 @@ export default function AdminDashboard() {
           </Link>
         </div>
       </div>
+
+      {/* Management */}
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Management</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Link
+            href="/admin/contact-submissions"
+            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-center font-medium"
+          >
+            📧 View Contact Submissions
+          </Link>
+          <Link
+            href="/admin/settings"
+            className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors text-center font-medium"
+          >
+            ⚙️ Site Settings
+          </Link>
+          <Link
+            href="/admin/projects?search="
+            className="px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors text-center font-medium"
+          >
+            🔍 Search Content
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
