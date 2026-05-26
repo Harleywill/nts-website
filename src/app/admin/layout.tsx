@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 export const metadata = {
@@ -10,6 +11,13 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get("auth-token");
+
+  if (!authCookie) {
+    redirect("/auth/login");
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       <nav className="bg-gray-900 text-white">
