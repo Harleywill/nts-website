@@ -33,41 +33,13 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  background: #fbfbfd;
 }
 
 body {
-  @apply bg-white text-gray-900 font-sans;
-
-  /* Ultra Subtle Grid Background */
-  --grid-color: #f0f0f0;
-  --grid-size: 1em;
-  --grid-thickness: 0.5px;
-  --grid-offset: calc(0.5 * var(--grid-thickness));
-
-  background-image:
-    /* horizontal and vertical lines */
-    conic-gradient(from 90deg at var(--grid-thickness) var(--grid-thickness),
-        #0000 25%, var(--grid-color) 0),
-    /* main diagonal */
-    linear-gradient(45deg,
-        #0000 calc(50% - var(--grid-offset)),
-        var(--grid-color) 0 calc(50% + var(--grid-offset)),
-        #0000 0),
-    /* secondary diagonal */
-    linear-gradient(-45deg,
-        #0000 calc(50% - var(--grid-offset)),
-        var(--grid-color) 0 calc(50% + var(--grid-offset)),
-        #0000 0);
-
-  background-size:
-    var(--grid-size) var(--grid-size),
-    calc(2 * var(--grid-size)) calc(2 * var(--grid-size)),
-    calc(2 * var(--grid-size)) calc(2 * var(--grid-size));
-
-  background-position:
-    calc(-1 * var(--grid-offset)) calc(-1 * var(--grid-offset)),
-    0 0,
-    0 0;
+  @apply text-gray-900 font-sans;
+  background: transparent;
+  color: #111827;
 }
 
 /* Responsive typography */

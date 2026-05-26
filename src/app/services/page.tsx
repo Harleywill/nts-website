@@ -71,7 +71,7 @@ const serviceInfo = [
 
 export default function Services() {
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen ">
       <Navbar />
       <main className="flex-grow">
         {/* Hero Section */}
@@ -90,27 +90,16 @@ export default function Services() {
         </section>
 
         {/* Services Information Section */}
-        <section className="relative py-24 sm:py-32 overflow-hidden bg-white px-6 lg:px-8"
-          style={{
-            backgroundColor: '#ffffff',
-            backgroundImage: `
-              conic-gradient(from 90deg at 1px 1px, #0000 25%, #e0e0e0 0),
-              linear-gradient(45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0),
-              linear-gradient(-45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0)
-            `,
-            backgroundSize: '1em 1em, 2em 2em, 2em 2em',
-            backgroundPosition: '-0.5px -0.5px, 0 0, 0 0'
-          }}
-        >
+        <section className="relative py-24 sm:py-32 overflow-hidden px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
-            <div className="bg-white rounded-2xl p-8 shadow-lg mb-16">
+            <div className=" rounded-2xl p-8 shadow-lg mb-16">
               <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center">
                 What We Offer
               </h2>
             </div>
             <div className="space-y-12">
               {serviceInfo.map((service, index) => (
-                <div key={index} className="bg-white rounded-2xl p-8 shadow-lg">
+                <div key={index} className=" rounded-2xl p-8 shadow-lg">
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">
                     {service.title}
                   </h3>
@@ -124,20 +113,9 @@ export default function Services() {
         </section>
 
         {/* Services Grid */}
-        <section className="relative py-24 sm:py-32 overflow-hidden bg-white px-6 lg:px-8"
-          style={{
-            backgroundColor: '#ffffff',
-            backgroundImage: `
-              conic-gradient(from 90deg at 1px 1px, #0000 25%, #e0e0e0 0),
-              linear-gradient(45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0),
-              linear-gradient(-45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0)
-            `,
-            backgroundSize: '1em 1em, 2em 2em, 2em 2em',
-            backgroundPosition: '-0.5px -0.5px, 0 0, 0 0'
-          }}
-        >
+        <section className="relative py-24 sm:py-32 overflow-hidden px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
-            <div className="bg-white rounded-2xl p-8 shadow-lg mb-16">
+            <div className=" rounded-2xl p-8 shadow-lg mb-16">
               <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center">
                 Explore Our Services
               </h2>
@@ -149,7 +127,7 @@ export default function Services() {
                   <Link
                     key={service.id}
                     href={`/services/${service.id}`}
-                    className="group h-full rounded-2xl bg-white p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-green-500 flex flex-col items-center justify-center text-center"
+                    className="group h-full rounded-2xl  p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-green-500 flex flex-col items-center justify-center text-center"
                   >
                     <div className="inline-block p-3 rounded-lg bg-green-500/10 mb-6 group-hover:bg-green-500/20 transition-colors">
                       <Icon size={40} style={{ color: "#4caf50" }} />

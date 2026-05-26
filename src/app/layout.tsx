@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import FaviconManager from "@/components/common/FaviconManager";
 import StickyButton from "@/components/common/StickyButton";
+import EngineeringBackground from "@/components/common/EngineeringBackground";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nevilletuckerservices.co.uk";
 
@@ -230,7 +231,7 @@ gtag('config', 'G-PEK7PKH64Z');`,
         />
         {/* End Google Analytics 4 */}
       </head>
-      <body className="min-h-screen flex flex-col bg-white text-gray-900">
+      <body className="min-h-screen flex flex-col text-gray-900">
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
@@ -241,6 +242,7 @@ gtag('config', 'G-PEK7PKH64Z');`,
           ></iframe>
         </noscript>
         {/* End Google Tag Manager (noscript) */}
+        <EngineeringBackground />
         <FaviconManager />
         {children}
         <StickyButton />

@@ -36,7 +36,7 @@ export default function TestimonialsPage() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen ">
       <Navbar />
       <main className="flex-grow">
         {/* Hero Section */}
@@ -61,17 +61,8 @@ export default function TestimonialsPage() {
         </section>
 
         {/* Testimonials Grid */}
-        <section className="relative isolate overflow-hidden py-24 sm:py-32 px-6 lg:px-8 bg-white"
-          style={{
-            backgroundColor: '#ffffff',
-            backgroundImage: `
-              conic-gradient(from 90deg at 1px 1px, #0000 25%, #e0e0e0 0),
-              linear-gradient(45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0),
-              linear-gradient(-45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0)
-            `,
-            backgroundSize: '1em 1em, 2em 2em, 2em 2em',
-            backgroundPosition: '-0.5px -0.5px, 0 0, 0 0'
-          }}
+        <section className="relative isolate overflow-hidden py-24 sm:py-32 px-6 lg:px-8 "
+          
         >
           <div className="mx-auto max-w-7xl relative z-10">
             {/* Title Section */}
@@ -112,7 +103,7 @@ export default function TestimonialsPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true, amount: 0.2 }}
-                    className="flex flex-col bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:border-green-500 transition-all duration-300 h-full p-6"
+                    className="flex flex-col  border border-gray-200 rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:border-green-500 transition-all duration-300 h-full p-6"
                   >
                     {/* Stars */}
                     <div className="flex gap-1 mb-4">

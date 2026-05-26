@@ -109,17 +109,8 @@ export default function ProjectDetailPage() {
           </div>
 
           {/* Content Section */}
-          <div className="bg-white py-16 sm:py-24 px-6 lg:px-8"
-            style={{
-              backgroundColor: '#ffffff',
-              backgroundImage: `
-                conic-gradient(from 90deg at 1px 1px, #0000 25%, #e0e0e0 0),
-                linear-gradient(45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0),
-                linear-gradient(-45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0)
-              `,
-              backgroundSize: '1em 1em, 2em 2em, 2em 2em',
-              backgroundPosition: '-0.5px -0.5px, 0 0, 0 0'
-            }}
+          <div className=" py-16 sm:py-24 px-6 lg:px-8"
+            
           >
             <div className="mx-auto max-w-4xl">
               <motion.div
