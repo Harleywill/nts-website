@@ -1,6 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import ContactForm from "@/components/home/Contact";
+import ContactPageContent from "@/components/home/ContactPageContent";
 import DuctWaves from "@/components/common/DuctWaves";
 
 export const metadata = {
@@ -10,9 +10,7 @@ export const metadata = {
 
 export default function Contact() {
   return (
-    <div className="flex flex-col min-h-screen "
-      
-    >
+    <div className="flex flex-col min-h-screen">
       <Navbar />
       <main className="flex-grow">
         {/* Hero Section */}
@@ -31,7 +29,7 @@ export default function Contact() {
         </section>
 
         {/* Contact Form */}
-        <ContactForm />
+        <ContactPageContent />
       </main>
       <Footer />
     </div>
