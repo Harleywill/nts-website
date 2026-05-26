@@ -9,6 +9,7 @@ interface Stats {
   projects: number;
   news: number;
   testimonials: number;
+  contactSubmissions: number;
 }
 
 export default function AdminDashboard() {
@@ -18,6 +19,7 @@ export default function AdminDashboard() {
     projects: 0,
     news: 0,
     testimonials: 0,
+    contactSubmissions: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -25,14 +27,15 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [usersRes, projectsRes, newsRes, testimonialsRes] = await Promise.all([
+        const [usersRes, projectsRes, newsRes, testimonialsRes, contactRes] = await Promise.all([
           fetch("/api/users", { credentials: "include" }),
           fetch("/api/projects", { credentials: "include" }),
           fetch("/api/news", { credentials: "include" }),
           fetch("/api/testimonials", { credentials: "include" }),
+          fetch("/api/contact-submissions", { credentials: "include" }),
         ]);
 
-        if (!usersRes.ok || !projectsRes.ok || !newsRes.ok || !testimonialsRes.ok) {
+        if (!usersRes.ok || !projectsRes.ok || !newsRes.ok || !testimonialsRes.ok || !contactRes.ok) {
           throw new Error("Failed to fetch stats");
         }
 
@@ -40,12 +43,14 @@ export default function AdminDashboard() {
         const projects = await projectsRes.json();
         const news = await newsRes.json();
         const testimonials = await testimonialsRes.json();
+        const submissions = await contactRes.json();
 
         setStats({
           users: Array.isArray(users) ? users.length : 0,
           projects: Array.isArray(projects) ? projects.length : 0,
           news: Array.isArray(news) ? news.length : 0,
           testimonials: Array.isArray(testimonials) ? testimonials.length : 0,
+          contactSubmissions: Array.isArray(submissions) ? submissions.length : 0,
         });
       } catch (err) {
         setError("Failed to load dashboard stats");
@@ -76,7 +81,7 @@ export default function AdminDashboard() {
       {!loading && (
         <div>
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Site Statistics</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {/* Users Card */}
             <Link
               href="/admin/users"
@@ -191,6 +196,35 @@ export default function AdminDashboard() {
                 </div>
               </div>
               <p className="mt-4 text-xs text-gray-500">Manage testimonials →</p>
+            </Link>
+
+            {/* Contact Submissions Card */}
+            <Link
+              href="/admin/contact-submissions"
+              className="bg-white rounded-lg border border-gray-200 p-6 hover:border-green-500 hover:shadow-lg transition-all"
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 font-medium">Contact Forms</p>
+                  <p className="text-3xl font-bold text-gray-900 mt-2">{stats.contactSubmissions}</p>
+                </div>
+                <div className="p-3 bg-red-50 rounded-lg">
+                  <svg
+                    className="w-6 h-6 text-red-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <p className="mt-4 text-xs text-gray-500">View submissions →</p>
             </Link>
           </div>
         </div>
