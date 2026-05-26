@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Gallery from "@/components/common/Gallery";
+import DuctWaves from "@/components/common/DuctWaves";
 
 interface Project {
   id: number;
@@ -70,7 +71,10 @@ export default function ProjectDetailPage() {
       ) : (
         <>
           {/* Hero Section with Dark Background */}
-          <div className="bg-gradient-to-b from-gray-900 to-gray-800 py-16 sm:py-24 px-6 lg:px-8">
+          <div className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 py-16 sm:py-24 px-6 lg:px-8">
+            <div className="absolute inset-0 -z-10 overflow-hidden">
+              <DuctWaves bands={5} speed={0.7} />
+            </div>
             <div className="mx-auto max-w-5xl">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
