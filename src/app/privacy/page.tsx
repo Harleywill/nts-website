@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function Privacy() {
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen ">
       <Navbar />
       <main className="flex-grow">
         {/* Hero Section */}
@@ -26,17 +26,8 @@ export default function Privacy() {
         </section>
 
         {/* Content Section */}
-        <section className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:px-8"
-          style={{
-            backgroundColor: '#ffffff',
-            backgroundImage: `
-              conic-gradient(from 90deg at 1px 1px, #0000 25%, #e0e0e0 0),
-              linear-gradient(45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0),
-              linear-gradient(-45deg, #0000 calc(50% - 0.5px), #e0e0e0 0 calc(50% + 0.5px), #0000 0)
-            `,
-            backgroundSize: '1em 1em, 2em 2em, 2em 2em',
-            backgroundPosition: '-0.5px -0.5px, 0 0, 0 0'
-          }}
+        <section className="relative isolate overflow-hidden  px-6 py-24 sm:py-32 lg:px-8"
+          
         >
           <div className="mx-auto max-w-3xl">
             <div className="prose prose-lg prose-gray max-w-none">
