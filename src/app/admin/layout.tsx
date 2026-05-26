@@ -14,6 +14,9 @@ export default function AdminLayout({
             <Link href="/admin/dashboard" className="hover:text-green-400">
               Dashboard
             </Link>
+            <Link href="/admin/careers" className="hover:text-green-400">
+              Careers
+            </Link>
             <Link href="/admin/contact-submissions" className="hover:text-green-400">
               Contact
             </Link>
