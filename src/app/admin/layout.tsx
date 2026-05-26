@@ -1,43 +1,10 @@
-"use client";
-
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const [authToken, setAuthToken] = useState<string | null>(null);
-  const [isChecking, setIsChecking] = useState(true);
-
-  useEffect(() => {
-    // Check for auth token from cookie
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("auth-token="))
-      ?.split("=")[1];
-
-    setAuthToken(token || null);
-    setIsChecking(false);
-
-    if (!token && pathname !== "/admin/login") {
-      redirect("/admin/login");
-    }
-  }, [pathname]);
-
-  if (isChecking) {
-    return <div>Loading...</div>;
-  }
-
-  // Don't show the nav for login page
-  if (pathname === "/admin/login") {
-    return <>{children}</>;
-  }
-
   return (
     <div className="min-h-screen bg-gray-100">
       <nav className="bg-gray-900 text-white">
