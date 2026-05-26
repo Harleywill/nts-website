@@ -103,7 +103,7 @@ export default function TestimonialsPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true, amount: 0.2 }}
-                    className="flex flex-col  border border-gray-200 rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:border-green-500 transition-all duration-300 h-full p-6"
+                    className="flex flex-col  border border-gray-200 rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:border-green-500 transition-all duration-300 h-full p-6 bg-white"
                   >
                     {/* Stars */}
                     <div className="flex gap-1 mb-4">

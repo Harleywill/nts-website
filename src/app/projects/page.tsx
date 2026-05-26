@@ -91,7 +91,7 @@ export default function Projects() {
                     viewport={{ once: true, amount: 0.2 }}
                   >
                     <Link href={`/projects/${project.id}`}>
-                      <div className="group h-full rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-green-500 cursor-pointer ">
+                      <div className="group h-full rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-green-500 cursor-pointer bg-white">
                         {/* Image Container */}
                         {project.imageUrl ? (
                           <div className="relative w-full h-48 overflow-hidden bg-gray-200">
