@@ -51,8 +51,8 @@ export default function Contact() {
             ==================================================== */}
         <section className="relative px-6 py-24 lg:px-8">
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-14 lg:grid-cols-[1fr_1.4fr] lg:items-start">
-            {/* LEFT: intro + stats + accreditations */}
-            <div>
+            {/* LEFT: intro + stats + accreditations — in white card */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-[0_20px_60px_rgba(13,21,48,0.08)]">
               <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#4caf50]">
                 Contact form
               </div>

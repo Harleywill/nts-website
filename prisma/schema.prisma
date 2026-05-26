@@ -12,6 +12,7 @@ model User {
   username  String   @unique
   password  String
   createdAt DateTime @default(now())
+  jobs      Job[]
 }
 
 model Project {
@@ -86,4 +87,79 @@ model SiteSettings {
   linkedinUrl  String?
   twitterUrl   String?
   updatedAt    DateTime @updatedAt
+}
+
+enum JobStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  APPRENTICESHIP
+}
+
+enum ApplicationStatus {
+  NEW
+  REVIEWING
+  INTERVIEW
+  OFFER
+  HIRED
+  REJECTED
+}
+
+model Job {
+  id              String         @id @default(cuid())
+  slug            String         @unique
+  title           String
+  department      String
+  location        String
+  employmentType  EmploymentType
+  salaryRange     String
+  experience      String
+  closesAt        DateTime
+  status          JobStatus      @default(DRAFT)
+
+  description     String
+  responsibilities String
+  requirements    String
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  createdById     Int?
+  createdBy       User?          @relation(fields: [createdById], references: [id])
+
+  applications    Application[]
+
+  @@index([status])
+  @@index([closesAt])
+}
+
+model Application {
+  id              String             @id @default(cuid())
+  reference       String             @unique
+
+  jobId           String
+  job             Job                @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  fullName        String
+  email           String
+  phone           String
+  postcode        String
+  cvUrl           String
+  cvFilename      String
+  coverLetter     String?
+
+  status          ApplicationStatus  @default(NEW)
+  notes           String?
+
+  submittedAt     DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([jobId])
+  @@index([status])
+  @@index([submittedAt])
 }

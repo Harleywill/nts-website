@@ -10,6 +10,7 @@ interface Stats {
   news: number;
   testimonials: number;
   contactSubmissions: number;
+  applications: number;
 }
 
 export default function AdminDashboard() {
@@ -20,6 +21,7 @@ export default function AdminDashboard() {
     news: 0,
     testimonials: 0,
     contactSubmissions: 0,
+    applications: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -27,15 +29,16 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [usersRes, projectsRes, newsRes, testimonialsRes, contactRes] = await Promise.all([
+        const [usersRes, projectsRes, newsRes, testimonialsRes, contactRes, applicationsRes] = await Promise.all([
           fetch("/api/users", { credentials: "include" }),
           fetch("/api/projects", { credentials: "include" }),
           fetch("/api/news", { credentials: "include" }),
           fetch("/api/testimonials", { credentials: "include" }),
           fetch("/api/contact-submissions", { credentials: "include" }),
+          fetch("/api/admin/applications", { credentials: "include" }),
         ]);
 
-        if (!usersRes.ok || !projectsRes.ok || !newsRes.ok || !testimonialsRes.ok || !contactRes.ok) {
+        if (!usersRes.ok || !projectsRes.ok || !newsRes.ok || !testimonialsRes.ok || !contactRes.ok || !applicationsRes.ok) {
           throw new Error("Failed to fetch stats");
         }
 
@@ -43,14 +46,16 @@ export default function AdminDashboard() {
         const projects = await projectsRes.json();
         const news = await newsRes.json();
         const testimonials = await testimonialsRes.json();
-        const submissions = await contactRes.json();
+        const contact = await contactRes.json();
+        const applications = await applicationsRes.json();
 
         setStats({
           users: Array.isArray(users) ? users.length : 0,
           projects: Array.isArray(projects) ? projects.length : 0,
           news: Array.isArray(news) ? news.length : 0,
           testimonials: Array.isArray(testimonials) ? testimonials.length : 0,
-          contactSubmissions: Array.isArray(submissions) ? submissions.length : 0,
+          contactSubmissions: Array.isArray(contact) ? contact.length : 0,
+          applications: Array.isArray(applications) ? applications.length : 0,
         });
       } catch (err) {
         setError("Failed to load dashboard stats");
@@ -81,7 +86,7 @@ export default function AdminDashboard() {
       {!loading && (
         <div>
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Site Statistics</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Users Card */}
             <Link
               href="/admin/users"
@@ -205,7 +210,7 @@ export default function AdminDashboard() {
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 font-medium">Contact Forms</p>
+                  <p className="text-sm text-gray-600 font-medium">Contact Submissions</p>
                   <p className="text-3xl font-bold text-gray-900 mt-2">{stats.contactSubmissions}</p>
                 </div>
                 <div className="p-3 bg-red-50 rounded-lg">
@@ -226,6 +231,35 @@ export default function AdminDashboard() {
               </div>
               <p className="mt-4 text-xs text-gray-500">View submissions →</p>
             </Link>
+
+            {/* Job Applications Card */}
+            <Link
+              href="/admin/careers/applications"
+              className="bg-white rounded-lg border border-gray-200 p-6 hover:border-green-500 hover:shadow-lg transition-all"
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 font-medium">Job Applications</p>
+                  <p className="text-3xl font-bold text-gray-900 mt-2">{stats.applications}</p>
+                </div>
+                <div className="p-3 bg-indigo-50 rounded-lg">
+                  <svg
+                    className="w-6 h-6 text-indigo-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <p className="mt-4 text-xs text-gray-500">View applications →</p>
+            </Link>
           </div>
         </div>
       )}
@@ -240,55 +274,42 @@ export default function AdminDashboard() {
       {/* Quick Actions */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <Link
             href="/admin/users/new"
-            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-center font-medium"
+            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-center font-medium border-2 border-green-700"
           >
             + Create New User
           </Link>
           <Link
             href="/admin/projects/new"
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-center font-medium"
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-center font-medium border-2 border-blue-600"
           >
             + Add New Project
           </Link>
           <Link
             href="/admin/news/new"
-            className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-center font-medium"
+            className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-center font-medium border-2 border-purple-700"
           >
             + Write News Article
           </Link>
           <Link
             href="/admin/testimonials/new"
-            className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors text-center font-medium"
+            className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors text-center font-medium border-2 border-yellow-600"
           >
             + Add Testimonial
           </Link>
-        </div>
-      </div>
-
-      {/* Management */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Management</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
-            href="/admin/contact-submissions"
-            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-center font-medium"
+            href="/admin/careers/new"
+            className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors text-center font-medium border-2 border-emerald-700"
           >
-            📧 View Contact Submissions
+            + Post New Job
           </Link>
           <Link
-            href="/admin/settings"
-            className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors text-center font-medium"
+            href="/admin/careers/applications"
+            className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors text-center font-medium border-2 border-indigo-700"
           >
-            ⚙️ Site Settings
-          </Link>
-          <Link
-            href="/admin/projects?search="
-            className="px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors text-center font-medium"
-          >
-            🔍 Search Content
+            📋 View Applications
           </Link>
         </div>
       </div>
