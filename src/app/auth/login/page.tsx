@@ -22,20 +22,15 @@ export default function LoginPage() {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await res.json();
-      console.log("Login response:", res.status, data);
-
       if (!res.ok) {
+        const data = await res.json();
         setError(data.error || "Failed to login");
         setLoading(false);
         return;
       }
 
-      console.log("Login successful, redirecting...");
-      await new Promise(resolve => setTimeout(resolve, 500));
       router.push("/admin/dashboard");
     } catch (err) {
-      console.error("Login error:", err);
       setError("An error occurred. Please try again.");
       setLoading(false);
     }
