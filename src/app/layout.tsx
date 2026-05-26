@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -13,12 +13,17 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1.0,
+  maximumScale: 5.0,
+};
+
 export const metadata: Metadata = {
   title: "NTS Ltd | Heating & Air Conditioning Services in Hull",
   description: "Professional heating, ventilation, and air conditioning services for domestic and commercial clients in Hull, UK. Gas Safe registered. Over 15 years of expertise.",
   keywords: "heating services Hull, air conditioning Hull, HVAC Hull, ventilation systems, plumbing Hull, Gas Safe registered, commercial HVAC, domestic heating",
   authors: [{ name: "NTS Ltd" }],
-  viewport: "width=device-width, initial-scale=1.0, maximum-scale=5.0",
   icons: {
     icon: "/favicon.png",
   },
@@ -68,6 +73,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${inter.variable} scroll-smooth`}
+      data-scroll-behavior="smooth"
     >
       <head>
         {/* Structured Data - JSON-LD Schema */}
