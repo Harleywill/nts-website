@@ -2,9 +2,16 @@ import { prisma } from "@/lib/db";
 import Link from "next/link";
 import DeleteUserButton from "@/components/admin/DeleteUserButton";
 
-async function getUsers() {
+async function getUsers(searchQuery?: string) {
   try {
+    const where = searchQuery
+      ? {
+          username: { contains: searchQuery, mode: "insensitive" as const },
+        }
+      : undefined;
+
     const users = await prisma.user.findMany({
+      where,
       orderBy: { createdAt: "desc" },
     });
     return users;
@@ -14,8 +21,14 @@ async function getUsers() {
   }
 }
 
-export default async function AdminUsersPage() {
-  const users = await getUsers();
+export default async function AdminUsersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string }>;
+}) {
+  const params = await searchParams;
+  const searchQuery = params.search || "";
+  const users = await getUsers(searchQuery);
 
   return (
     <div>
@@ -28,6 +41,32 @@ export default async function AdminUsersPage() {
           New User
         </Link>
       </div>
+
+      <form className="mb-6" method="GET">
+        <div className="flex gap-3">
+          <input
+            type="text"
+            name="search"
+            placeholder="Search by username..."
+            defaultValue={searchQuery}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          />
+          <button
+            type="submit"
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          >
+            Search
+          </button>
+          {searchQuery && (
+            <Link
+              href="/admin/users"
+              className="px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
+            >
+              Clear
+            </Link>
+          )}
+        </div>
+      </form>
 
       {users.length === 0 ? (
         <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">

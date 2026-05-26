@@ -2,9 +2,19 @@ import { prisma } from "@/lib/db";
 import Link from "next/link";
 import DeleteNewsButton from "@/components/admin/DeleteNewsButton";
 
-async function getNewsItems() {
+async function getNewsItems(searchQuery?: string) {
   try {
+    const where = searchQuery
+      ? {
+          OR: [
+            { title: { contains: searchQuery, mode: "insensitive" as const } },
+            { content: { contains: searchQuery, mode: "insensitive" as const } },
+          ],
+        }
+      : undefined;
+
     const newsItems = await prisma.newsItem.findMany({
+      where,
       orderBy: { createdAt: "desc" },
     });
     return newsItems;
@@ -14,8 +24,14 @@ async function getNewsItems() {
   }
 }
 
-export default async function AdminNewsPage() {
-  const newsItems = await getNewsItems();
+export default async function AdminNewsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string }>;
+}) {
+  const params = await searchParams;
+  const searchQuery = params.search || "";
+  const newsItems = await getNewsItems(searchQuery);
 
   return (
     <div>
@@ -28,6 +44,32 @@ export default async function AdminNewsPage() {
           New News Item
         </Link>
       </div>
+
+      <form className="mb-6" method="GET">
+        <div className="flex gap-3">
+          <input
+            type="text"
+            name="search"
+            placeholder="Search by title or content..."
+            defaultValue={searchQuery}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          />
+          <button
+            type="submit"
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          >
+            Search
+          </button>
+          {searchQuery && (
+            <Link
+              href="/admin/news"
+              className="px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
+            >
+              Clear
+            </Link>
+          )}
+        </div>
+      </form>
 
       {newsItems.length === 0 ? (
         <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
