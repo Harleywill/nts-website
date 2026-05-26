@@ -7,7 +7,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
-
+import DuctWaves from "@/components/common/DuctWaves";
 const serviceData: Record<
   string,
   {
@@ -176,6 +176,9 @@ export default function ServicePage() {
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 via-gray-900 to-gray-800 px-6 pt-24 pb-24 sm:py-32 lg:px-8 lg:pt-24 min-h-[550px] flex items-center">
+          <div className="absolute inset-0 -z-10 overflow-hidden">
+            <DuctWaves bands={5} speed={0.7} />
+          </div>
           <div className="mx-auto max-w-7xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
