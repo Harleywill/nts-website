@@ -23,7 +23,14 @@ async function verifyAuth(request: NextRequest): Promise<boolean> {
 }
 
 export async function middleware(request: NextRequest) {
-  // Verify JWT token
+  const pathname = request.nextUrl.pathname;
+
+  // Allow login page without authentication
+  if (pathname === '/admin/login') {
+    return NextResponse.next();
+  }
+
+  // Verify JWT token for all other admin routes
   const isAuthenticated = await verifyAuth(request);
 
   if (!isAuthenticated) {
