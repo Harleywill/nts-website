@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  webpack: {
+    // Force webpack instead of Turbopack
+  },
   images: {
     remotePatterns: [
       {
