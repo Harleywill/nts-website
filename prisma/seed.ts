@@ -227,6 +227,22 @@ async function main() {
 
     console.log("News items seeded");
   }
+
+  // Initialize SiteSettings
+  const existingSettings = await prisma.siteSettings.count();
+  if (existingSettings === 0) {
+    await prisma.siteSettings.create({
+      data: {
+        companyName: "NTS Ltd",
+        phone: "01482 838080",
+        email: "info@nevilletuckerservices.co.uk",
+        address: "Kingston upon Hull",
+        city: "Hull",
+        postalCode: "HU1 2AA",
+      },
+    });
+    console.log("SiteSettings initialized with defaults");
+  }
 }
 
 main()
