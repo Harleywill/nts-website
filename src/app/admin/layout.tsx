@@ -11,6 +11,12 @@ export default function AdminLayout({
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">NTS Admin</h1>
           <div className="flex gap-6 items-center">
+            <Link href="/admin/dashboard" className="hover:text-green-400">
+              Dashboard
+            </Link>
+            <Link href="/admin/contact-submissions" className="hover:text-green-400">
+              Contact
+            </Link>
             <Link href="/admin/projects" className="hover:text-green-400">
               Projects
             </Link>
@@ -22,6 +28,9 @@ export default function AdminLayout({
             </Link>
             <Link href="/admin/users" className="hover:text-green-400">
               Users
+            </Link>
+            <Link href="/admin/settings" className="hover:text-green-400">
+              Settings
             </Link>
             <form action="/api/auth/logout" method="POST">
               <button className="hover:text-red-400">Logout</button>

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 const transporter = nodemailer.createTransport({
   host: "smtp.resend.com",
@@ -57,26 +60,39 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { name, service, contact, message } = body;
+    const { name, email, phone, service, company, message } = body;
 
     // Validation
-    if (!name || !service || !contact || !message) {
+    if (!name || !email) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    // Validate email or phone
+    // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-    const isValidContact = emailRegex.test(contact) || phoneRegex.test(contact);
-
-    if (!isValidContact) {
+    if (!emailRegex.test(email)) {
       return NextResponse.json(
-        { error: "Please provide a valid email address or phone number" },
+        { error: "Please provide a valid email address" },
         { status: 400 }
       );
+    }
+
+    // Save to database
+    try {
+      await prisma.contactSubmission.create({
+        data: {
+          name,
+          email,
+          phone: phone || null,
+          service: service || null,
+          message: message || "",
+        },
+      });
+    } catch (dbError) {
+      console.error("Database error saving contact submission:", dbError);
+      // Continue even if database save fails - still send email
     }
 
     const adminHtml = `
@@ -84,8 +100,10 @@ export async function POST(request: NextRequest) {
         <h2 style="color: #1a2f6e;">New Contact Form Submission</h2>
 
         <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Service:</strong> ${service}</p>
-        <p><strong>Contact:</strong> ${contact}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+        ${company ? `<p><strong>Company:</strong> ${company}</p>` : ''}
+        ${service ? `<p><strong>Service:</strong> ${service}</p>` : ''}
 
         <h3 style="color: #1a2f6e; margin-top: 20px;">Message:</h3>
         <p style="white-space: pre-wrap; background-color: #f5f5f5; padding: 15px; border-radius: 5px;">
@@ -99,57 +117,52 @@ export async function POST(request: NextRequest) {
       </div>
     `;
 
-    // Check if contact is an email
-    const isEmail = emailRegex.test(contact);
-
     // Send email to admin(s)
     await transporter.sendMail({
-      from: "noreply@nevilletuckerservices.co.uk",
-      to: "info@nevilletuckerservices.co.uk",
-      replyTo: contact,
+      from: "noreply@ntsltd.com",
+      to: "info@ntsltd.com",
+      replyTo: email,
       subject: `New Contact Form Submission - ${name}`,
-      html: `${adminHtml}<p style="color: #999; font-size: 11px; margin-top: 20px;">From: ${contact}</p>`,
+      html: adminHtml,
     });
 
-    // Send confirmation email to customer if email was provided
-    if (isEmail) {
-      const customerHtml = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #1a2f6e;">Thank You for Your Enquiry</h2>
+    // Send confirmation email to customer
+    const customerHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #1a2f6e;">Thank You for Your Enquiry</h2>
 
-          <p>Hi ${name},</p>
+        <p>Hi ${name},</p>
 
-          <p>We've received your enquiry about our ${service} service. Thank you for getting in touch!</p>
+        <p>We've received your enquiry. Thank you for getting in touch!</p>
 
-          <p>Our team will review your message and get back to you as soon as possible. If you have any urgent requests, please feel free to call us at <strong>01482 838080</strong>.</p>
+        <p>Our team will review your message and get back to you as soon as possible. If you have any urgent requests, please feel free to call us at <strong>01482 838080</strong>.</p>
 
-          <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+        <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
 
-          <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px;">
-            <h3 style="color: #1a2f6e; margin-top: 0;">Quick Links:</h3>
-            <ul style="color: #333;">
-              <li><a href="https://nevilletuckerservices.co.uk" style="color: #4caf50; text-decoration: none;">Visit Our Website</a></li>
-              <li><a href="https://nevilletuckerservices.co.uk/services" style="color: #4caf50; text-decoration: none;">View Our Services</a></li>
-              <li><a href="https://nevilletuckerservices.co.uk/contact" style="color: #4caf50; text-decoration: none;">Contact Us</a></li>
-            </ul>
-          </div>
-
-          <p style="color: #666; font-size: 12px; margin-top: 20px;">
-            Best regards,<br>
-            <strong>NTS Ltd Team</strong><br>
-            Hull, UK<br>
-            Phone: 01482 838080
-          </p>
+        <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px;">
+          <h3 style="color: #1a2f6e; margin-top: 0;">Quick Links:</h3>
+          <ul style="color: #333;">
+            <li><a href="https://ntsltd.com" style="color: #4caf50; text-decoration: none;">Visit Our Website</a></li>
+            <li><a href="https://ntsltd.com/services" style="color: #4caf50; text-decoration: none;">View Our Services</a></li>
+            <li><a href="https://ntsltd.com/contact" style="color: #4caf50; text-decoration: none;">Contact Us</a></li>
+          </ul>
         </div>
-      `;
 
-      await transporter.sendMail({
-        from: "noreply@nevilletuckerservices.co.uk",
-        to: contact,
-        subject: "Thank you for your enquiry - NTS Ltd",
-        html: customerHtml,
-      });
-    }
+        <p style="color: #666; font-size: 12px; margin-top: 20px;">
+          Best regards,<br>
+          <strong>NTS Ltd Team</strong><br>
+          Hull, UK<br>
+          Phone: 01482 838080
+        </p>
+      </div>
+    `;
+
+    await transporter.sendMail({
+      from: "noreply@ntsltd.com",
+      to: email,
+      subject: "Thank you for your enquiry - NTS Ltd",
+      html: customerHtml,
+    });
 
     return NextResponse.json(
       {
