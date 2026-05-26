@@ -92,14 +92,14 @@ export default function Services() {
         {/* Services Information Section */}
         <section className="relative py-24 sm:py-32 overflow-hidden px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
-            <div className=" rounded-2xl p-8 shadow-lg mb-16">
+            <div className=" rounded-2xl p-8 shadow-lg mb-16 bg-white">
               <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center">
                 What We Offer
               </h2>
             </div>
             <div className="space-y-12">
               {serviceInfo.map((service, index) => (
-                <div key={index} className=" rounded-2xl p-8 shadow-lg">
+                <div key={index} className=" rounded-2xl p-8 shadow-lg bg-white">
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">
                     {service.title}
                   </h3>
@@ -115,7 +115,7 @@ export default function Services() {
         {/* Services Grid */}
         <section className="relative py-24 sm:py-32 overflow-hidden px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
-            <div className=" rounded-2xl p-8 shadow-lg mb-16">
+            <div className=" rounded-2xl p-8 shadow-lg mb-16 bg-white">
               <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center">
                 Explore Our Services
               </h2>
@@ -127,7 +127,7 @@ export default function Services() {
                   <Link
                     key={service.id}
                     href={`/services/${service.id}`}
-                    className="group h-full rounded-2xl  p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-green-500 flex flex-col items-center justify-center text-center"
+                    className="group h-full rounded-2xl  p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-green-500 flex flex-col items-center justify-center text-center bg-white"
                   >
                     <div className="inline-block p-3 rounded-lg bg-green-500/10 mb-6 group-hover:bg-green-500/20 transition-colors">
                       <Icon size={40} style={{ color: "#4caf50" }} />

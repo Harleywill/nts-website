@@ -126,8 +126,7 @@ export default function FeaturedNews() {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.5, delay: idx * 0.12, ease: "easeOut" }}
                 viewport={{ once: true, amount: 0.3 }}
-                className="flex flex-col rounded-2xl overflow-hidden border border-gray-700 shadow-md h-full"
-                style={{ backgroundColor: "#1f2937" }}
+                className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-md h-full bg-white"
                 whileHover={{ scale: 1.05, y: -6, boxShadow: "0 20px 25px -5px rgba(76, 175, 80, 0.2)" }}
               >
                 {newsItem.imageUrl && (
@@ -144,7 +143,7 @@ export default function FeaturedNews() {
 
                 <div className="p-4 sm:p-6 flex flex-col grow">
                   <div className="flex items-center gap-x-3 text-xs sm:text-sm flex-shrink-0">
-                    <time dateTime={newsItem.createdAt} className="text-gray-400 font-medium">
+                    <time dateTime={newsItem.createdAt} className="text-gray-600 font-medium">
                       {new Date(newsItem.createdAt).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
@@ -159,11 +158,11 @@ export default function FeaturedNews() {
                     </span>
                   </div>
 
-                  <h3 className="mt-3 sm:mt-4 text-lg font-semibold text-white">
+                  <h3 className="mt-3 sm:mt-4 text-lg font-semibold text-gray-900">
                     {newsItem.title}
                   </h3>
 
-                  <p className="mt-2 text-sm text-gray-300 leading-relaxed line-clamp-2">
+                  <p className="mt-2 text-sm text-gray-600 leading-relaxed line-clamp-2">
                     {newsItem.content}
                   </p>
 
