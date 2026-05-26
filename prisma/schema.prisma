@@ -62,3 +62,28 @@ model NewsItem {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model ContactSubmission {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  service   String?
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model SiteSettings {
+  id           Int      @id @default(autoincrement())
+  companyName  String
+  phone        String
+  email        String
+  address      String?
+  city         String?
+  postalCode   String?
+  facebookUrl  String?
+  linkedinUrl  String?
+  twitterUrl   String?
+  updatedAt    DateTime @updatedAt
+}
