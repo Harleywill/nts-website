@@ -1,21 +1,41 @@
+"use client";
+
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
-export const metadata = {
-  title: "Admin - NTS Ltd",
-};
-
-export default async function AdminLayout({
+export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get("auth-token");
+  const pathname = usePathname();
+  const [authToken, setAuthToken] = useState<string | null>(null);
+  const [isChecking, setIsChecking] = useState(true);
 
-  if (!authCookie) {
-    redirect("/auth/login");
+  useEffect(() => {
+    // Check for auth token from cookie
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("auth-token="))
+      ?.split("=")[1];
+
+    setAuthToken(token || null);
+    setIsChecking(false);
+
+    if (!token && pathname !== "/admin/login") {
+      redirect("/admin/login");
+    }
+  }, [pathname]);
+
+  if (isChecking) {
+    return <div>Loading...</div>;
+  }
+
+  // Don't show the nav for login page
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
   }
 
   return (
