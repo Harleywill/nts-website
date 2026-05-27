@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function ProtectedLayout({
@@ -9,37 +9,44 @@ export default function ProtectedLayout({
   children: React.ReactNode
 }) {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+  const hasCheckedAuth = useRef(false);
 
   useEffect(() => {
-    // Check if auth token exists in cookies
-    const token = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('auth-token='))
-      ?.split('=')[1];
+    // Only run this check once
+    if (hasCheckedAuth.current) return;
+    hasCheckedAuth.current = true;
 
-    if (!token) {
-      // No token found, redirect to login
-      router.push('/admin/login');
-      return;
-    }
+    // Give the DOM a moment to be fully ready
+    const timer = setTimeout(() => {
+      try {
+        // Check if auth token exists in cookies
+        const cookies = document.cookie;
+        const hasToken = cookies.includes('auth-token=');
 
-    // Token exists, user is authenticated
-    setIsAuthenticated(true);
-    setIsLoading(false);
+        if (!hasToken) {
+          // No token found, redirect to login
+          router.push('/admin/login');
+          return;
+        }
+
+        // Token exists, user is authenticated - ready to display
+        setIsReady(true);
+      } catch (error) {
+        console.error('Auth check error:', error);
+        router.push('/admin/login');
+      }
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [router]);
 
-  if (isLoading) {
+  if (!isReady) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-gray-600">Loading...</div>
       </div>
     );
-  }
-
-  if (!isAuthenticated) {
-    return null; // Component will redirect in useEffect
   }
 
   return <>{children}</>;
