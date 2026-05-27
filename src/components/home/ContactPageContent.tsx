@@ -123,7 +123,7 @@ export default function ContactPageContent() {
     {
       icon: FaEnvelope,
       label: "Email",
-      value: "info@ntsltd.com",
+      value: "info@nt.services",
       subvalue: "We'll respond within 24 hours",
     },
   ];

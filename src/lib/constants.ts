@@ -11,7 +11,7 @@ export const COLORS = {
 export const COMPANY = {
   name: "NTS Ltd",
   phone: "01482 838080",
-  email: "info@ntsltd.com",
+  email: "info@nt.services",
   address: "Unit F2 Rotterdam Park,Sutton Fields Industrial Estate,Hull, HU7 0AN",
   tagline: "Reliable Heating & Air Conditioning Services You Can Trust",
 };
