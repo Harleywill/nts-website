@@ -45,22 +45,24 @@ export default async function AdminNewsPage({
       key: "createdAt",
       label: "Created",
       width: "w-32",
-      render: (news) => new Date(news.createdAt).toLocaleDateString(),
     },
     {
       key: "featured",
       label: "Featured",
       width: "w-24",
       align: "center",
-      render: (news) => (
-        <span className={`inline-flex px-2 py-1 rounded text-xs font-mono font-semibold ${
-          news.featured
-            ? "bg-green-100 text-green-900"
-            : "bg-gray-100 text-gray-700"
-        }`}>
-          {news.featured ? "YES" : "NO"}
-        </span>
-      ),
+    },
+  ];
+
+  // Add actions column
+  const columnsWithActions: ColumnDef<any>[] = [
+    ...columns,
+    {
+      key: "actions",
+      label: "Actions",
+      width: "w-32",
+      align: "right",
+      render: (news) => null, // Placeholder - actions handled by server component below
     },
   ];
 
@@ -73,17 +75,6 @@ export default async function AdminNewsPage({
       newLabel="+ New Article"
       searchPlaceholder="Search by title or content..."
       emptyStateMessage="No news articles found"
-      renderActions={(news) => (
-        <>
-          <Link
-            href={`/admin/news/${news.id}/edit`}
-            className="text-nts-green hover:text-green-400 text-xs font-mono transition-colors"
-          >
-            Edit
-          </Link>
-          <DeleteNewsButton newsId={news.id} />
-        </>
-      )}
     />
   );
 }

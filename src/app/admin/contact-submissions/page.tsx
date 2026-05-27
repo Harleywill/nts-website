@@ -91,57 +91,28 @@ export default function ContactSubmissionsPage() {
       key: 'email',
       label: 'Email',
       width: 'flex-1',
-      render: (submission) => (
-        <a href={`mailto:${submission.email}`} className="text-nts-green hover:underline text-xs">
-          {submission.email}
-        </a>
-      ),
     },
     {
       key: 'service',
       label: 'Service',
       width: 'w-32',
-      render: (submission) => submission.service || '-',
     },
     {
       key: 'read',
       label: 'Status',
       width: 'w-20',
       align: 'center',
-      render: (submission) => (
-        <span
-          className={`inline-flex px-2 py-1 rounded text-xs font-mono font-semibold ${
-            submission.read ? 'bg-gray-100 text-gray-700' : 'bg-yellow-100 text-yellow-900'
-          }`}
-        >
-          {submission.read ? 'READ' : 'NEW'}
-        </span>
-      ),
     },
     {
       key: 'emailSentToAdmin',
       label: 'Email',
       width: 'w-20',
       align: 'center',
-      render: (submission) => (
-        <span
-          className={`text-xs font-mono ${submission.emailSentToAdmin ? 'text-nts-green' : 'text-nts-danger'}`}
-        >
-          {submission.emailSentToAdmin ? '✓' : '✗'}
-        </span>
-      ),
     },
     {
       key: 'createdAt',
       label: 'Date',
       width: 'w-32',
-      render: (submission) =>
-        new Date(submission.createdAt).toLocaleString('en-GB', {
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
     },
   ];
 

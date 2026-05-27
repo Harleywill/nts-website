@@ -12,10 +12,9 @@ export function TopBar() {
       {/* Spacer */}
       <div className="flex-1" />
 
-      {/* Notifications */}
-      <button className="p-2 text-adm-textMut hover:text-adm-textBody hover:bg-adm-panel rounded-lg transition-colors relative" title="Notifications">
+      {/* Notifications (placeholder - no unread notifications currently) */}
+      <button className="p-2 text-adm-textMut hover:text-adm-textBody hover:bg-adm-panel rounded-lg transition-colors" title="Notifications">
         <MdNotifications size={18} />
-        <span className="absolute top-0 right-0 w-2 h-2 bg-nts-danger rounded-full" />
       </button>
     </header>
   );

@@ -42,7 +42,6 @@ export default async function AdminUsersPage({
       key: "createdAt",
       label: "Created",
       width: "w-32",
-      render: (user) => new Date(user.createdAt).toLocaleDateString(),
     },
   ];
 
@@ -55,17 +54,6 @@ export default async function AdminUsersPage({
       newLabel="+ New User"
       searchPlaceholder="Search by username..."
       emptyStateMessage="No users found"
-      renderActions={(user) => (
-        <>
-          <Link
-            href={`/admin/users/${user.id}/edit`}
-            className="text-nts-green hover:text-green-400 text-xs font-mono transition-colors"
-          >
-            Edit
-          </Link>
-          <DeleteUserButton userId={user.id} />
-        </>
-      )}
     />
   );
 }
