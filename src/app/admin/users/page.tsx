@@ -1,57 +1,38 @@
-'use client';
+import { prisma } from "@/lib/db";
+import Link from "next/link";
+import { AdminListPage } from "@/components/admin/templates/AdminListPage";
+import DeleteButton from "@/components/admin/DeleteButton";
+import { ColumnDef } from "@/components/admin/templates/AdminListPage";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { AdminListPage } from '@/components/admin/templates/AdminListPage';
-import { ColumnDef } from '@/components/admin/templates/AdminListPage';
-import { useSearchParams } from 'next/navigation';
+async function getUsers(searchQuery?: string) {
+  try {
+    const where = searchQuery
+      ? {
+          username: { contains: searchQuery, mode: "insensitive" as const },
+        }
+      : undefined;
 
-interface User {
-  id: string;
-  username: string;
-  createdAt: string;
+    const users = await prisma.user.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+    });
+    return users;
+  } catch (error) {
+    console.error("Failed to fetch users:", error);
+    return [];
+  }
 }
 
-export default function AdminUsersPage() {
-  const searchParams = useSearchParams();
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const searchQuery = searchParams.get('search') || '';
+export default async function AdminUsersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string }>;
+}) {
+  const params = await searchParams;
+  const searchQuery = params.search || "";
+  const users = await getUsers(searchQuery);
 
-  useEffect(() => {
-    fetchUsers();
-  }, [searchQuery]);
-
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      const query = searchQuery ? `?search=${encodeURIComponent(searchQuery)}` : '';
-      const res = await fetch(`/api/users${query}`);
-      if (!res.ok) throw new Error('Failed to fetch users');
-      const data = await res.json();
-      setUsers(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteUser = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this user?')) return;
-    try {
-      const res = await fetch(`/api/users/${id}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) throw new Error('Failed to delete user');
-      setUsers(users.filter((item) => item.id !== id));
-    } catch (err) {
-      console.error(err);
-      alert('Failed to delete user');
-    }
-  };
-
-  const columns: ColumnDef<User>[] = [
+  const columns: ColumnDef<any>[] = [
     {
       key: "username",
       label: "Username",
@@ -73,7 +54,7 @@ export default function AdminUsersPage() {
       newLabel="+ New User"
       searchPlaceholder="Search by username..."
       emptyStateMessage="No users found"
-      renderActions={(item: User) => (
+      renderActions={(item: any) => (
         <div className="flex gap-2 justify-end">
           <Link
             href={`/admin/users/${item.id}/edit`}
@@ -82,13 +63,11 @@ export default function AdminUsersPage() {
           >
             Edit
           </Link>
-          <button
-            onClick={() => deleteUser(item.id)}
-            className="text-nts-danger hover:text-red-300 text-xs font-mono transition-colors"
-            title="Delete"
-          >
-            Delete
-          </button>
+          <DeleteButton 
+            id={item.id} 
+            type="user" 
+            name={item.username}
+          />
         </div>
       )}
     />

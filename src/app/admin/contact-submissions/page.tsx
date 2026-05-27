@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { FaTrash, FaEye } from 'react-icons/fa';
+import { FaEye } from 'react-icons/fa';
 import { AdminListPage } from '@/components/admin/templates/AdminListPage';
 import { ColumnDef } from '@/components/admin/templates/AdminListPage';
+import DeleteButton from '@/components/admin/DeleteButton';
 import ContactSubmissionModal from '@/components/admin/ContactSubmissionModal';
 
 interface ContactSubmission {
@@ -140,7 +141,7 @@ export default function ContactSubmissionsPage() {
         searchPlaceholder="Search by name or email..."
         emptyStateMessage="No contact submissions found"
         kpiStats={kpiStats}
-        renderActions={(submission) => (
+        renderActions={(submission: ContactSubmission) => (
           <>
             <button
               onClick={() => setSelectedSubmission(submission)}
@@ -149,13 +150,11 @@ export default function ContactSubmissionsPage() {
             >
               View
             </button>
-            <button
-              onClick={() => deleteSubmission(submission.id)}
-              className="text-nts-danger hover:text-red-300 text-xs font-mono transition-colors"
-              title="Delete submission"
-            >
-              Delete
-            </button>
+            <DeleteButton 
+              id={submission.id} 
+              type="contact"
+              name={submission.name}
+            />
           </>
         )}
       />

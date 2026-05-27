@@ -1,64 +1,72 @@
-'use client';
+import Link from "next/link";
+import { prisma } from "@/lib/db";
+import { AdminListPage } from "@/components/admin/templates/AdminListPage";
+import DeleteButton from "@/components/admin/DeleteButton";
+import { ColumnDef } from "@/components/admin/templates/AdminListPage";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { AdminListPage } from '@/components/admin/templates/AdminListPage';
-import { ColumnDef } from '@/components/admin/templates/AdminListPage';
-import { useSearchParams } from 'next/navigation';
+async function getApplications(
+  jobId?: string,
+  status?: string,
+  search?: string
+) {
+  const where: Record<string, unknown> = {};
 
-interface Application {
-  id: string;
-  fullName: string;
-  email: string;
-  phone: string;
-  status: string;
-  submittedAt: string;
-  job?: {
-    id: string;
-    title: string;
+  if (jobId) where.jobId = jobId;
+  if (status) where.status = status;
+  if (search) {
+    where.OR = [
+      { fullName: { contains: search, mode: "insensitive" as const } },
+      { email: { contains: search, mode: "insensitive" as const } },
+    ];
+  }
+
+  const applications = await prisma.application.findMany({
+    where,
+    include: {
+      job: { select: { title: true, id: true } },
+    },
+    orderBy: { submittedAt: "desc" },
+  });
+
+  return applications;
+}
+
+async function getCounts() {
+  const counts = await Promise.all([
+    prisma.application.count(),
+    prisma.application.count({ where: { status: "NEW" } }),
+    prisma.application.count({ where: { status: "REVIEWING" } }),
+    prisma.application.count({ where: { status: "INTERVIEW" } }),
+    prisma.application.count({ where: { status: "OFFER" } }),
+    prisma.application.count({ where: { status: "HIRED" } }),
+  ]);
+
+  return {
+    total: counts[0],
+    new: counts[1],
+    reviewing: counts[2],
+    interview: counts[3],
+    offer: counts[4],
+    hired: counts[5],
   };
 }
 
-export default function ApplicationsPage() {
-  const searchParams = useSearchParams();
-  const [applications, setApplications] = useState<Application[]>([]);
-  const [loading, setLoading] = useState(true);
-  const searchQuery = searchParams.get('search') || '';
+export default async function ApplicationsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    jobId?: string;
+    status?: string;
+    search?: string;
+  }>;
+}) {
+  const params = await searchParams;
+  const { jobId, status, search } = params;
 
-  useEffect(() => {
-    fetchApplications();
-  }, [searchQuery]);
+  const applications = await getApplications(jobId, status, search);
+  const counts = await getCounts();
 
-  const fetchApplications = async () => {
-    try {
-      setLoading(true);
-      const query = searchQuery ? `?search=${encodeURIComponent(searchQuery)}` : '';
-      const res = await fetch(`/api/admin/applications${query}`);
-      if (!res.ok) throw new Error('Failed to fetch applications');
-      const data = await res.json();
-      setApplications(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteApplication = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this application?')) return;
-    try {
-      const res = await fetch(`/api/admin/applications/${id}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) throw new Error('Failed to delete application');
-      setApplications(applications.filter((item) => item.id !== id));
-    } catch (err) {
-      console.error(err);
-      alert('Failed to delete application');
-    }
-  };
-
-  const columns: ColumnDef<Application>[] = [
+  const columns: ColumnDef<any>[] = [
     {
       key: "fullName",
       label: "Name",
@@ -82,6 +90,15 @@ export default function ApplicationsPage() {
     },
   ];
 
+  const kpiStats = [
+    { label: "Total", count: counts.total, icon: "📋" },
+    { label: "New", count: counts.new, icon: "🆕" },
+    { label: "Reviewing", count: counts.reviewing, icon: "👀" },
+    { label: "Interview", count: counts.interview, icon: "🎤" },
+    { label: "Offer", count: counts.offer, icon: "🎉" },
+    { label: "Hired", count: counts.hired, icon: "✓" },
+  ];
+
   return (
     <AdminListPage
       title="Applications"
@@ -89,7 +106,8 @@ export default function ApplicationsPage() {
       columns={columns}
       searchPlaceholder="Search by name or email..."
       emptyStateMessage="No applications found"
-      renderActions={(item: Application) => (
+      kpiStats={kpiStats}
+      renderActions={(item: any) => (
         <div className="flex gap-2 justify-end">
           <Link
             href={`/admin/careers/applications/${item.id}`}
@@ -98,13 +116,11 @@ export default function ApplicationsPage() {
           >
             View
           </Link>
-          <button
-            onClick={() => deleteApplication(item.id)}
-            className="text-nts-danger hover:text-red-300 text-xs font-mono transition-colors"
-            title="Delete"
-          >
-            Delete
-          </button>
+          <DeleteButton 
+            id={item.id} 
+            type="application" 
+            name={item.fullName}
+          />
         </div>
       )}
     />

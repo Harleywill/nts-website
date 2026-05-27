@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/db";
 import Link from "next/link";
 import { AdminListPage } from "@/components/admin/templates/AdminListPage";
-import DeleteNewsButton from "@/components/admin/DeleteNewsButton";
 import { ColumnDef } from "@/components/admin/templates/AdminListPage";
+import DeleteButton from "@/components/admin/DeleteButton";
 
 async function getNewsItems(searchQuery?: string) {
   try {
@@ -54,18 +54,6 @@ export default async function AdminNewsPage({
     },
   ];
 
-  // Add actions column
-  const columnsWithActions: ColumnDef<any>[] = [
-    ...columns,
-    {
-      key: "actions",
-      label: "Actions",
-      width: "w-32",
-      align: "right",
-      render: (news) => null, // Placeholder - actions handled by server component below
-    },
-  ];
-
   return (
     <AdminListPage
       title="News"
@@ -75,6 +63,22 @@ export default async function AdminNewsPage({
       newLabel="+ New Article"
       searchPlaceholder="Search by title or content..."
       emptyStateMessage="No news articles found"
+      renderActions={(item: any) => (
+        <div className="flex gap-2 justify-end">
+          <Link
+            href={`/admin/news/${item.id}/edit`}
+            className="text-nts-info hover:text-cyan-300 text-xs font-mono transition-colors"
+            title="Edit"
+          >
+            Edit
+          </Link>
+          <DeleteButton 
+            id={item.id} 
+            type="news" 
+            name={item.title}
+          />
+        </div>
+      )}
     />
   );
 }
