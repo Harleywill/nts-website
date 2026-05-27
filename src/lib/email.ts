@@ -22,7 +22,7 @@ const careersEmailsEnv = (process.env.CAREERS_ADMIN_EMAILS || "")
   .filter((email) => email.length > 0);
 
 const CAREERS_ADMIN_EMAILS = careersEmailsEnv.length > 0 ? careersEmailsEnv : [
-  "careers@ntsltd.com",
+  "info@nt.services",  // Same as contact email
 ];
 
 console.log("Email Configuration:");
