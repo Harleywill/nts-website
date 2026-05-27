@@ -72,10 +72,10 @@ export default function Contact() {
                 </div>
                 <div className="grid grid-cols-2 gap-5">
                   {[
-                    ["15+", "Years experience"],
-                    ["500+", "Projects delivered"],
-                    ["25+", "Qualified engineers"],
-                    ["24h", "Avg response time"],
+                    ["45+", "Years in Business"],
+                    ["3000+", "Projects Completed"],
+                    ["25+", "Qualified Engineers"],
+                    ["Always", "24/7 Support"],
                   ].map(([v, k]) => (
                     <div key={k}>
                       <div className="text-2xl font-extrabold tracking-tight text-[#4caf50]">
