@@ -1,60 +1,43 @@
-'use client';
+import { prisma } from "@/lib/db";
+import Link from "next/link";
+import { AdminListPage } from "@/components/admin/templates/AdminListPage";
+import DeleteButton from "@/components/admin/DeleteButton";
+import { ColumnDef } from "@/components/admin/templates/AdminListPage";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { AdminListPage } from '@/components/admin/templates/AdminListPage';
-import { ColumnDef } from '@/components/admin/templates/AdminListPage';
-import { useSearchParams } from 'next/navigation';
+async function getTestimonials(searchQuery?: string) {
+  try {
+    const where = searchQuery
+      ? {
+          OR: [
+            { name: { contains: searchQuery, mode: "insensitive" as const } },
+            { company: { contains: searchQuery, mode: "insensitive" as const } },
+            { text: { contains: searchQuery, mode: "insensitive" as const } },
+          ],
+        }
+      : undefined;
 
-interface Testimonial {
-  id: string;
-  name: string;
-  company: string;
-  text: string;
-  featured: boolean;
-  createdAt: string;
+    const testimonials = await prisma.testimonial.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      include: { project: true },
+    });
+    return testimonials;
+  } catch (error) {
+    console.error("Failed to fetch testimonials:", error);
+    return [];
+  }
 }
 
-export default function AdminTestimonialsPage() {
-  const searchParams = useSearchParams();
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [loading, setLoading] = useState(true);
-  const searchQuery = searchParams.get('search') || '';
+export default async function AdminTestimonialsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string }>;
+}) {
+  const params = await searchParams;
+  const searchQuery = params.search || "";
+  const testimonials = await getTestimonials(searchQuery);
 
-  useEffect(() => {
-    fetchTestimonials();
-  }, [searchQuery]);
-
-  const fetchTestimonials = async () => {
-    try {
-      setLoading(true);
-      const query = searchQuery ? `?search=${encodeURIComponent(searchQuery)}` : '';
-      const res = await fetch(`/api/testimonials${query}`);
-      if (!res.ok) throw new Error('Failed to fetch testimonials');
-      const data = await res.json();
-      setTestimonials(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteTestimonial = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this testimonial?')) return;
-    try {
-      const res = await fetch(`/api/testimonials/${id}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) throw new Error('Failed to delete testimonial');
-      setTestimonials(testimonials.filter((item) => item.id !== id));
-    } catch (err) {
-      console.error(err);
-      alert('Failed to delete testimonial');
-    }
-  };
-
-  const columns: ColumnDef<Testimonial>[] = [
+  const columns: ColumnDef<any>[] = [
     {
       key: "name",
       label: "Name",
@@ -87,7 +70,7 @@ export default function AdminTestimonialsPage() {
       newLabel="+ New Testimonial"
       searchPlaceholder="Search by name, company, or text..."
       emptyStateMessage="No testimonials found"
-      renderActions={(item: Testimonial) => (
+      renderActions={(item: any) => (
         <div className="flex gap-2 justify-end">
           <Link
             href={`/admin/testimonials/${item.id}/edit`}
@@ -96,13 +79,11 @@ export default function AdminTestimonialsPage() {
           >
             Edit
           </Link>
-          <button
-            onClick={() => deleteTestimonial(item.id)}
-            className="text-nts-danger hover:text-red-300 text-xs font-mono transition-colors"
-            title="Delete"
-          >
-            Delete
-          </button>
+          <DeleteButton 
+            id={item.id} 
+            type="testimonial" 
+            name={item.name}
+          />
         </div>
       )}
     />
