@@ -50,7 +50,7 @@ export function IconRail() {
           className="w-12 h-12 flex items-center justify-center rounded-lg text-adm-textMut hover:text-adm-textBody hover:bg-adm-panelAlt/50 transition-all"
           title="Logout"
         >
-          <LogOut size={20} />
+          <MdLogout size={20} />
         </button>
       </form>
     </nav>
