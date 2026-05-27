@@ -51,7 +51,7 @@ export default function Navbar() {
   // Detect mobile viewport
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1280);
+      setIsMobile(window.innerWidth < 1650);
     };
 
     checkMobile();
@@ -168,7 +168,7 @@ export default function Navbar() {
           </Link>
 
           {/* Center navigation - Only visible on XL screens and up */}
-          <div className="hidden xl:flex absolute left-1/2 transform -translate-x-1/2 items-center justify-center">
+          <div className="hidden 3xl:flex absolute left-1/2 transform -translate-x-1/2 items-center justify-center">
             {/* Desktop Navigation - Center */}
             <div
               ref={navContainerRef}
@@ -211,7 +211,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
               onClick={toggleMenu}
-              className="xl:hidden p-2 rounded-lg hover:bg-white/10 transition-colors ml-auto"
+              className="3xl:hidden p-2 rounded-lg hover:bg-white/10 transition-colors ml-auto"
               aria-label="Toggle menu"
             >
             {isOpen ? (
@@ -235,7 +235,7 @@ export default function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="xl:hidden border-t border-gray-200"
+              className="3xl:hidden border-t border-gray-200"
             >
               <div className="px-6 py-6 space-y-4">
                 {NAV_LINKS.map((link) => (
