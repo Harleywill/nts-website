@@ -185,6 +185,7 @@ model DailyStats {
   newsCount               Int      @default(0)
   testimonialCount        Int      @default(0)
   contactSubmissionCount  Int      @default(0)
+  applicationCount        Int      @default(0)
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
 

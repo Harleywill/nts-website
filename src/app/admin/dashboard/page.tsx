@@ -23,6 +23,7 @@ interface SparklineData {
   news: number[];
   testimonials: number[];
   submissions: number[];
+  applications: number[];
 }
 
 export default function AdminDashboard() {
@@ -40,6 +41,7 @@ export default function AdminDashboard() {
     news: [],
     testimonials: [],
     submissions: [],
+    applications: [],
   });
   const [time, setTime] = useState<string>('');
   const [loading, setLoading] = useState(true);
@@ -61,7 +63,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [usersRes, projectsRes, newsRes, testimonialsRes, contactRes, applicationsRes, usersHistoryRes, projectsHistoryRes, newsHistoryRes, testimonialsHistoryRes, submissionsHistoryRes] = await Promise.all([
+        const [usersRes, projectsRes, newsRes, testimonialsRes, contactRes, applicationsRes, usersHistoryRes, projectsHistoryRes, newsHistoryRes, testimonialsHistoryRes, submissionsHistoryRes, applicationsHistoryRes] = await Promise.all([
           fetch('/api/users', { credentials: 'include' }),
           fetch('/api/projects', { credentials: 'include' }),
           fetch('/api/news', { credentials: 'include' }),
@@ -73,6 +75,7 @@ export default function AdminDashboard() {
           fetch('/api/admin/stats/history?type=news', { credentials: 'include' }),
           fetch('/api/admin/stats/history?type=testimonials', { credentials: 'include' }),
           fetch('/api/admin/stats/history?type=submissions', { credentials: 'include' }),
+          fetch('/api/admin/stats/history?type=applications', { credentials: 'include' }),
         ]);
 
         if (
@@ -108,12 +111,14 @@ export default function AdminDashboard() {
         let newsHistory: number[] = [];
         let testimonialsHistory: number[] = [];
         let submissionsHistory: number[] = [];
+        let applicationsHistory: number[] = [];
 
         if (usersHistoryRes.ok) usersHistory = await usersHistoryRes.json();
         if (projectsHistoryRes.ok) projectsHistory = await projectsHistoryRes.json();
         if (newsHistoryRes.ok) newsHistory = await newsHistoryRes.json();
         if (testimonialsHistoryRes.ok) testimonialsHistory = await testimonialsHistoryRes.json();
         if (submissionsHistoryRes.ok) submissionsHistory = await submissionsHistoryRes.json();
+        if (applicationsHistoryRes.ok) applicationsHistory = await applicationsHistoryRes.json();
 
         setSparklines({
           users: usersHistory && usersHistory.length > 0 ? usersHistory : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -121,6 +126,7 @@ export default function AdminDashboard() {
           news: newsHistory && newsHistory.length > 0 ? newsHistory : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           testimonials: testimonialsHistory && testimonialsHistory.length > 0 ? testimonialsHistory : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           submissions: submissionsHistory && submissionsHistory.length > 0 ? submissionsHistory : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          applications: applicationsHistory && applicationsHistory.length > 0 ? applicationsHistory : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         });
       } catch (err) {
         console.error('Failed to load dashboard stats:', err);
@@ -216,6 +222,7 @@ export default function AdminDashboard() {
               <div className="text-3xl font-mono font-bold text-nts-danger">{stats.contactSubmissions}</div>
               <StatusPill status="NEW" />
             </div>
+            <Sparkline data={sparklines.submissions} color="text-nts-danger" height={30} />
             <p className="text-sm text-adm-textBody">Contact form submissions awaiting review</p>
             <Link href="/admin/contact-submissions">
               <BoldButton size="sm" variant="secondary" className="w-full">
@@ -232,6 +239,7 @@ export default function AdminDashboard() {
               <div className="text-3xl font-mono font-bold text-nts-green">{stats.applications}</div>
               <StatusPill status="NEW" />
             </div>
+            <Sparkline data={sparklines.applications} color="text-nts-green" height={30} />
             <p className="text-sm text-adm-textBody">Applications across all open positions</p>
             <Link href="/admin/careers/applications">
               <BoldButton size="sm" variant="secondary" className="w-full">
