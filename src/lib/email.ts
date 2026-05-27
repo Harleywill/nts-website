@@ -5,19 +5,23 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // Admin email addresses for contact form notifications
 // Configure via CONTACT_ADMIN_EMAILS environment variable (comma-separated)
 // Default addresses are used if env var is not set
-const CONTACT_ADMIN_EMAILS = (process.env.CONTACT_ADMIN_EMAILS || "")
+const contactEmailsEnv = (process.env.CONTACT_ADMIN_EMAILS || "")
   .split(",")
   .map((email) => email.trim())
-  .filter((email) => email.length > 0) || [
+  .filter((email) => email.length > 0);
+
+const CONTACT_ADMIN_EMAILS = contactEmailsEnv.length > 0 ? contactEmailsEnv : [
   "info@ntsltd.co.uk",  // Main company email (correct domain)
 ];
 
 // Admin email addresses for job applications
 // Configure via CAREERS_ADMIN_EMAILS environment variable (comma-separated)
-const CAREERS_ADMIN_EMAILS = (process.env.CAREERS_ADMIN_EMAILS || "")
+const careersEmailsEnv = (process.env.CAREERS_ADMIN_EMAILS || "")
   .split(",")
   .map((email) => email.trim())
-  .filter((email) => email.length > 0) || [
+  .filter((email) => email.length > 0);
+
+const CAREERS_ADMIN_EMAILS = careersEmailsEnv.length > 0 ? careersEmailsEnv : [
   "careers@ntsltd.com",
 ];
 
