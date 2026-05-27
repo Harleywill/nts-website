@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function ProtectedLayout({
   children
@@ -9,10 +9,20 @@ export default function ProtectedLayout({
   children: React.ReactNode
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isReady, setIsReady] = useState(false);
   const hasCheckedAuth = useRef(false);
 
+  // Don't protect the login page
+  const isLoginPage = pathname === '/admin/login';
+
   useEffect(() => {
+    // If this is the login page, allow it without auth check
+    if (isLoginPage) {
+      setIsReady(true);
+      return;
+    }
+
     // Only run this check once
     if (hasCheckedAuth.current) return;
     hasCheckedAuth.current = true;
@@ -39,7 +49,7 @@ export default function ProtectedLayout({
     }, 0);
 
     return () => clearTimeout(timer);
-  }, [router]);
+  }, [router, isLoginPage]);
 
   if (!isReady) {
     return (
