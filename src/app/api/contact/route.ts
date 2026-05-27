@@ -32,7 +32,22 @@ export async function POST(request: NextRequest) {
     const email = isEmail ? contact : undefined;
     const phone = !isEmail ? contact : undefined;
 
-    // Save submission to database
+    // Send emails and track status
+    let emailSentToAdmin = false;
+    let emailSentToUser = false;
+    let emailError: string | null = null;
+    const adminEmails = ["info@nt.services", "info@ntsltd.com", "hjakewilliams@gmail.com"];
+
+    try {
+      await sendContactNotification(name, contact, service, message);
+      emailSentToAdmin = true;
+      emailSentToUser = isEmail; // Mark as sent if we sent confirmation email
+    } catch (err) {
+      emailError = err instanceof Error ? err.message : "Unknown error";
+      console.error("Failed to send contact notification emails:", err);
+    }
+
+    // Save submission to database with email tracking
     try {
       await prisma.contactSubmission.create({
         data: {
@@ -41,17 +56,17 @@ export async function POST(request: NextRequest) {
           phone: phone || null,
           service,
           message,
+          emailSentToAdmin,
+          emailSentToUser: emailSentToUser,
+          adminEmails: JSON.stringify(adminEmails),
+          userEmail: isEmail ? contact : null,
+          emailError,
         },
       });
     } catch (dbError) {
       console.error("Database error saving contact submission:", dbError);
-      // Don't fail the request if database save fails, still send emails
+      // Don't fail the request if database save fails
     }
-
-    // Send emails via Resend (fire and forget)
-    sendContactNotification(name, contact, service, message).catch((err) =>
-      console.error("Failed to send contact notification emails:", err)
-    );
 
     return NextResponse.json(
       {

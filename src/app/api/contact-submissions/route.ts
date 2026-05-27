@@ -19,6 +19,36 @@ export async function GET(request: NextRequest) {
   }
 }
 
+export async function PATCH(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Missing submission ID" },
+        { status: 400 }
+      );
+    }
+
+    const body = await request.json();
+    const { read } = body;
+
+    const updated = await prisma.contactSubmission.update({
+      where: { id: parseInt(id) },
+      data: { read },
+    });
+
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error("Error updating submission:", error);
+    return NextResponse.json(
+      { error: "Failed to update submission" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

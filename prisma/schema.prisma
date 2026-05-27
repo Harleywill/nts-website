@@ -65,14 +65,20 @@ model NewsItem {
 }
 
 model ContactSubmission {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String
-  phone     String?
-  service   String?
-  message   String
-  read      Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id               Int      @id @default(autoincrement())
+  name             String
+  email            String
+  phone            String?
+  service          String?
+  message          String
+  read             Boolean  @default(false)
+  emailSentToAdmin Boolean  @default(false)
+  emailSentToUser  Boolean  @default(false)
+  adminEmails      String?  // JSON array of admin emails that received notification
+  userEmail        String?  // The email address the confirmation was sent to (if applicable)
+  emailError       String?  // Any error message if email sending failed
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model SiteSettings {
