@@ -7,10 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  ADMIN
+  MANAGER
+  EDITOR
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
   password  String
+  role      UserRole @default(EDITOR)
   createdAt DateTime @default(now())
   jobs      Job[]
 }
