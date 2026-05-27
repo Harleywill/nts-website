@@ -17,6 +17,14 @@ interface Stats {
   applications: number;
 }
 
+interface SparklineData {
+  users: number[];
+  projects: number[];
+  news: number[];
+  testimonials: number[];
+  submissions: number[];
+}
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats>({
     users: 0,
@@ -25,6 +33,13 @@ export default function AdminDashboard() {
     testimonials: 0,
     contactSubmissions: 0,
     applications: 0,
+  });
+  const [sparklines, setSparklines] = useState<SparklineData>({
+    users: [],
+    projects: [],
+    news: [],
+    testimonials: [],
+    submissions: [],
   });
   const [time, setTime] = useState<string>('');
   const [loading, setLoading] = useState(true);
@@ -46,13 +61,18 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [usersRes, projectsRes, newsRes, testimonialsRes, contactRes, applicationsRes] = await Promise.all([
+        const [usersRes, projectsRes, newsRes, testimonialsRes, contactRes, applicationsRes, usersHistoryRes, projectsHistoryRes, newsHistoryRes, testimonialsHistoryRes, submissionsHistoryRes] = await Promise.all([
           fetch('/api/users', { credentials: 'include' }),
           fetch('/api/projects', { credentials: 'include' }),
           fetch('/api/news', { credentials: 'include' }),
           fetch('/api/testimonials', { credentials: 'include' }),
           fetch('/api/contact-submissions', { credentials: 'include' }),
           fetch('/api/admin/applications', { credentials: 'include' }),
+          fetch('/api/admin/stats/history?type=users', { credentials: 'include' }),
+          fetch('/api/admin/stats/history?type=projects', { credentials: 'include' }),
+          fetch('/api/admin/stats/history?type=news', { credentials: 'include' }),
+          fetch('/api/admin/stats/history?type=testimonials', { credentials: 'include' }),
+          fetch('/api/admin/stats/history?type=submissions', { credentials: 'include' }),
         ]);
 
         if (
@@ -81,6 +101,27 @@ export default function AdminDashboard() {
           contactSubmissions: Array.isArray(contact) ? contact.length : 0,
           applications: Array.isArray(applications) ? applications.length : 0,
         });
+
+        // Fetch sparkline data (don't fail the entire dashboard if history fails)
+        let usersHistory: number[] = [];
+        let projectsHistory: number[] = [];
+        let newsHistory: number[] = [];
+        let testimonialsHistory: number[] = [];
+        let submissionsHistory: number[] = [];
+
+        if (usersHistoryRes.ok) usersHistory = await usersHistoryRes.json();
+        if (projectsHistoryRes.ok) projectsHistory = await projectsHistoryRes.json();
+        if (newsHistoryRes.ok) newsHistory = await newsHistoryRes.json();
+        if (testimonialsHistoryRes.ok) testimonialsHistory = await testimonialsHistoryRes.json();
+        if (submissionsHistoryRes.ok) submissionsHistory = await submissionsHistoryRes.json();
+
+        setSparklines({
+          users: usersHistory && usersHistory.length > 0 ? usersHistory : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          projects: projectsHistory && projectsHistory.length > 0 ? projectsHistory : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          news: newsHistory && newsHistory.length > 0 ? newsHistory : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          testimonials: testimonialsHistory && testimonialsHistory.length > 0 ? testimonialsHistory : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          submissions: submissionsHistory && submissionsHistory.length > 0 ? submissionsHistory : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        });
       } catch (err) {
         console.error('Failed to load dashboard stats:', err);
       } finally {
@@ -90,9 +131,6 @@ export default function AdminDashboard() {
 
     fetchStats();
   }, []);
-
-  // Mock sparkline data (30 days)
-  const sparklineData = [10, 12, 11, 15, 14, 18, 17, 20, 19, 22, 21, 25, 24, 28, 27, 30, 29, 32, 31, 35, 34, 38, 37, 40, 39, 42, 41, 45, 44, 48];
 
   return (
     <div className="space-y-6">
@@ -115,7 +153,7 @@ export default function AdminDashboard() {
           <BoldPanel title="Total Users">
             <div className="space-y-3">
               <div className="text-3xl font-mono font-bold text-nts-green">{stats.users}</div>
-              <Sparkline data={sparklineData} color="text-nts-green" height={40} />
+              <Sparkline data={sparklines.users} color="text-nts-green" height={40} />
               <Link
                 href="/admin/users"
                 className="text-xs text-adm-textMut hover:text-nts-green transition-colors"
@@ -129,7 +167,7 @@ export default function AdminDashboard() {
           <BoldPanel title="Total Projects">
             <div className="space-y-3">
               <div className="text-3xl font-mono font-bold text-nts-info">{stats.projects}</div>
-              <Sparkline data={sparklineData} color="text-nts-info" height={40} />
+              <Sparkline data={sparklines.projects} color="text-nts-info" height={40} />
               <Link
                 href="/admin/projects"
                 className="text-xs text-adm-textMut hover:text-nts-info transition-colors"
@@ -143,7 +181,7 @@ export default function AdminDashboard() {
           <BoldPanel title="News Articles">
             <div className="space-y-3">
               <div className="text-3xl font-mono font-bold text-nts-warn">{stats.news}</div>
-              <Sparkline data={sparklineData} color="text-nts-warn" height={40} />
+              <Sparkline data={sparklines.news} color="text-nts-warn" height={40} />
               <Link
                 href="/admin/news"
                 className="text-xs text-adm-textMut hover:text-nts-warn transition-colors"
@@ -157,7 +195,7 @@ export default function AdminDashboard() {
           <BoldPanel title="Testimonials">
             <div className="space-y-3">
               <div className="text-3xl font-mono font-bold text-nts-purple">{stats.testimonials}</div>
-              <Sparkline data={sparklineData} color="text-nts-purple" height={40} />
+              <Sparkline data={sparklines.testimonials} color="text-nts-purple" height={40} />
               <Link
                 href="/admin/testimonials"
                 className="text-xs text-adm-textMut hover:text-nts-purple transition-colors"
