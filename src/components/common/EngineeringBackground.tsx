@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 /**
  * EngineeringBackground — site-wide "engineer's drawing" watermark.
  *
@@ -42,6 +44,26 @@ export default function EngineeringBackground({
   opacity = 1,
   minimal = false,
 }: EngineeringBackgroundProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 0%, #ffffff 0%, #f6f7fa 80%)",
+          opacity,
+        }}
+      />
+    );
+  }
+
   return (
     <div
       aria-hidden="true"

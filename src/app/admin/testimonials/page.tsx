@@ -47,30 +47,17 @@ export default async function AdminTestimonialsPage({
       key: "company",
       label: "Company",
       width: "w-40",
-      render: (testimonial) => testimonial.company || "-",
     },
     {
       key: "text",
       label: "Text",
       width: "flex-1",
-      render: (testimonial) => (
-        <span className="truncate max-w-xs text-adm-textBody">{testimonial.text}</span>
-      ),
     },
     {
       key: "featured",
       label: "Featured",
       width: "w-24",
       align: "center",
-      render: (testimonial) => (
-        <span className={`inline-flex px-2 py-1 rounded text-xs font-mono font-semibold ${
-          testimonial.featured
-            ? "bg-green-100 text-green-900"
-            : "bg-gray-100 text-gray-700"
-        }`}>
-          {testimonial.featured ? "YES" : "NO"}
-        </span>
-      ),
     },
   ];
 
@@ -83,17 +70,6 @@ export default async function AdminTestimonialsPage({
       newLabel="+ New Testimonial"
       searchPlaceholder="Search by name, company, or text..."
       emptyStateMessage="No testimonials found"
-      renderActions={(testimonial) => (
-        <>
-          <Link
-            href={`/admin/testimonials/${testimonial.id}/edit`}
-            className="text-nts-green hover:text-green-400 text-xs font-mono transition-colors"
-          >
-            Edit
-          </Link>
-          <DeleteTestimonialButton testimonialId={testimonial.id} />
-        </>
-      )}
     />
   );
 }
