@@ -11,7 +11,7 @@ const contactEmailsEnv = (process.env.CONTACT_ADMIN_EMAILS || "")
   .filter((email) => email.length > 0);
 
 const CONTACT_ADMIN_EMAILS = contactEmailsEnv.length > 0 ? contactEmailsEnv : [
-  "info@ntsltd.co.uk",  // Main company email (correct domain)
+  "info@nt.services",  // Main contact email
 ];
 
 // Admin email addresses for job applications
