@@ -36,7 +36,12 @@ export async function POST(request: NextRequest) {
     let emailSentToAdmin = false;
     let emailSentToUser = false;
     let emailError: string | null = null;
-    const adminEmails = ["info@nt.services", "info@ntsltd.com", "hjakewilliams@gmail.com"];
+
+    // Get admin emails from environment or use defaults
+    const adminEmails = (process.env.CONTACT_ADMIN_EMAILS || "")
+      .split(",")
+      .map((e) => e.trim())
+      .filter((e) => e.length > 0) || ["info@ntsltd.co.uk"];
 
     try {
       await sendContactNotification(name, contact, service, message);
