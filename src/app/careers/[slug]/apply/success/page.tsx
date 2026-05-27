@@ -113,10 +113,10 @@ function SuccessContent() {
             <p className="text-xs text-gray-600">
               Want to update something or withdraw?{" "}
               <a
-                href="mailto:careers@ntsltd.com"
+                href="mailto:info@nt.services"
                 className="text-emerald-500 font-semibold hover:underline"
               >
-                Email us at careers@ntsltd.com
+                Email us at info@nt.services
               </a>
             </p>
           </div>

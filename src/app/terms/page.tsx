@@ -94,7 +94,7 @@ export default function Terms() {
                 If you have any questions about these Terms of Service, please contact us at:
               </p>
               <ul>
-                <li>Email: info@ntsltd.co.uk</li>
+                <li>Email: info@nt.services</li>
                 <li>Phone: 01482 838080</li>
               </ul>
 

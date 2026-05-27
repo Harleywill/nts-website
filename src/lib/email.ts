@@ -39,7 +39,7 @@ export async function sendApplicationNotification(
     // Send notification to admin emails
     await Promise.all([
       resend.emails.send({
-        from: "careers@ntsltd.com",
+        from: "noreply@nt.services",
         to: CAREERS_ADMIN_EMAILS,
         subject: `New Job Application - ${jobTitle}`,
         html: `
@@ -56,7 +56,7 @@ export async function sendApplicationNotification(
       }),
       // Send confirmation to applicant
       resend.emails.send({
-        from: "careers@ntsltd.com",
+        from: "noreply@nt.services",
         to: applicantEmail,
         subject: "Application Received - NTS Ltd",
         html: `
@@ -88,7 +88,7 @@ export async function sendContactNotification(
     await Promise.all([
       // Send notification to admin emails
       resend.emails.send({
-        from: "contact@ntsltd.com",
+        from: "noreply@nt.services",
         to: CONTACT_ADMIN_EMAILS,
         subject: `New Contact Form Submission - ${name}`,
         html: `
@@ -105,7 +105,7 @@ export async function sendContactNotification(
       // Send confirmation to user if email provided
       contact.includes("@")
         ? resend.emails.send({
-            from: "contact@ntsltd.com",
+            from: "noreply@nt.services",
             to: contact,
             subject: "Thank you for your enquiry - NTS Ltd",
             html: `
