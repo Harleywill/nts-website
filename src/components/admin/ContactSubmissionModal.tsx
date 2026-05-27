@@ -38,7 +38,7 @@ export default function ContactSubmissionModal({
 
   const adminEmails = submission.adminEmails
     ? JSON.parse(submission.adminEmails)
-    : ["info@nt.services", "info@ntsltd.com", "hjakewilliams@gmail.com"];
+    : ["info@nt.services", "hjakewilliams@gmail.com"];
 
   const handleCopyEmail = (email: string) => {
     navigator.clipboard.writeText(email);

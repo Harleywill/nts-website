@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
         data: {
           companyName: "NTS Ltd",
           phone: "01482 838080",
-          email: "info@ntsltd.com",
+          email: "info@nt.services",
           address: "Unit F2 Rotterdam Park",
           city: "Hull",
           postalCode: "HU7 0AN",
@@ -42,7 +42,7 @@ export async function PUT(request: NextRequest) {
         data: {
           companyName: companyName || "NTS Ltd",
           phone: phone || "01482 838080",
-          email: email || "info@ntsltd.com",
+          email: email || "info@nt.services",
           address: address || null,
           city: city || null,
           postalCode: postalCode || null,

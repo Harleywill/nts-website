@@ -49,9 +49,9 @@ export default function ContactInfoCards() {
         </svg>
       ),
       label: "Email",
-      value: "info@ntsltd.com",
+      value: "info@nt.services",
       sub: "Replies within 24 hours",
-      href: "mailto:info@ntsltd.com",
+      href: "mailto:info@nt.services",
     },
     {
       icon: (
