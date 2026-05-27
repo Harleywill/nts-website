@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const type = searchParams.get("type") || "users"; // users, projects, news, testimonials, submissions
+    const type = searchParams.get("type") || "users"; // users, projects, news, testimonials, submissions, applications
 
     // Get the last 30 days of stats
     const thirtyDaysAgo = new Date();
@@ -26,12 +26,14 @@ export async function GET(request: NextRequest) {
         newsCount,
         testimonialCount,
         contactSubmissionCount,
+        applicationCount,
       ] = await Promise.all([
         prisma.user.count(),
         prisma.project.count(),
         prisma.newsItem.count(),
         prisma.testimonial.count(),
         prisma.contactSubmission.count(),
+        prisma.application.count(),
       ]);
 
       todayStats = await prisma.dailyStats.create({
@@ -42,6 +44,7 @@ export async function GET(request: NextRequest) {
           newsCount,
           testimonialCount,
           contactSubmissionCount,
+          applicationCount,
         },
       });
     }
@@ -71,6 +74,8 @@ export async function GET(request: NextRequest) {
       data = stats.map((s) => s.testimonialCount);
     } else if (type === "submissions") {
       data = stats.map((s) => s.contactSubmissionCount);
+    } else if (type === "applications") {
+      data = stats.map((s) => s.applicationCount);
     }
 
     // If we have fewer than 30 days of data, fill the gaps with the first available value
