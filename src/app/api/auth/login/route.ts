@@ -37,8 +37,18 @@ export async function POST(request: NextRequest) {
     const token = await signToken({ userId: user.id, username: user.username });
 
     const response = NextResponse.json({ success: true });
+
+    // Set httpOnly token cookie (for API requests - secure)
     response.cookies.set("auth-token", token, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    // Set non-httpOnly auth status cookie (for client-side checks)
+    response.cookies.set("auth-status", "authenticated", {
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60,
