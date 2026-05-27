@@ -176,3 +176,17 @@ model Application {
   @@index([status])
   @@index([submittedAt])
 }
+
+model DailyStats {
+  id                      Int      @id @default(autoincrement())
+  date                    DateTime @unique
+  userCount               Int      @default(0)
+  projectCount            Int      @default(0)
+  newsCount               Int      @default(0)
+  testimonialCount        Int      @default(0)
+  contactSubmissionCount  Int      @default(0)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@index([date])
+}
