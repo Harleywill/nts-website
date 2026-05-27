@@ -10,44 +10,48 @@ export async function GET(request: NextRequest) {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    // First, ensure today's stats exist
+    // First, ensure today's stats exist using upsert to avoid duplicate key errors
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    let todayStats = await prisma.dailyStats.findUnique({
-      where: { date: today },
-    });
+    // Count current records
+    const [
+      userCount,
+      projectCount,
+      newsCount,
+      testimonialCount,
+      contactSubmissionCount,
+      applicationCount,
+    ] = await Promise.all([
+      prisma.user.count(),
+      prisma.project.count(),
+      prisma.newsItem.count(),
+      prisma.testimonial.count(),
+      prisma.contactSubmission.count(),
+      prisma.application.count(),
+    ]);
 
-    if (!todayStats) {
-      // Create today's stats by counting current records
-      const [
+    // Upsert today's stats (update if exists, create if not)
+    await prisma.dailyStats.upsert({
+      where: { date: today },
+      update: {
         userCount,
         projectCount,
         newsCount,
         testimonialCount,
         contactSubmissionCount,
         applicationCount,
-      ] = await Promise.all([
-        prisma.user.count(),
-        prisma.project.count(),
-        prisma.newsItem.count(),
-        prisma.testimonial.count(),
-        prisma.contactSubmission.count(),
-        prisma.application.count(),
-      ]);
-
-      todayStats = await prisma.dailyStats.create({
-        data: {
-          date: today,
-          userCount,
-          projectCount,
-          newsCount,
-          testimonialCount,
-          contactSubmissionCount,
-          applicationCount,
-        },
-      });
-    }
+      },
+      create: {
+        date: today,
+        userCount,
+        projectCount,
+        newsCount,
+        testimonialCount,
+        contactSubmissionCount,
+        applicationCount,
+      },
+    });
 
     // Fetch stats for the last 30 days
     const stats = await prisma.dailyStats.findMany({
