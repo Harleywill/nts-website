@@ -9,8 +9,15 @@ async function main() {
     where: { username: adminUsername },
   });
 
-  if (!existingAdmin) {
-    const hashedPassword = await bcryptjs.hash(adminPassword, 10);
+  // Always update the admin user with the latest password from env
+  const hashedPassword = await bcryptjs.hash(adminPassword, 10);
+  if (existingAdmin) {
+    const updatedAdmin = await prisma.user.update({
+      where: { username: adminUsername },
+      data: { password: hashedPassword },
+    });
+    console.log("Admin user password updated:", updatedAdmin.username);
+  } else {
     const admin = await prisma.user.create({
       data: {
         username: adminUsername,
