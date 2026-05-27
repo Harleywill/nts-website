@@ -4,14 +4,16 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MdDashboard, MdWork, MdArticle, MdFolder, MdMailOutline, MdPeople, MdSettings, MdLogout } from 'react-icons/md';
 
+// Navigation items with optional permission requirements
+// TODO: Wire up userRole from auth cookie to filter visibility
 const navItems = [
-  { icon: MdDashboard, label: 'Dashboard', href: '/admin/dashboard', key: 'dashboard' },
-  { icon: MdWork, label: 'Careers', href: '/admin/careers', key: 'careers' },
-  { icon: MdFolder, label: 'Projects', href: '/admin/projects', key: 'projects' },
-  { icon: MdArticle, label: 'News', href: '/admin/news', key: 'news' },
-  { icon: MdMailOutline, label: 'Contact', href: '/admin/contact-submissions', key: 'contact' },
-  { icon: MdPeople, label: 'Users', href: '/admin/users', key: 'users' },
-  { icon: MdSettings, label: 'Settings', href: '/admin/settings', key: 'settings' },
+  { icon: MdDashboard, label: 'Dashboard', href: '/admin/dashboard', key: 'dashboard', requiredRole: 'EDITOR' as const },
+  { icon: MdWork, label: 'Careers', href: '/admin/careers', key: 'careers', requiredRole: 'MANAGER' as const },
+  { icon: MdFolder, label: 'Projects', href: '/admin/projects', key: 'projects', requiredRole: 'EDITOR' as const },
+  { icon: MdArticle, label: 'News', href: '/admin/news', key: 'news', requiredRole: 'EDITOR' as const },
+  { icon: MdMailOutline, label: 'Contact', href: '/admin/contact-submissions', key: 'contact', requiredRole: 'MANAGER' as const },
+  { icon: MdPeople, label: 'Users', href: '/admin/users', key: 'users', requiredRole: 'ADMIN' as const },
+  { icon: MdSettings, label: 'Settings', href: '/admin/settings', key: 'settings', requiredRole: 'ADMIN' as const },
 ];
 
 export function IconRail() {
