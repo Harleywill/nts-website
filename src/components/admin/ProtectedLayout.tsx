@@ -20,17 +20,17 @@ export default function ProtectedLayout({
     // Give the DOM a moment to be fully ready
     const timer = setTimeout(() => {
       try {
-        // Check if auth token exists in cookies
+        // Check if auth status cookie exists (accessible from client-side)
         const cookies = document.cookie;
-        const hasToken = cookies.includes('auth-token=');
+        const hasAuthStatus = cookies.includes('auth-status=');
 
-        if (!hasToken) {
-          // No token found, redirect to login
+        if (!hasAuthStatus) {
+          // No auth status found, redirect to login
           router.push('/admin/login');
           return;
         }
 
-        // Token exists, user is authenticated - ready to display
+        // User is authenticated - ready to display
         setIsReady(true);
       } catch (error) {
         console.error('Auth check error:', error);
