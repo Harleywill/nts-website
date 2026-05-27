@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import FaviconManager from "@/components/common/FaviconManager";
@@ -10,6 +10,11 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nevilletuckerservic
 
 const inter = Inter({
   variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const mono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -72,7 +77,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} scroll-smooth`}
+      className={`${inter.variable} ${mono.variable} scroll-smooth`}
       data-scroll-behavior="smooth"
     >
       <head>
