@@ -29,6 +29,11 @@ export interface AdminListPageProps<T> {
     count: number;
     icon?: string;
   }>;
+  actionConfig?: {
+    editUrl: (item: T) => string;
+    onDelete: (item: T) => Promise<void>;
+    deleteType: string;
+  };
 }
 
 export function AdminListPage<T extends { id: string | number }>({
@@ -38,6 +43,7 @@ export function AdminListPage<T extends { id: string | number }>({
   newUrl,
   newLabel = '+ New',
   renderActions,
+  actionConfig,
   emptyStateMessage = 'No items yet',
   searchPlaceholder = 'Search...',
   kpiStats = [],
@@ -163,7 +169,7 @@ export function AdminListPage<T extends { id: string | number }>({
                       {col.label}
                     </th>
                   ))}
-                  {renderActions && (
+                  {(renderActions || actionConfig) && (
                     <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-right">
                       Actions
                     </th>
@@ -184,9 +190,20 @@ export function AdminListPage<T extends { id: string | number }>({
                         {col.render ? col.render(item) : String(item[col.key as keyof T])}
                       </td>
                     ))}
-                    {renderActions && (
+                    {(renderActions || actionConfig) && (
                       <td className="px-4 py-3 text-right text-adm-textBody space-x-2">
-                        {renderActions(item)}
+                        {renderActions ? renderActions(item) : null}
+                        {actionConfig && (
+                          <div className="flex gap-2 justify-end">
+                            <Link
+                              href={actionConfig.editUrl(item)}
+                              className="text-nts-info hover:text-cyan-300 text-xs font-mono transition-colors"
+                              title="Edit"
+                            >
+                              Edit
+                            </Link>
+                          </div>
+                        )}
                       </td>
                     )}
                   </tr>
