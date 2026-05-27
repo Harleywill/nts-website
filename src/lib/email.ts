@@ -2,11 +2,28 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const ADMIN_EMAILS = [
-  "info@nt.services",
-  "info@ntsltd.com",
-  "hjakewilliams@gmail.com",
+// Admin email addresses for contact form notifications
+// Configure via CONTACT_ADMIN_EMAILS environment variable (comma-separated)
+// Default addresses are used if env var is not set
+const CONTACT_ADMIN_EMAILS = (process.env.CONTACT_ADMIN_EMAILS || "")
+  .split(",")
+  .map((email) => email.trim())
+  .filter((email) => email.length > 0) || [
+  "info@ntsltd.co.uk",  // Main company email (correct domain)
 ];
+
+// Admin email addresses for job applications
+// Configure via CAREERS_ADMIN_EMAILS environment variable (comma-separated)
+const CAREERS_ADMIN_EMAILS = (process.env.CAREERS_ADMIN_EMAILS || "")
+  .split(",")
+  .map((email) => email.trim())
+  .filter((email) => email.length > 0) || [
+  "careers@ntsltd.com",
+];
+
+console.log("Email Configuration:");
+console.log("- Contact Form Admin Emails:", CONTACT_ADMIN_EMAILS);
+console.log("- Careers Admin Emails:", CAREERS_ADMIN_EMAILS);
 
 export async function sendApplicationNotification(
   applicantName: string,
@@ -19,7 +36,7 @@ export async function sendApplicationNotification(
     await Promise.all([
       resend.emails.send({
         from: "careers@ntsltd.com",
-        to: ADMIN_EMAILS,
+        to: CAREERS_ADMIN_EMAILS,
         subject: `New Job Application - ${jobTitle}`,
         html: `
           <h2>New Application Received</h2>
@@ -68,7 +85,7 @@ export async function sendContactNotification(
       // Send notification to admin emails
       resend.emails.send({
         from: "contact@ntsltd.com",
-        to: ADMIN_EMAILS,
+        to: CONTACT_ADMIN_EMAILS,
         subject: `New Contact Form Submission - ${name}`,
         html: `
           <h2>New Contact Form Submission</h2>
