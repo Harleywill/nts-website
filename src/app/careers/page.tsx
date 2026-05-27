@@ -11,6 +11,10 @@ export const metadata = {
     "Join the NTS Ltd team. Explore current job openings in HVAC and mechanical services.",
 };
 
+// Force dynamic rendering - always fetch fresh data
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
+
 export default async function CareersPage() {
   const jobs = await prisma.job.findMany({
     where: { status: "PUBLISHED" },
