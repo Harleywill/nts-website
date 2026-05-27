@@ -1,7 +1,7 @@
 'use client';
 
-import { MdNotifications } from 'react-icons/md';
 import { CommandPalette } from '@/components/admin/palette/CommandPalette';
+import { NotificationPanel } from '@/components/admin/NotificationPanel';
 
 export function TopBar() {
   return (
@@ -12,10 +12,8 @@ export function TopBar() {
       {/* Spacer */}
       <div className="flex-1" />
 
-      {/* Notifications (placeholder - no unread notifications currently) */}
-      <button className="p-2 text-adm-textMut hover:text-adm-textBody hover:bg-adm-panel rounded-lg transition-colors" title="Notifications">
-        <MdNotifications size={18} />
-      </button>
+      {/* Notifications */}
+      <NotificationPanel />
     </header>
   );
 }
