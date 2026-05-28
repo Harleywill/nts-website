@@ -7,37 +7,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  ADMIN
-  MANAGER
-  EDITOR
-}
-
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
   password  String
-  role      UserRole @default(EDITOR)
+  role      UserRole @default("EDITOR")
   createdAt DateTime @default(now())
   jobs      Job[]
 }
 
 model Project {
-  id            Int      @id @default(autoincrement())
-  title         String
-  description   String
-  category      String
-  date          DateTime @default(now())
-  imageUrl      String?
-  featured      Boolean  @default(false)
-  clientName    String?
-  duration      String?
-  highlights    String?
-  metrics       String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  images        ProjectImage[]
-  testimonials  Testimonial[]
+  id           Int            @id @default(autoincrement())
+  title        String
+  description  String
+  category     String
+  date         DateTime       @default(now())
+  imageUrl     String?
+  featured     Boolean        @default(false)
+  clientName   String?
+  duration     String?
+  highlights   String?
+  metrics      String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  images       ProjectImage[]
+  testimonials Testimonial[]
 }
 
 model ProjectImage {
@@ -45,8 +39,8 @@ model ProjectImage {
   projectId Int
   imageUrl  String
   alt       String?
-  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 model Testimonial {
@@ -55,10 +49,10 @@ model Testimonial {
   name      String
   company   String?
   projectId Int?
-  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
   featured  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  project   Project? @relation(fields: [projectId], references: [id])
 }
 
 model NewsItem {
@@ -81,25 +75,105 @@ model ContactSubmission {
   read             Boolean  @default(false)
   emailSentToAdmin Boolean  @default(false)
   emailSentToUser  Boolean  @default(false)
-  adminEmails      String?  // JSON array of admin emails that received notification
-  userEmail        String?  // The email address the confirmation was sent to (if applicable)
-  emailError       String?  // Any error message if email sending failed
+  adminEmails      String?
+  userEmail        String?
+  emailError       String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }
 
 model SiteSettings {
-  id           Int      @id @default(autoincrement())
-  companyName  String
-  phone        String
-  email        String
-  address      String?
-  city         String?
-  postalCode   String?
-  facebookUrl  String?
-  linkedinUrl  String?
-  twitterUrl   String?
-  updatedAt    DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  companyName String
+  phone       String
+  email       String
+  address     String?
+  city        String?
+  postalCode  String?
+  facebookUrl String?
+  linkedinUrl String?
+  twitterUrl  String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Job {
+  id               String         @id @default(cuid())
+  slug             String         @unique
+  title            String
+  department       String
+  location         String
+  employmentType   EmploymentType
+  salaryRange      String
+  experience       String
+  closesAt         DateTime
+  status           JobStatus      @default("DRAFT")
+  description      String
+  responsibilities String
+  requirements     String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  createdById      Int?
+  applications     Application[]
+  createdBy        User?          @relation(fields: [createdById], references: [id])
+
+  @@index([status])
+  @@index([closesAt])
+}
+
+model Application {
+  id          String            @id @default(cuid())
+  reference   String            @unique
+  jobId       String
+  fullName    String
+  email       String
+  phone       String
+  postcode    String
+  cvUrl       String
+  cvFilename  String
+  coverLetter String?
+  status      ApplicationStatus @default("NEW")
+  notes       String?
+  submittedAt DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  job         Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+  @@index([status])
+  @@index([submittedAt])
+}
+
+model DailyStats {
+  id                     Int      @id @default(autoincrement())
+  date                   DateTime @unique
+  userCount              Int      @default(0)
+  projectCount           Int      @default(0)
+  newsCount              Int      @default(0)
+  testimonialCount       Int      @default(0)
+  contactSubmissionCount Int      @default(0)
+  applicationCount       Int      @default(0)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@index([date])
+}
+
+model GoogleReview {
+  id            Int      @id @default(autoincrement())
+  reviewerName  String
+  reviewerTitle String?
+  reviewText    String
+  rating        Int      @default(5)
+  googleUrl     String
+  featured      Boolean  @default(false)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  EDITOR
 }
 
 enum JobStatus {
@@ -122,72 +196,4 @@ enum ApplicationStatus {
   OFFER
   HIRED
   REJECTED
-}
-
-model Job {
-  id              String         @id @default(cuid())
-  slug            String         @unique
-  title           String
-  department      String
-  location        String
-  employmentType  EmploymentType
-  salaryRange     String
-  experience      String
-  closesAt        DateTime
-  status          JobStatus      @default(DRAFT)
-
-  description     String
-  responsibilities String
-  requirements    String
-
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  createdById     Int?
-  createdBy       User?          @relation(fields: [createdById], references: [id])
-
-  applications    Application[]
-
-  @@index([status])
-  @@index([closesAt])
-}
-
-model Application {
-  id              String             @id @default(cuid())
-  reference       String             @unique
-
-  jobId           String
-  job             Job                @relation(fields: [jobId], references: [id], onDelete: Cascade)
-
-  fullName        String
-  email           String
-  phone           String
-  postcode        String
-  cvUrl           String
-  cvFilename      String
-  coverLetter     String?
-
-  status          ApplicationStatus  @default(NEW)
-  notes           String?
-
-  submittedAt     DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
-
-  @@index([jobId])
-  @@index([status])
-  @@index([submittedAt])
-}
-
-model DailyStats {
-  id                      Int      @id @default(autoincrement())
-  date                    DateTime @unique
-  userCount               Int      @default(0)
-  projectCount            Int      @default(0)
-  newsCount               Int      @default(0)
-  testimonialCount        Int      @default(0)
-  contactSubmissionCount  Int      @default(0)
-  applicationCount        Int      @default(0)
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
-
-  @@index([date])
 }
