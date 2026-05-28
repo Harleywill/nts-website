@@ -5,10 +5,11 @@ import { notFound } from "next/navigation";
 export default async function EditReviewPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const review = await prisma.googleReview.findUnique({
-    where: { id: parseInt(params.id) },
+    where: { id: parseInt(id) },
   });
 
   if (!review) {
