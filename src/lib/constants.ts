@@ -102,22 +102,6 @@ export const SERVICES = [
       "Compliance certification"
     ]
   },
-  {
-    id: "rpz-testing",
-    title: "RPZ Testing",
-    description: "Professional testing and certification of Reduced Pressure Zone devices for water safety compliance.",
-    icon: "FaTint",
-    details: [
-      "Professional RPZ device testing and inspection",
-      "Annual certification and re-certification",
-      "Functional performance testing",
-      "Compliance with Water Regulations",
-      "Detailed testing documentation and reports",
-      "Backflow prevention verification",
-      "Device maintenance recommendations",
-      "Scheduled maintenance programs"
-    ]
-  },
 ];
 
 // Navigation Links
