@@ -1,0 +1,84 @@
+<h2>Google Reviews Integration - Design Summary</h2>
+<p class="subtitle">Complete design for hybrid testimonials + reviews section</p>
+
+<div style="background: #f0fdf4; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #4caf50;">
+  <h3 style="margin: 0 0 12px 0; color: #166534;">✓ What You're Getting</h3>
+  <ul style="margin: 0; color: #15803d; line-height: 1.8;">
+    <li><strong>Homepage:</strong> Keep your testimonials carousel + add new "Verified Reviews from Google" section below</li>
+    <li><strong>Review Cards:</strong> Top 3 reviews displayed as clickable cards (5-star ratings, reviewer name, review text)</li>
+    <li><strong>Links:</strong> Each review card links directly to Google Business profile</li>
+    <li><strong>Admin Control:</strong> Manage which 3 reviews appear via admin dashboard</li>
+    <li><strong>No API dependency:</strong> Manual data entry = simpler, no refresh tokens to manage</li>
+  </ul>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+
+  <!-- User Flow -->
+  <div style="background: white; padding: 18px; border-radius: 8px; border: 1px solid #e5e7eb;">
+    <h4 style="margin: 0 0 12px 0; color: #1f2937;">🌐 User Flow</h4>
+    <ol style="margin: 0; color: #4b5563; font-size: 0.9em; line-height: 2;">
+      <li>Visit NTS homepage</li>
+      <li>Scroll down past testimonials</li>
+      <li>See "Verified Reviews from Google"</li>
+      <li>Click any review card</li>
+      <li>Redirected to Google Business profile</li>
+      <li>See full review + all other reviews</li>
+    </ol>
+  </div>
+
+  <!-- Admin Flow -->
+  <div style="background: white; padding: 18px; border-radius: 8px; border: 1px solid #e5e7eb;">
+    <h4 style="margin: 0 0 12px 0; color: #1f2937;">⚙️ Admin Flow</h4>
+    <ol style="margin: 0; color: #4b5563; font-size: 0.9em; line-height: 2;">
+      <li>Log into admin dashboard</li>
+      <li>Go to "Reviews" section</li>
+      <li>Add/edit 3 reviews (name, text, rating, Google link)</li>
+      <li>Save</li>
+      <li>Reviews appear on homepage immediately</li>
+      <li>No rebuild needed</li>
+    </ol>
+  </div>
+
+</div>
+
+<div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; margin-bottom: 20px;">
+  <h4 style="margin: 0 0 12px 0; color: #1f2937;">📊 Data Model</h4>
+  <p style="margin: 0 0 12px 0; color: #6b7280; font-size: 0.9em;">New "GoogleReview" table in your database:</p>
+  <div style="background: #f3f4f6; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 0.85em; color: #1f2937; line-height: 1.6;">
+id: Int (auto-increment)<br>
+reviewerName: String<br>
+reviewText: String<br>
+rating: Int (1-5)<br>
+googleReviewUrl: String<br>
+reviewerTitle: String (optional - "Local Guide", "381 reviews", etc.)<br>
+featured: Boolean (to control which reviews show)<br>
+order: Int (sort order)<br>
+createdAt: DateTime<br>
+updatedAt: DateTime
+  </div>
+</div>
+
+<div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb;">
+  <h4 style="margin: 0 0 12px 0; color: #1f2937;">🔧 What We'll Build</h4>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+    <div>
+      <h5 style="margin: 0 0 8px 0; color: #374151; font-size: 0.9em;">Frontend</h5>
+      <ul style="margin: 0; padding-left: 20px; color: #6b7280; font-size: 0.85em;">
+        <li>New review section component</li>
+        <li>Grid layout (3 columns)</li>
+        <li>Clickable cards with hover effects</li>
+        <li>Stars, names, review text</li>
+      </ul>
+    </div>
+    <div>
+      <h5 style="margin: 0 0 8px 0; color: #374151; font-size: 0.9em;">Admin Backend</h5>
+      <ul style="margin: 0; padding-left: 20px; color: #6b7280; font-size: 0.85em;">
+        <li>Reviews management page</li>
+        <li>Add/edit/delete forms</li>
+        <li>Featured toggle & ordering</li>
+        <li>Database integration</li>
+      </ul>
+    </div>
+  </div>
+</div>
