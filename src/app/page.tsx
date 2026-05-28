@@ -8,6 +8,7 @@ import ServicesGrid from "@/components/home/ServicesGrid";
 import AccreditationsSection from "@/components/home/AccreditationsSection";
 import LatestProjects from "@/components/home/LatestProjects";
 import Testimonials from "@/components/home/Testimonials";
+import GoogleReviewsSection from "@/components/home/GoogleReviewsSection";
 import FeaturedNews from "@/components/home/FeaturedNews";
 
 export default function Home() {
@@ -35,6 +36,7 @@ export default function Home() {
         </div>
         <LatestProjects />
         <Testimonials />
+        <GoogleReviewsSection />
         <FeaturedNews />
       </main>
       <Footer />
