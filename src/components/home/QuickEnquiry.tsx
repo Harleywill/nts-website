@@ -89,8 +89,8 @@ export default function QuickEnquiry() {
   return (
     <section
       ref={ref}
-      className="relative isolate overflow-hidden py-16 sm:py-20 lg:py-28 text-white"
-      style={{ backgroundColor: "#1a2f6e" }}
+      className="relative isolate overflow-hidden py-16 sm:py-20 lg:py-28 text-gray-900"
+      style={{ backgroundColor: "#ffffff" }}
     >
       {/* Gradient Blob Background - Top */}
       <div
@@ -116,7 +116,7 @@ export default function QuickEnquiry() {
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               Get In Touch Today
             </h2>
-            <p className="text-gray-200 text-lg">
+            <p className="text-gray-600 text-lg">
               Have a question? Request a free quote or tell us about your project
             </p>
           </div>
@@ -132,7 +132,7 @@ export default function QuickEnquiry() {
             <AnimatePresence>
               {error && (
                 <motion.div
-                  className="p-4 bg-red-500 bg-opacity-20 border border-red-400 rounded-lg text-red-200"
+                  className="p-4 bg-red-500 bg-opacity-20 border border-red-400 rounded-lg text-red-700"
                   initial={{ opacity: 0 }}
                   animate={{ x: [0, -10, 10, -10, 0], opacity: 1 }}
                   exit={{ opacity: 0 }}
