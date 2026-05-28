@@ -26,6 +26,12 @@ interface SparklineData {
   applications: number[];
 }
 
+interface ActivityEntry {
+  timestamp: string;
+  action: string;
+  resource: string;
+}
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats>({
     users: 0,
@@ -43,6 +49,7 @@ export default function AdminDashboard() {
     submissions: [],
     applications: [],
   });
+  const [activity, setActivity] = useState<ActivityEntry[]>([]);
   const [time, setTime] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
@@ -128,6 +135,17 @@ export default function AdminDashboard() {
           submissions: submissionsHistory && submissionsHistory.length > 0 ? submissionsHistory : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           applications: applicationsHistory && applicationsHistory.length > 0 ? applicationsHistory : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         });
+
+        // Fetch recent activity
+        try {
+          const activityRes = await fetch('/api/admin/activity', { credentials: 'include' });
+          if (activityRes.ok) {
+            const activityData = await activityRes.json();
+            setActivity(activityData);
+          }
+        } catch (err) {
+          console.error('Failed to fetch activity:', err);
+        }
       } catch (err) {
         console.error('Failed to load dashboard stats:', err);
       } finally {
@@ -258,21 +276,17 @@ export default function AdminDashboard() {
             <div>ACTION</div>
             <div>RESOURCE</div>
           </div>
-          {[
-            { time: '14:32', action: 'Created', resource: 'User Account' },
-            { time: '14:15', action: 'Updated', resource: 'Project' },
-            { time: '13:48', action: 'Published', resource: 'News Article' },
-            { time: '13:22', action: 'Received', resource: 'Contact Submission' },
-            { time: '12:55', action: 'Added', resource: 'Testimonial' },
-            { time: '12:30', action: 'Applied', resource: 'Job Position' },
-            { time: '11:45', action: 'Deleted', resource: 'Testimonial' },
-          ].map((entry, i) => (
-            <div key={i} className="text-xs grid grid-cols-3 gap-4 py-2 border-b border-adm-border/50 text-adm-textBody hover:bg-adm-panelAlt/50 px-2 rounded transition-colors">
-              <div className="font-mono">{entry.time}</div>
-              <div>{entry.action}</div>
-              <div className="text-adm-textMut">{entry.resource}</div>
-            </div>
-          ))}
+          {activity.length > 0 ? (
+            activity.map((entry, i) => (
+              <div key={i} className="text-xs grid grid-cols-3 gap-4 py-2 border-b border-adm-border/50 text-adm-textBody hover:bg-adm-panelAlt/50 px-2 rounded transition-colors">
+                <div className="font-mono">{entry.timestamp}</div>
+                <div>{entry.action}</div>
+                <div className="text-adm-textMut">{entry.resource}</div>
+              </div>
+            ))
+          ) : (
+            <div className="text-xs text-adm-textMut py-4 text-center">No recent activity</div>
+          )}
         </div>
       </BoldPanel>
 
