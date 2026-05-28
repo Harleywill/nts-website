@@ -3,11 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: idParam } = await params;
     const body = await request.json();
-    const id = parseInt(params.id);
+    const id = parseInt(idParam);
 
     const review = await prisma.googleReview.update({
       where: { id },
@@ -34,10 +35,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id);
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
 
     await prisma.googleReview.delete({
       where: { id },
