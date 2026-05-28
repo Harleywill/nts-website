@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { FaStar, FaEdit, FaTrash } from "react-icons/fa";
+import DeleteReviewButton from "@/components/admin/reviews/DeleteReviewButton";
 
 export default async function ReviewsPage() {
   const reviews = await prisma.googleReview.findMany({
@@ -105,6 +106,7 @@ export default async function ReviewsPage() {
                       >
                         <FaEdit size={16} />
                       </Link>
+                      <DeleteReviewButton reviewId={review.id} />
                     </div>
                   </td>
                 </tr>
