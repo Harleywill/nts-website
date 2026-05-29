@@ -14,16 +14,16 @@ export default function FloatingChatButton() {
   const [showDemo, setShowDemo] = useState(false);
 
   useEffect(() => {
-    // Initialize Retell widget on mount
+    // Initialize Retell on mount
     const initializeRetell = async () => {
       try {
-        // Dynamically import the Retell widget
-        const { RetellWidget } = await import('retell-client-js-sdk');
+        // Dynamically import the Retell SDK
+        const RetellSDK = await import('retell-client-js-sdk');
 
         console.log('✅ Retell SDK imported successfully');
 
-        // Initialize the widget with NTS branding
-        window.RetellWidget = RetellWidget;
+        // Store the SDK on window for later use
+        window.RetellWidget = RetellSDK;
         setIsLoaded(true);
       } catch (error) {
         console.error('❌ Failed to load Retell SDK:', error);
