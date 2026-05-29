@@ -243,31 +243,7 @@ gtag('config', 'G-PEK7PKH64Z');`,
         />
         {/* End Google Analytics 4 */}
 
-        {/* Retell AI Chatbot Widget */}
-        <Script
-          id="retell-script"
-          src="https://cdn.retellai.com/js/sdk.js"
-          strategy="afterInteractive"
-        />
-        <Script
-          id="retell-config"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.addEventListener('retellLoaded', function() {
-                // Configure Retell widget behavior
-                if (typeof Retell !== 'undefined') {
-                  Retell.registerCallHandler({
-                    onCallEnd: function() {
-                      console.log('Chat ended');
-                    }
-                  });
-                }
-              });
-            `,
-          }}
-        />
-        {/* End Retell AI Chatbot Widget */}
+        {/* Retell AI Chatbot SDK loaded via npm in FloatingChatButton component */}
       </head>
       <body className="min-h-screen flex flex-col text-gray-900">
         {/* Google Tag Manager (noscript) */}
