@@ -143,8 +143,8 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
               {/* Content */}
               <div className="space-y-12">
                 {/* About the Role */}
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                <div className="bg-white rounded-lg border border-gray-200 p-8 shadow-sm hover:shadow-md transition-shadow">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">
                     About the role
                   </h2>
                   <div className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap space-y-4">
@@ -154,7 +154,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
                 {/* What You'll Do */}
                 {responsibilities.length > 0 && (
-                  <div>
+                  <div className="bg-white rounded-lg border border-gray-200 p-8 shadow-sm hover:shadow-md transition-shadow">
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">
                       What you'll do
                     </h2>
@@ -175,7 +175,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
                 {/* What We're Looking For */}
                 {requirements.length > 0 && (
-                  <div>
+                  <div className="bg-white rounded-lg border border-gray-200 p-8 shadow-sm hover:shadow-md transition-shadow">
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">
                       What we're looking for
                     </h2>
