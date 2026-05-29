@@ -5,7 +5,6 @@ import "./globals.css";
 import FaviconManager from "@/components/common/FaviconManager";
 import StickyButton from "@/components/common/StickyButton";
 import EngineeringBackground from "@/components/common/EngineeringBackground";
-import FloatingChatButton from "@/components/common/FloatingChatButton";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nevilletuckerservices.co.uk";
 
@@ -243,7 +242,20 @@ gtag('config', 'G-PEK7PKH64Z');`,
         />
         {/* End Google Analytics 4 */}
 
-        {/* Retell AI Chatbot SDK loaded via npm in FloatingChatButton component */}
+        {/* Retell AI Chat Widget - Text Conversation Agent */}
+        <Script
+          id="retell-widget"
+          src="https://dashboard.retellai.com/retell-widget-v2.js"
+          type="module"
+          async
+          data-public-key="public_key_e4108cc94298bc2363fed"
+          data-agent-id="agent_269f6e63f78cc9bea28409ad64"
+          data-title="Chat with Natasha"
+          data-color="#4caf50"
+          data-fab-text="Need help?"
+          data-bot-name="Natasha"
+        />
+        {/* End Retell AI Chat Widget */}
       </head>
       <body className="min-h-screen flex flex-col text-gray-900">
         {/* Google Tag Manager (noscript) */}
@@ -260,7 +272,6 @@ gtag('config', 'G-PEK7PKH64Z');`,
         <FaviconManager />
         {children}
         <StickyButton />
-        <FloatingChatButton />
       </body>
     </html>
   );
