@@ -3,46 +3,74 @@
 import { useEffect, useState } from 'react';
 import ChatbotDemo from './ChatbotDemo';
 
+declare global {
+  interface Window {
+    RetellWidget: any;
+  }
+}
+
 export default function FloatingChatButton() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
 
   useEffect(() => {
-    // Load Retell web chat widget script
-    const script = document.createElement('script');
-    script.src = 'https://cdn.retellai.com/v2/widget-bundle.js';
-    script.async = true;
-    script.onload = () => {
-      console.log('✅ Retell web chat widget loaded');
-      setIsLoaded(true);
-    };
-    script.onerror = () => {
-      console.warn('⚠️ Failed to load Retell widget, using fallback');
-      setIsLoaded(true); // Still set loaded to show demo
-    };
-    document.head.appendChild(script);
+    // Initialize Retell widget on mount
+    const initializeRetell = async () => {
+      try {
+        // Dynamically import the Retell widget
+        const { RetellWidget } = await import('retell-client-js-sdk');
 
-    return () => {
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
+        console.log('✅ Retell SDK imported successfully');
+
+        // Initialize the widget with NTS branding
+        window.RetellWidget = RetellWidget;
+        setIsLoaded(true);
+      } catch (error) {
+        console.error('❌ Failed to load Retell SDK:', error);
+        console.log('📱 Falling back to ChatbotDemo');
+        setIsLoaded(true);
       }
     };
+
+    initializeRetell();
   }, []);
 
-  const handleStartChat = () => {
+  const handleStartChat = async () => {
     try {
-      // Check if Retell widget is available
-      if (typeof window !== 'undefined' && (window as any).Retell) {
-        console.log('🟢 Starting Retell web chat widget with agent');
-        (window as any).Retell.openChat({
-          agentId: 'agent_269f6e63f78cc9bea28409ad64',
-        });
-      } else {
-        console.log('📱 Retell widget not available, using ChatbotDemo fallback');
+      // Check if Retell is available
+      if (!window.RetellWidget) {
+        console.log('📱 Retell not available, using ChatbotDemo');
         setShowDemo(true);
+        return;
       }
+
+      console.log('🔄 Requesting web call access token...');
+
+      // Get access token from our backend
+      const tokenResponse = await fetch('/api/retell/access-token', {
+        method: 'POST',
+      });
+
+      if (!tokenResponse.ok) {
+        throw new Error('Failed to get access token');
+      }
+
+      const { access_token, call_id } = await tokenResponse.json();
+      console.log('✅ Access token received, starting Retell conversation');
+
+      // Use the Retell SDK to start the web call
+      const { RetellWebClient } = window.RetellWidget;
+      const client = new RetellWebClient();
+
+      // Start the call
+      await client.startCall({
+        accessToken: access_token,
+      });
+
+      console.log('🟢 Retell conversation started successfully');
     } catch (error) {
-      console.error('Error opening Retell chat:', error);
+      console.error('Error starting Retell conversation:', error);
+      console.log('📱 Falling back to ChatbotDemo');
       setShowDemo(true);
     }
   };

@@ -12,8 +12,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call Retell API to create access token
-    const response = await fetch('https://api.retellai.com/v2/create-web-access-token', {
+    console.log('Creating Retell web session for agent:', agentId);
+
+    // Call Retell API v2 to create a web session/call
+    const response = await fetch('https://api.retellai.com/v2/create-web-call', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -26,20 +28,19 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const error = await response.text();
-      console.error('Retell API error:', error);
+      console.error('Retell API error:', response.status, error);
       return NextResponse.json(
-        { error: 'Failed to generate access token' },
+        { error: 'Failed to create web call session', details: error },
         { status: response.status }
       );
     }
 
     const data = await response.json();
+    console.log('Web call session created:', data);
 
-    return NextResponse.json({
-      accessToken: data.access_token,
-    });
+    return NextResponse.json(data);
   } catch (error) {
-    console.error('Error generating Retell access token:', error);
+    console.error('Error creating Retell web call session:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
