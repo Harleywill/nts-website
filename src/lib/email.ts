@@ -195,6 +195,73 @@ export async function sendApplicationNotification(
   }
 }
 
+export async function sendApplicationConfirmationEmail(
+  applicantEmail: string,
+  applicantName: string,
+  jobTitle: string,
+  applicationReference: string,
+  applicationId: string
+) {
+  try {
+    const cvDownloadUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/applications/${applicationId}/cv`;
+
+    await resend.emails.send({
+      from: "noreply@nevilletuckerservices.co.uk",
+      to: applicantEmail,
+      subject: `Application Received - ${jobTitle}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+            <tr>
+              <td style="padding: 20px;">
+                <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                  ${emailHeader}
+                  <tr>
+                    <td style="padding: 40px 30px;">
+                      <h2 style="color: #1a2f6e; margin: 0 0 25px 0; font-size: 24px;">Application Received</h2>
+                      <p style="color: #333333; margin: 0 0 20px 0; font-size: 15px; line-height: 1.6;">Hi ${applicantName},</p>
+
+                      <p style="color: #333333; margin: 0 0 20px 0; font-size: 15px; line-height: 1.6;">Thank you for applying for the <strong>${jobTitle}</strong> position at NTS Ltd. We've received your application and will review it carefully.</p>
+
+                      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9f9f9; border-left: 4px solid #4caf50; margin: 25px 0;">
+                        <tr>
+                          <td style="padding: 20px;">
+                            <p style="margin: 0 0 15px 0; color: #666666; font-size: 13px;"><strong style="color: #1a2f6e;">Your Reference Number:</strong><br><code style="background-color: #e8f5e9; padding: 5px 10px; border-radius: 3px; color: #2e7d32; font-weight: bold;">${applicationReference}</code></p>
+                            <p style="margin: 0; color: #666666; font-size: 13px;"><strong style="color: #1a2f6e;">What happens next?</strong><br>Our recruitment team will review your application and get back to you within 5-7 business days with an update.</p>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <p style="color: #333333; margin: 0 0 15px 0; font-size: 15px; line-height: 1.6;">If you need to make any changes to your application, please contact us at careers@nevilletuckerservices.co.uk with your reference number.</p>
+
+                      <div style="background-color: #f0f9ff; border-left: 4px solid #3b82f6; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                        <p style="color: #1e40af; margin: 0; font-size: 13px;"><strong>Need your CV?</strong> You can download your submitted CV here: <a href="${cvDownloadUrl}" style="color: #3b82f6; text-decoration: underline;">Download CV</a></p>
+                      </div>
+
+                      <p style="color: #666666; margin: 20px 0 0 0; font-size: 13px; line-height: 1.6;">Best regards,<br><strong>The NTS Ltd Team</strong></p>
+                    </td>
+                  </tr>
+                  ${emailFooter}
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `,
+    });
+  } catch (error) {
+    console.error("Failed to send application confirmation email:", error);
+    // Don't throw - email failure shouldn't break the application submission
+  }
+}
+
 export async function sendContactNotification(
   name: string,
   contact: string,
