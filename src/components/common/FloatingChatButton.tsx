@@ -49,15 +49,17 @@ export default function FloatingChatButton() {
       timers.push(timer);
     }
 
-    // If on localhost and SDK doesn't load, show development mode button
+    // After 3 seconds, if SDK still not loaded, show button anyway
     const devCheckTimer = setTimeout(() => {
       if (typeof window !== 'undefined' && !window.Retell) {
+        setIsLoaded(true);
         const isLocalhost = window.location.hostname === 'localhost' ||
                            window.location.hostname === '127.0.0.1';
         if (isLocalhost) {
           setIsDevelopment(true);
-          setIsLoaded(true);
           console.log('Running in development mode - Retell SDK unavailable. Click button to see ChatbotDemo.');
+        } else {
+          console.log('Running in production mode - Retell SDK will load or demo available as fallback.');
         }
       }
     }, 3000);
@@ -94,7 +96,8 @@ export default function FloatingChatButton() {
         displayOverlayMessages: true,
       });
     } else {
-      console.error('Retell SDK not available');
+      // If SDK not available, show demo as fallback
+      setShowDemo(true);
     }
   };
 
