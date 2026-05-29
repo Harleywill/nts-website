@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { sendApplicationNotification } from "@/lib/email";
+import {
+  sendApplicationNotification,
+  sendApplicationConfirmationEmail
+} from "@/lib/email";
 
 function generateApplicationReference() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -75,9 +78,18 @@ export async function POST(
       },
     });
 
-    // Send emails (fire and forget - don't block response if email fails)
-    sendApplicationNotification(fullName, email, job.title, reference).catch(
-      (err) => console.error("Failed to send notification emails:", err)
+    // Send emails (admin + applicant in parallel)
+    await Promise.all([
+      sendApplicationNotification(fullName, email, job.title, reference),
+      sendApplicationConfirmationEmail(
+        email,
+        fullName,
+        job.title,
+        reference,
+        application.id
+      ),
+    ]).catch((err) =>
+      console.error("Failed to send notification emails:", err)
     );
 
     return NextResponse.json(
