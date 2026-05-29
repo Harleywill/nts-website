@@ -213,7 +213,7 @@ export default function ChatbotDemo({ isOpen = false, onClose }: ChatbotDemoProp
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-4">
+          <div className="h-80 overflow-y-auto p-4 bg-gray-50 space-y-4">
             {conversation.map((msg, idx) => (
               <div
                 key={idx}
