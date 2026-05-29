@@ -11,7 +11,7 @@ model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
   password  String
-  role      UserRole @default("EDITOR")
+  role      UserRole @default(EDITOR)
   createdAt DateTime @default(now())
   jobs      Job[]
 }
@@ -106,7 +106,7 @@ model Job {
   salaryRange      String
   experience       String
   closesAt         DateTime
-  status           JobStatus      @default("DRAFT")
+  status           JobStatus      @default(DRAFT)
   description      String
   responsibilities String
   requirements     String
@@ -131,7 +131,7 @@ model Application {
   cvUrl       String
   cvFilename  String
   coverLetter String?
-  status      ApplicationStatus @default("NEW")
+  status      ApplicationStatus @default(NEW)
   notes       String?
   submittedAt DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
