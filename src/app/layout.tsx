@@ -5,6 +5,7 @@ import "./globals.css";
 import FaviconManager from "@/components/common/FaviconManager";
 import StickyButton from "@/components/common/StickyButton";
 import EngineeringBackground from "@/components/common/EngineeringBackground";
+import FloatingChatButton from "@/components/common/FloatingChatButton";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nevilletuckerservices.co.uk";
 
@@ -241,6 +242,32 @@ gtag('config', 'G-PEK7PKH64Z');`,
           }}
         />
         {/* End Google Analytics 4 */}
+
+        {/* Retell AI Chatbot Widget */}
+        <Script
+          id="retell-script"
+          src="https://cdn.retellai.com/js/sdk.js"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="retell-config"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.addEventListener('retellLoaded', function() {
+                // Configure Retell widget behavior
+                if (typeof Retell !== 'undefined') {
+                  Retell.registerCallHandler({
+                    onCallEnd: function() {
+                      console.log('Chat ended');
+                    }
+                  });
+                }
+              });
+            `,
+          }}
+        />
+        {/* End Retell AI Chatbot Widget */}
       </head>
       <body className="min-h-screen flex flex-col text-gray-900">
         {/* Google Tag Manager (noscript) */}
@@ -257,6 +284,7 @@ gtag('config', 'G-PEK7PKH64Z');`,
         <FaviconManager />
         {children}
         <StickyButton />
+        <FloatingChatButton />
       </body>
     </html>
   );
