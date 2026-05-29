@@ -242,20 +242,25 @@ gtag('config', 'G-PEK7PKH64Z');`,
         />
         {/* End Google Analytics 4 */}
 
-        {/* Retell AI Chat Widget - Text Conversation Agent */}
-        <Script
-          id="retell-widget"
-          src="https://dashboard.retellai.com/retell-widget-v2.js"
-          type="module"
-          async
-          data-public-key="public_key_e4108cc94298bc2363fed"
-          data-agent-id="agent_269f6e63f78cc9bea28409ad64"
-          data-title="Chat with Natasha"
-          data-color="#4caf50"
-          data-fab-text="Need help?"
-          data-bot-name="Natasha"
-        />
-        {/* End Retell AI Chat Widget */}
+        {/* Retell AI Chat Widget */}
+        <Script strategy="afterInteractive" id="retell-init">
+          {`
+            (function() {
+              const script = document.createElement('script');
+              script.src = 'https://dashboard.retellai.com/retell-widget-v2.js';
+              script.type = 'module';
+              script.async = true;
+              script.id = 'retell-widget';
+              script.setAttribute('data-public-key', 'public_key_e4108cc94298bc2363fed');
+              script.setAttribute('data-agent-id', 'agent_269f6e63f78cc9bea28409ad64');
+              script.setAttribute('data-title', 'Chat with Natasha');
+              script.setAttribute('data-color', '#4caf50');
+              script.setAttribute('data-fab-text', 'Need help?');
+              script.setAttribute('data-bot-name', 'Natasha');
+              document.head.appendChild(script);
+            })();
+          `}
+        </Script>
       </head>
       <body className="min-h-screen flex flex-col text-gray-900">
         {/* Google Tag Manager (noscript) */}
