@@ -25,6 +25,7 @@ export default function FloatingChatButton() {
       if (typeof window !== 'undefined' && window.Retell) {
         setIsLoaded(true);
         setIsDevelopment(false);
+        console.log('✅ Retell SDK loaded successfully');
         return true;
       }
       return false;
@@ -49,15 +50,19 @@ export default function FloatingChatButton() {
       timers.push(timer);
     }
 
-    // If on localhost and SDK doesn't load, show development mode button
+    // After 3 seconds, if SDK hasn't loaded, show button anyway (fallback to demo)
     const devCheckTimer = setTimeout(() => {
       if (typeof window !== 'undefined' && !window.Retell) {
         const isLocalhost = window.location.hostname === 'localhost' ||
                            window.location.hostname === '127.0.0.1';
+        setIsLoaded(true);
         if (isLocalhost) {
           setIsDevelopment(true);
-          setIsLoaded(true);
-          console.log('Running in development mode - Retell SDK unavailable. Click button to see ChatbotDemo.');
+          console.log('🟡 Running in development mode - Retell SDK unavailable. Click button to see ChatbotDemo.');
+        } else {
+          // Production: SDK not loaded, will use ChatbotDemo as fallback
+          console.log('🟠 Production mode - Retell SDK not loaded, using ChatbotDemo fallback');
+          setIsDevelopment(true); // Use demo fallback on production too
         }
       }
     }, 3000);
@@ -66,6 +71,7 @@ export default function FloatingChatButton() {
     const handleSDKLoad = () => {
       setIsLoaded(true);
       setIsDevelopment(false);
+      console.log('✅ Retell SDK loaded via event listener');
     };
 
     if (typeof window !== 'undefined') {
@@ -83,18 +89,21 @@ export default function FloatingChatButton() {
 
   const handleStartChat = () => {
     if (isDevelopment) {
-      // In development mode, show the ChatbotDemo instead
+      // In development/fallback mode, show the ChatbotDemo instead
       setShowDemo(true);
+      console.log('📱 Opening ChatbotDemo (demo mode)');
       return;
     }
 
     if (typeof window !== 'undefined' && window.Retell) {
+      console.log('🟢 Starting Retell conversation');
       window.Retell.startConversation({
         agentId: 'agent_269f6e63f78cc9bea28409ad64',
         displayOverlayMessages: true,
       });
     } else {
-      console.error('Retell SDK not available');
+      console.log('⚠️ Retell SDK not available - falling back to demo');
+      setShowDemo(true);
     }
   };
 
@@ -114,7 +123,7 @@ export default function FloatingChatButton() {
               : 'bg-green-600 hover:bg-green-700'
           }`}
           aria-label="Open chat with NTS support"
-          title={isDevelopment ? 'Chat widget (development mode)' : 'Chat with us'}
+          title={isDevelopment ? 'Chat widget (demo mode)' : 'Chat with us'}
         >
           <svg
             className="w-6 h-6"
@@ -132,7 +141,7 @@ export default function FloatingChatButton() {
         </button>
         {isDevelopment && (
           <div className="absolute bottom-20 right-0 bg-blue-50 border border-blue-200 rounded-lg p-2 text-xs text-blue-700 whitespace-nowrap">
-            Dev mode
+            Demo mode
           </div>
         )}
       </div>
