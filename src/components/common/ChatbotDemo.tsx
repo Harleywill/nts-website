@@ -197,7 +197,7 @@ export default function ChatbotDemo({ isOpen = false, onClose }: ChatbotDemoProp
     <>
       <div className="fixed bottom-6 right-6 z-50">
         {/* Chat Widget */}
-        <div className="w-96 bg-white rounded-lg shadow-2xl flex flex-col border border-gray-200" style={{ height: '650px' }}>
+        <div className="w-96 bg-white rounded-lg shadow-2xl flex flex-col border border-gray-200" style={{ height: '600px', maxHeight: '90vh' }}>
           {/* Header */}
           <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-4 rounded-t-lg flex justify-between items-center flex-shrink-0">
             <div>
@@ -213,7 +213,7 @@ export default function ChatbotDemo({ isOpen = false, onClose }: ChatbotDemoProp
           </div>
 
           {/* Messages */}
-          <div className="h-80 overflow-y-auto p-4 bg-gray-50 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-4 min-h-0">
             {conversation.map((msg, idx) => (
               <div
                 key={idx}
@@ -231,8 +231,8 @@ export default function ChatbotDemo({ isOpen = false, onClose }: ChatbotDemoProp
               </div>
             ))}
 
-            {/* Extracted Data Display */}
-            {Object.keys(extractedData).length > 0 && step !== -1 && (
+            {/* Extracted Data Display - Only show at end */}
+            {Object.keys(extractedData).length > 0 && step === -1 && (
               <div className="bg-blue-50 border border-blue-200 rounded p-3 mt-4">
                 <p className="text-xs font-semibold text-blue-900 mb-2">📊 Extracted Data:</p>
                 <div className="text-xs space-y-1">
