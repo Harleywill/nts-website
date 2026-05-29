@@ -46,6 +46,49 @@ button {
   @apply transition-all duration-200 ease-out;
 }
 
+/* Retell Widget Button Override - Fix white text on white background */
+[class*="retell"] button,
+[class*="Retell"] button,
+div[class*="widget"] button,
+div[class*="chat"] button {
+  background-color: #1a2f6e !important;
+  color: #ffffff !important;
+  border: 1px solid #1a2f6e !important;
+  padding: 10px 16px !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+}
+
+[class*="retell"] button:hover,
+[class*="Retell"] button:hover,
+div[class*="widget"] button:hover,
+div[class*="chat"] button:hover {
+  background-color: #0f1f4a !important;
+  border-color: #0f1f4a !important;
+}
+
+/* Target specific Retell message/option buttons */
+div[class*="message"] button,
+div[class*="option"] button,
+div[class*="response"] button {
+  background-color: #1a2f6e !important;
+  color: #ffffff !important;
+  border: 1px solid #1a2f6e !important;
+}
+
+/* Ensure text is always readable */
+button {
+  color: inherit !important;
+}
+
+button[style*="white"],
+button[style*="#fff"],
+button[style*="#ffffff"] {
+  color: #ffffff !important;
+  background-color: #1a2f6e !important;
+}
+
 /* Remove grid background for dark sections */
 body.no-grid {
   background-image: none;
