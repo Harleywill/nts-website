@@ -88,8 +88,10 @@ export default function FloatingChatButton() {
   }, []);
 
   const handleStartChat = () => {
+    console.log('🔵 handleStartChat called, isDevelopment:', isDevelopment, 'showDemo:', showDemo);
     if (isDevelopment) {
       // In development/fallback mode, show the ChatbotDemo instead
+      console.log('📱 Setting showDemo to true');
       setShowDemo(true);
       console.log('📱 Opening ChatbotDemo (demo mode)');
       return;
@@ -108,8 +110,11 @@ export default function FloatingChatButton() {
   };
 
   if (!isLoaded) {
+    console.log('⚪ isLoaded is false, not rendering button');
     return null;
   }
+
+  console.log('🟢 Rendering button, isDevelopment:', isDevelopment, 'showDemo:', showDemo);
 
   return (
     <>
