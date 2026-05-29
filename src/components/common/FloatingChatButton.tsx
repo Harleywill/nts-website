@@ -3,81 +3,55 @@
 import { useEffect, useState } from 'react';
 import ChatbotDemo from './ChatbotDemo';
 
-declare global {
-  interface Window {
-    Retell?: {
-      startConversation: (config: {
-        agentId: string;
-        displayOverlayMessages?: boolean;
-      }) => void;
-    };
-  }
-}
-
 export default function FloatingChatButton() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
-  const [useRealRetell, setUseRealRetell] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(false);
 
   useEffect(() => {
-    // Check if Retell SDK is available
-    const checkRetell = () => {
-      if (typeof window !== 'undefined' && window.Retell) {
-        console.log('✅ Retell SDK loaded - using real integration');
-        setUseRealRetell(true);
-        setIsLoaded(true);
-        return true;
-      }
-      return false;
-    };
-
-    // Initial check
-    if (checkRetell()) {
-      return;
-    }
-
-    // Wait for SDK to load
-    let attempts = 0;
-    const checkInterval = setInterval(() => {
-      attempts++;
-      if (checkRetell()) {
-        clearInterval(checkInterval);
-      }
-      if (attempts > 50) {
-        // 5 seconds timeout - fall back to demo
-        clearInterval(checkInterval);
-        console.log('⚠️ Retell SDK not available - using ChatbotDemo fallback');
-        setIsLoaded(true);
-      }
-    }, 100);
-
-    // Listen for Retell SDK load event
-    if (typeof window !== 'undefined') {
-      const handleSDKLoad = () => {
-        console.log('✅ Retell SDK loaded via event');
-        setUseRealRetell(true);
-        setIsLoaded(true);
-      };
-      
-      window.addEventListener('retellLoaded', handleSDKLoad);
-      
-      return () => {
-        clearInterval(checkInterval);
-        window.removeEventListener('retellLoaded', handleSDKLoad);
-      };
-    }
+    // SDK is available via npm import, so we're ready immediately
+    console.log('✅ Retell SDK (npm) loaded - ready to use');
+    setIsLoaded(true);
   }, []);
 
-  const handleStartChat = () => {
-    if (useRealRetell && typeof window !== 'undefined' && window.Retell) {
-      console.log('🟢 Starting Retell conversation with agent_269f6e63f78cc9bea28409ad64');
-      window.Retell.startConversation({
-        agentId: 'agent_269f6e63f78cc9bea28409ad64',
-        displayOverlayMessages: true,
+  const handleStartChat = async () => {
+    if (isInitializing) return;
+    setIsInitializing(true);
+
+    try {
+      // Get access token from backend
+      console.log('🔄 Requesting access token from backend...');
+      const tokenResponse = await fetch('/api/retell/access-token', {
+        method: 'POST',
       });
-    } else {
-      console.log('📱 Using ChatbotDemo fallback');
+
+      if (!tokenResponse.ok) {
+        throw new Error('Failed to get access token');
+      }
+
+      const { accessToken } = await tokenResponse.json();
+      console.log('✅ Access token received');
+
+      // Dynamically import the Retell SDK
+      const { RetellWebClient } = await import('retell-client-js-sdk');
+
+      console.log('🟢 Starting Retell conversation...');
+
+      // Create a new instance of RetellWebClient
+      const client = new RetellWebClient();
+
+      // Start the call with the access token
+      await client.startCall({
+        accessToken: accessToken,
+      });
+
+      console.log('✅ Retell conversation started successfully');
+    } catch (error) {
+      console.error('Error starting Retell conversation:', error);
+      console.log('📱 Falling back to ChatbotDemo');
       setShowDemo(true);
+    } finally {
+      setIsInitializing(false);
     }
   };
 
@@ -91,16 +65,13 @@ export default function FloatingChatButton() {
       <div className="fixed bottom-6 right-6 z-50">
         <button
           onClick={handleStartChat}
-          className={`flex items-center justify-center w-14 h-14 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-110 ${
-            useRealRetell
-              ? 'bg-green-600 hover:bg-green-700'
-              : 'bg-blue-600 hover:bg-blue-700'
-          }`}
+          disabled={isInitializing}
+          className="flex items-center justify-center w-14 h-14 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-110 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Open chat with NTS support"
-          title={useRealRetell ? 'Chat with Natasha' : 'Chat widget (demo mode)'}
+          title={isInitializing ? 'Initializing...' : 'Chat with Natasha'}
         >
           <svg
-            className="w-6 h-6"
+            className={`w-6 h-6 ${isInitializing ? 'animate-spin' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -113,11 +84,6 @@ export default function FloatingChatButton() {
             />
           </svg>
         </button>
-        {!useRealRetell && (
-          <div className="absolute bottom-20 right-0 bg-blue-50 border border-blue-200 rounded-lg p-2 text-xs text-blue-700 whitespace-nowrap">
-            Demo mode
-          </div>
-        )}
       </div>
     </>
   );
