@@ -6,52 +6,44 @@ import ChatbotDemo from './ChatbotDemo';
 export default function FloatingChatButton() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
-  const [isInitializing, setIsInitializing] = useState(false);
 
   useEffect(() => {
-    // SDK is available via npm import, so we're ready immediately
-    console.log('✅ Retell SDK (npm) loaded - ready to use');
-    setIsLoaded(true);
+    // Load Retell web chat widget script
+    const script = document.createElement('script');
+    script.src = 'https://cdn.retellai.com/v2/widget-bundle.js';
+    script.async = true;
+    script.onload = () => {
+      console.log('✅ Retell web chat widget loaded');
+      setIsLoaded(true);
+    };
+    script.onerror = () => {
+      console.warn('⚠️ Failed to load Retell widget, using fallback');
+      setIsLoaded(true); // Still set loaded to show demo
+    };
+    document.head.appendChild(script);
+
+    return () => {
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
+    };
   }, []);
 
-  const handleStartChat = async () => {
-    if (isInitializing) return;
-    setIsInitializing(true);
-
+  const handleStartChat = () => {
     try {
-      // Get access token from backend
-      console.log('🔄 Requesting access token from backend...');
-      const tokenResponse = await fetch('/api/retell/access-token', {
-        method: 'POST',
-      });
-
-      if (!tokenResponse.ok) {
-        throw new Error('Failed to get access token');
+      // Check if Retell widget is available
+      if (typeof window !== 'undefined' && (window as any).Retell) {
+        console.log('🟢 Starting Retell web chat widget with agent');
+        (window as any).Retell.openChat({
+          agentId: 'agent_269f6e63f78cc9bea28409ad64',
+        });
+      } else {
+        console.log('📱 Retell widget not available, using ChatbotDemo fallback');
+        setShowDemo(true);
       }
-
-      const { accessToken } = await tokenResponse.json();
-      console.log('✅ Access token received');
-
-      // Dynamically import the Retell SDK
-      const { RetellWebClient } = await import('retell-client-js-sdk');
-
-      console.log('🟢 Starting Retell conversation...');
-
-      // Create a new instance of RetellWebClient
-      const client = new RetellWebClient();
-
-      // Start the call with the access token
-      await client.startCall({
-        accessToken: accessToken,
-      });
-
-      console.log('✅ Retell conversation started successfully');
     } catch (error) {
-      console.error('Error starting Retell conversation:', error);
-      console.log('📱 Falling back to ChatbotDemo');
+      console.error('Error opening Retell chat:', error);
       setShowDemo(true);
-    } finally {
-      setIsInitializing(false);
     }
   };
 
@@ -65,13 +57,12 @@ export default function FloatingChatButton() {
       <div className="fixed bottom-6 right-6 z-50">
         <button
           onClick={handleStartChat}
-          disabled={isInitializing}
-          className="flex items-center justify-center w-14 h-14 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-110 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center justify-center w-14 h-14 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-110 bg-green-600 hover:bg-green-700"
           aria-label="Open chat with NTS support"
-          title={isInitializing ? 'Initializing...' : 'Chat with Natasha'}
+          title="Chat with Natasha"
         >
           <svg
-            className={`w-6 h-6 ${isInitializing ? 'animate-spin' : ''}`}
+            className="w-6 h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
