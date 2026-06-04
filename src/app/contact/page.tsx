@@ -100,9 +100,30 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* RIGHT: your existing ContactForm component */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-1 shadow-[0_20px_60px_rgba(13,21,48,0.08)]">
-              <ContactForm />
+            {/* RIGHT: Trust message, call button, and ContactForm */}
+            <div className="space-y-6">
+              {/* Trust Message */}
+              <div className="rounded-lg border-l-4 border-[#4caf50] bg-[#f0f9ff] p-4">
+                <p className="flex items-center gap-2 font-medium text-gray-700">
+                  <span className="text-[#4caf50] text-xl">✓</span>
+                  We respond within 24 hours
+                </p>
+              </div>
+
+              {/* Large Call Button */}
+              <div className="text-center">
+                <a
+                  href="tel:01482838080"
+                  className="inline-block rounded-lg bg-[#4caf50] px-8 py-4 font-bold text-lg text-white transition-colors hover:bg-green-700"
+                >
+                  📞 Call Now: 01482 838080
+                </a>
+              </div>
+
+              {/* Contact Form */}
+              <div className="rounded-2xl border border-gray-200 bg-white p-1 shadow-[0_20px_60px_rgba(13,21,48,0.08)]">
+                <ContactForm />
+              </div>
             </div>
           </div>
         </section>
