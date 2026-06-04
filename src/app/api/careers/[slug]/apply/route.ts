@@ -4,6 +4,7 @@ import {
   sendApplicationNotification,
   sendApplicationConfirmationEmail
 } from "@/lib/email";
+import { getRateLimitKey, checkRateLimit } from "@/lib/rate-limit";
 
 function generateApplicationReference() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -19,6 +20,20 @@ export async function POST(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    // Rate limiting: 1 application per day per IP
+    const ip = getRateLimitKey(request);
+    const isAllowed = checkRateLimit(ip, {
+      limit: 1,
+      window: 24 * 60 * 60 * 1000, // 24 hours
+    });
+
+    if (!isAllowed) {
+      return NextResponse.json(
+        { error: "Only one application per day is allowed. Please try again tomorrow." },
+        { status: 429 }
+      );
+    }
+
     const { slug } = await params;
     const body = await request.json();
 

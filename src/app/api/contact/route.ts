@@ -1,9 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { sendContactNotification } from "@/lib/email";
+import { getRateLimitKey, checkRateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting: 3 contact submissions per day per IP
+    const ip = getRateLimitKey(request);
+    const isAllowed = checkRateLimit(ip, {
+      limit: 3,
+      window: 24 * 60 * 60 * 1000, // 24 hours
+    });
+
+    if (!isAllowed) {
+      return NextResponse.json(
+        { error: "Too many contact requests. Please try again tomorrow." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { name, service, contact, message } = body;
 

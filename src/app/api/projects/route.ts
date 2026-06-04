@@ -38,11 +38,9 @@ export async function POST(request: NextRequest) {
           })) || [],
         },
       },
-      include: { images: true },
     });
     return NextResponse.json(project);
   } catch (error) {
-    console.error("Failed to create project:", error);
     return NextResponse.json(
       { error: "Failed to create project" },
       { status: 500 }

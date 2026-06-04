@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   try {
@@ -66,7 +64,12 @@ export async function DELETE(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (error: any) {
+    // P2025 = record not found, which is fine for delete (idempotent)
+    if (error?.code === "P2025") {
+      return NextResponse.json({ success: true });
+    }
+
     console.error("Error deleting submission:", error);
     return NextResponse.json(
       { error: "Failed to delete submission" },
