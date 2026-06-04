@@ -65,7 +65,7 @@ export function TopBar() {
       <button
         onClick={toggleLogo}
         disabled={loading}
-        className="px-3 py-2 rounded bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="px-3 py-2 rounded bg-nts-green text-white text-sm font-medium hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         title={`Current logo: ${logoVersion}`}
       >
         Logo: {logoVersion === 'old' ? 'Old' : 'New'}
