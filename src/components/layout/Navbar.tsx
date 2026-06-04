@@ -16,6 +16,8 @@ export default function Navbar() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isHoveringTop, setIsHoveringTop] = useState(false);
   const [shouldShowBackground, setShouldShowBackground] = useState(false);
+  const [logoVersion, setLogoVersion] = useState<'old' | 'new'>('new');
+  const [logoLoading, setLogoLoading] = useState(true);
   // Calculate selected index based on pathname - use memo to avoid recalculation
   const selectedIndex = useMemo(() => {
     const currentIndex = NAV_LINKS.findIndex((link) => {
@@ -57,6 +59,26 @@ export default function Navbar() {
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Fetch logo version from API on mount
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await fetch("/api/admin/settings");
+        if (res.ok) {
+          const data = await res.json();
+          setLogoVersion(data.logoVersion || "new");
+        }
+      } catch (error) {
+        console.error("Failed to fetch logo version:", error);
+        setLogoVersion("new"); // Default to new logo on error
+      } finally {
+        setLogoLoading(false);
+      }
+    };
+
+    fetchSettings();
   }, []);
 
   // Calculate nav item positions and navbar height
@@ -158,12 +180,13 @@ export default function Navbar() {
             className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity relative z-10"
           >
             <Image
-              src="/images/ntsLogo.png"
+              src={logoVersion === "old" ? "/images/ntsLogo-old.png" : "/images/ntsLogo.png"}
               alt="NTS Ltd Logo"
               width={320}
               height={48}
               priority
               className="h-9 sm:h-10 lg:h-12 w-auto"
+              onError={() => setLogoVersion("new")}
             />
           </Link>
 
@@ -207,6 +230,18 @@ export default function Navbar() {
             ))}
             </div>
           </div>
+
+          {/* Phone Number - Right */}
+          <a
+            href="tel:01482838080"
+            className="hidden md:flex items-center ml-4 font-semibold transition-colors"
+            style={{
+              color: (shouldShowBackground || isHoveringTop) ? "#4caf50" : "#4caf50",
+            }}
+            title="Call NTS Ltd"
+          >
+            <span className="text-sm lg:text-base">01482 838080</span>
+          </a>
 
           {/* Mobile Menu Button */}
           <button
