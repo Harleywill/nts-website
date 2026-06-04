@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -93,6 +94,7 @@ model SiteSettings {
   facebookUrl String?
   linkedinUrl String?
   twitterUrl  String?
+  logoVersion Int      @default(1)
   updatedAt   DateTime @updatedAt
 }
 
