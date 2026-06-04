@@ -102,6 +102,25 @@ export default function ServicesGrid() {
           </p>
         </motion.div>
 
+        {/* Trust Message Strip */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true, amount: 0.2 }}
+          className="mb-12 p-6 rounded-lg text-center border border-green-500/30"
+          style={{ backgroundColor: "rgba(76, 175, 80, 0.08)" }}
+        >
+          <p className="text-lg font-semibold text-white flex items-center justify-center gap-2">
+            <span style={{ color: "#4caf50" }}>✓</span>
+            We respond within 24 hours
+            <span style={{ color: "#4caf50" }}>•</span>
+            Expert engineers
+            <span style={{ color: "#4caf50" }}>•</span>
+            Fast, reliable service
+          </p>
+        </motion.div>
+
         {/* Services Grid */}
         <motion.div
           className="relative grid md:grid-cols-3 gap-8 z-0"
