@@ -190,8 +190,8 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Center navigation - Only visible on XL screens and up */}
-          <div className="hidden 3xl:flex absolute left-1/2 transform -translate-x-1/2 items-center justify-center">
+          {/* Center navigation - Only visible on 2XL screens and up (~1536px) */}
+          <div className="hidden 2xl:flex absolute left-1/2 transform -translate-x-1/2 items-center justify-center">
             {/* Desktop Navigation - Center */}
             <div
               ref={navContainerRef}
@@ -246,7 +246,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
               onClick={toggleMenu}
-              className="3xl:hidden p-2 rounded-lg hover:bg-white/10 transition-colors ml-auto"
+              className="2xl:hidden p-2 rounded-lg hover:bg-white/10 transition-colors ml-auto"
               aria-label="Toggle menu"
             >
             {isOpen ? (
@@ -270,7 +270,7 @@ export default function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="3xl:hidden border-t border-gray-200"
+              className="2xl:hidden border-t border-gray-200"
             >
               <div className="px-6 py-6 space-y-4">
                 {NAV_LINKS.map((link) => (
