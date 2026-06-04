@@ -2,6 +2,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import DeleteJobButton from "@/components/admin/DeleteJobButton";
 import { formatDistanceToNow } from "date-fns";
+import { BoldPanel } from "@/components/admin/ui/BoldPanel";
+import { BoldButton } from "@/components/admin/ui/BoldButton";
 
 export const metadata = {
   title: "Careers Management - Admin",
@@ -31,53 +33,60 @@ export default async function AdminCareersPage({
   });
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-4xl font-bold text-gray-900">Careers</h1>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-mono font-bold text-adm-textPri uppercase">Careers</h1>
+          <p className="text-xs text-adm-textMut mt-1">
+            {jobs.length} {jobs.length === 1 ? "job" : "jobs"}
+          </p>
+        </div>
         <Link
           href="/admin/careers/new"
-          className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors border-2 border-green-700"
         >
-          New Job
+          <BoldButton variant="primary" size="md">
+            + New Job
+          </BoldButton>
         </Link>
       </div>
 
-      <form className="mb-6" method="GET">
-        <div className="flex gap-3">
+      <form className="space-y-3">
+        <div className="flex gap-2">
           <input
             type="text"
             name="search"
             placeholder="Search by title or department..."
             defaultValue={searchQuery}
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="flex-1 px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody placeholder-adm-textMut focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
           />
-          <button
-            type="submit"
-            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 border-2 border-green-700"
-          >
+          <BoldButton type="submit" variant="primary" size="md">
             Search
-          </button>
+          </BoldButton>
           {searchQuery && (
             <Link
               href="/admin/careers"
-              className="px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 border-2 border-gray-500"
             >
-              Clear
+              <BoldButton variant="secondary" size="md">
+                Clear
+              </BoldButton>
             </Link>
           )}
         </div>
       </form>
 
       {jobs.length === 0 ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
-          <p className="text-gray-500 mb-4">No jobs yet</p>
-          <Link
-            href="/admin/careers/new"
-            className="inline-block px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors border-2 border-green-700"
-          >
-            Post your first job
-          </Link>
-        </div>
+        <BoldPanel cornerBrackets>
+          <div className="py-12 text-center">
+            <p className="text-adm-textMut text-sm font-mono mb-4">No jobs posted yet</p>
+            <Link
+              href="/admin/careers/new"
+            >
+              <BoldButton variant="secondary" size="md">
+                Post your first job
+              </BoldButton>
+            </Link>
+          </div>
+        </BoldPanel>
       ) : (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <table className="w-full">
