@@ -57,6 +57,14 @@ export default function AboutSection() {
               <p className="text-base/7 font-semibold" style={{ color: "#4caf50" }}>About NTS Ltd</p>
               <h2 className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-white sm:text-5xl">Your Trusted HVAC Partner</h2>
               <p className="mt-6 text-xl/8 text-gray-300">For over 45 years, NTS Ltd has been delivering exceptional heating, cooling, and ventilation services to homes and businesses across Hull. We're committed to keeping your systems running smoothly, efficiently, and safely.</p>
+              {/* Trust Indicator */}
+              <div className="mt-6 flex items-start gap-3">
+                <span className="text-nts-green text-2xl font-bold" style={{ color: "#4caf50" }}>✓</span>
+                <div>
+                  <p className="font-semibold text-white">Fast Response Time</p>
+                  <p className="text-gray-400 text-sm">We respond to all enquiries within 24 hours</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
