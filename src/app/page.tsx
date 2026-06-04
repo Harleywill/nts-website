@@ -6,9 +6,10 @@ import AboutSection from "@/components/home/AboutSection";
 import ServicesBento from "@/components/home/ServicesBento";
 import ServicesGrid from "@/components/home/ServicesGrid";
 import AccreditationsSection from "@/components/home/AccreditationsSection";
+import WhyChooseNTS from "@/components/home/WhyChooseNTS";
 import LatestProjects from "@/components/home/LatestProjects";
 import Testimonials from "@/components/home/Testimonials";
-import GoogleReviewsSection from "@/components/home/GoogleReviewsSection";
+import GoogleReviewsPromo from "@/components/home/GoogleReviewsPromo";
 import FeaturedNews from "@/components/home/FeaturedNews";
 
 export default function Home() {
@@ -34,9 +35,10 @@ export default function Home() {
         <div className="hidden md:block">
           <ServicesGrid />
         </div>
+        <WhyChooseNTS />
         <LatestProjects />
         <Testimonials />
-        <GoogleReviewsSection />
+        <GoogleReviewsPromo />
         <FeaturedNews />
       </main>
       <Footer />
