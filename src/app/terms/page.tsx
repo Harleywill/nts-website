@@ -99,7 +99,7 @@ export default function Terms() {
               </ul>
 
               <div className="mt-8 pt-8 border-t border-gray-200">
-                <Link href="/privacy" className="text-green-600 hover:text-green-700 font-semibold">
+                <Link href="/privacy" className="text-brand-green-600 hover:text-green-700 font-semibold">
                   View Privacy Policy →
                 </Link>
               </div>

@@ -131,7 +131,7 @@ export default function FAQ() {
                   onClick={() => setActiveCategory(category)}
                   className={`px-4 py-2 rounded-full font-semibold transition-all ${
                     activeCategory === category
-                      ? "bg-green-500 text-white"
+                      ? "bg-brand-green-500 text-white"
                       : "bg-gray-200 text-gray-900 hover:bg-gray-300"
                   }`}
                   whileHover={{ scale: 1.05 }}
@@ -163,7 +163,7 @@ export default function FAQ() {
                       className="w-full flex items-center justify-between p-6 bg-white hover:bg-gray-50 transition-colors text-left"
                     >
                       <div>
-                        <p className="text-xs font-semibold text-green-600 mb-1">
+                        <p className="text-xs font-semibold text-brand-green-600 mb-1">
                           {item.category}
                         </p>
                         <h3 className="text-lg font-semibold text-gray-900">

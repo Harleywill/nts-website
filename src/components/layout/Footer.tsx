@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useLogoVersion } from "@/hooks/useLogoVersion";
 import { motion } from "framer-motion";
 import { FaFacebook, FaInstagram, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { COMPANY, SERVICES } from "@/lib/constants";
 import { slideUpVariants, staggerContainerVariants, staggerItemVariants, staggerContainerFastVariants, staggerItemFastVariants } from "@/lib/animations";
 
 export default function Footer() {
+  const logoVersion = useLogoVersion();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -42,7 +44,7 @@ export default function Footer() {
             <div className="flex-1">
               <Link href="/" className="inline-block mb-4">
                 <Image
-                  src="/images/ntsLogo.png"
+                  src={logoVersion === "old" ? "/images/ntsLogo-old.png" : "/images/ntsLogo.png"}
                   alt="NTS Ltd Logo"
                   width={340}
                   height={51}
@@ -62,7 +64,7 @@ export default function Footer() {
                   className="flex items-center gap-2 hover:opacity-80 transition-opacity"
                   title="View our reviews on TrustPilot"
                 >
-                  <span className="text-xs font-semibold text-green-400">★★★★★ 4.8/5</span>
+                  <span className="text-xs font-semibold text-brand-green-400">★★★★★ 4.8/5</span>
                   <span className="text-xs text-gray-400">TrustPilot</span>
                 </a>
               </div>
@@ -168,10 +170,10 @@ export default function Footer() {
             <div className="space-y-5">
               {/* Phone */}
               <motion.div className="flex items-start gap-3" whileHover={{ x: 8 }} transition={{ duration: 0.2 }}>
-                <FaPhone size={18} className="text-green-400 flex-shrink-0 mt-1" />
+                <FaPhone size={18} className="text-brand-green-400 flex-shrink-0 mt-1" />
                 <div>
                   <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Phone Number</p>
-                  <a href={`tel:${COMPANY.phone.replace(/\s/g, "")}`} className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                  <a href={`tel:${COMPANY.phone.replace(/\s/g, "")}`} className="text-gray-300 hover:text-brand-green-400 transition-colors text-sm">
                     {COMPANY.phone}
                   </a>
                 </div>
@@ -179,10 +181,10 @@ export default function Footer() {
 
               {/* Email */}
               <motion.div className="flex items-start gap-3" whileHover={{ x: 8 }} transition={{ duration: 0.2 }}>
-                <FaEnvelope size={18} className="text-green-400 flex-shrink-0 mt-1" />
+                <FaEnvelope size={18} className="text-brand-green-400 flex-shrink-0 mt-1" />
                 <div>
                   <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Email Address</p>
-                  <a href={`mailto:${COMPANY.email}`} className="text-gray-300 hover:text-green-400 transition-colors text-sm">
+                  <a href={`mailto:${COMPANY.email}`} className="text-gray-300 hover:text-brand-green-400 transition-colors text-sm">
                     {COMPANY.email}
                   </a>
                 </div>
@@ -190,7 +192,7 @@ export default function Footer() {
 
               {/* Address */}
               <motion.div className="flex items-start gap-3" whileHover={{ x: 8 }} transition={{ duration: 0.2 }}>
-                <FaMapMarkerAlt size={18} className="text-green-400 flex-shrink-0 mt-1" />
+                <FaMapMarkerAlt size={18} className="text-brand-green-400 flex-shrink-0 mt-1" />
                 <div>
                   <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Address</p>
                   <p className="text-gray-300 text-sm leading-relaxed">{COMPANY.address}</p>

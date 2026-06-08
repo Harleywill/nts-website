@@ -18,11 +18,11 @@ function SuccessContent() {
           {/* Checkmark Icon with Radial Gradient Halo */}
           <div className="mb-10 relative inline-flex items-center justify-center">
             {/* Radial gradient halo */}
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500/20 via-emerald-500/10 to-transparent blur-2xl w-32 h-32 -inset-8" />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-brand-green-500/20 via-brand-green-500/10 to-transparent blur-2xl w-32 h-32 -inset-8" />
             {/* Checkmark circle */}
-            <div className="relative inline-flex items-center justify-center h-20 w-20 rounded-full bg-emerald-100 border-4 border-emerald-500">
+            <div className="relative inline-flex items-center justify-center h-20 w-20 rounded-full bg-brand-green-100 border-4 border-brand-green-500">
               <svg
-                className="h-10 w-10 text-emerald-600"
+                className="h-10 w-10 text-brand-green-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -102,7 +102,7 @@ function SuccessContent() {
             </Link>
             <Link
               href="/"
-              className="px-6 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 font-semibold transition-colors inline-block"
+              className="px-6 py-3 bg-brand-green-500 text-white rounded-lg hover:bg-brand-green-600 font-semibold transition-colors inline-block"
             >
               Back to home
             </Link>
@@ -114,7 +114,7 @@ function SuccessContent() {
               Want to update something or withdraw?{" "}
               <a
                 href="mailto:info@nt.services"
-                className="text-emerald-500 font-semibold hover:underline"
+                className="text-brand-green-500 font-semibold hover:underline"
               >
                 Email us at info@nt.services
               </a>

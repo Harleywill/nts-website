@@ -62,7 +62,7 @@ export default function NewsDetailPage() {
         >
           <div className="mx-auto max-w-4xl">
             <p className="text-gray-600">News article not found.</p>
-            <Link href="/" className="text-green-600 hover:text-green-700 mt-4 inline-block font-semibold">
+            <Link href="/" className="text-brand-green-600 hover:text-green-700 mt-4 inline-block font-semibold">
               ← Back to Home
             </Link>
           </div>

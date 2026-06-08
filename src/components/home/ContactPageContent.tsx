@@ -147,8 +147,8 @@ export default function ContactPageContent() {
                 >
                   <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">
-                      <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-green-100">
-                        <Icon className="text-green-600" size={24} />
+                      <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-brand-green-100">
+                        <Icon className="text-brand-green-600" size={24} />
                       </div>
                     </div>
                     <div>
@@ -181,7 +181,7 @@ export default function ContactPageContent() {
               viewport={{ once: true }}
             >
               <div className="mb-8">
-                <span className="text-green-600 text-sm font-semibold uppercase tracking-wider">
+                <span className="text-brand-green-600 text-sm font-semibold uppercase tracking-wider">
                   Contact Form
                 </span>
                 <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">
@@ -208,7 +208,7 @@ export default function ContactPageContent() {
               <AnimatePresence>
                 {submitted && (
                   <motion.div
-                    className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm"
+                    className="mb-6 p-4 bg-brand-green-50 border border-green-200 rounded-lg text-green-700 text-sm"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
@@ -309,7 +309,7 @@ export default function ContactPageContent() {
                           type="checkbox"
                           checked={formData.services.includes(service)}
                           onChange={() => handleServiceChange(service)}
-                          className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                          className="w-4 h-4 rounded border-gray-300 text-brand-green-600 focus:ring-green-500"
                         />
                         <span className="ml-3 text-sm text-gray-700">{service}</span>
                       </label>
@@ -339,11 +339,11 @@ export default function ContactPageContent() {
                     name="agreed"
                     checked={formData.agreed}
                     onChange={handleChange}
-                    className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500 mt-1"
+                    className="w-4 h-4 rounded border-gray-300 text-brand-green-600 focus:ring-green-500 mt-1"
                   />
                   <label className="ml-3 text-sm text-gray-600">
                     I agree to NTS Ltd's{" "}
-                    <a href="/privacy" className="text-green-600 hover:underline">
+                    <a href="/privacy" className="text-brand-green-600 hover:underline">
                       privacy policy
                     </a>
                     .
@@ -376,22 +376,22 @@ export default function ContactPageContent() {
 
               <div className="space-y-8">
                 <div>
-                  <div className="text-4xl font-bold text-green-400">15+</div>
+                  <div className="text-4xl font-bold text-brand-green-400">15+</div>
                   <p className="text-gray-300 mt-2">Years in business</p>
                 </div>
 
                 <div>
-                  <div className="text-4xl font-bold text-green-400">500+</div>
+                  <div className="text-4xl font-bold text-brand-green-400">500+</div>
                   <p className="text-gray-300 mt-2">Projects delivered</p>
                 </div>
 
                 <div>
-                  <div className="text-4xl font-bold text-green-400">25+</div>
+                  <div className="text-4xl font-bold text-brand-green-400">25+</div>
                   <p className="text-gray-300 mt-2">Qualified engineers</p>
                 </div>
 
                 <div>
-                  <div className="text-4xl font-bold text-green-400">24h</div>
+                  <div className="text-4xl font-bold text-brand-green-400">24h</div>
                   <p className="text-gray-300 mt-2">Avg response time</p>
                 </div>
               </div>

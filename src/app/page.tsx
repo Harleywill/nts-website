@@ -2,11 +2,10 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import HeroMobile from "@/components/home/HeroMobile";
 import HeroDesktop from "@/components/home/HeroDesktop";
+import FeaturedNewsCard from "@/components/home/FeaturedNewsCard";
 import AboutSection from "@/components/home/AboutSection";
 import ServicesBento from "@/components/home/ServicesBento";
 import ServicesGrid from "@/components/home/ServicesGrid";
-import AccreditationsSection from "@/components/home/AccreditationsSection";
-import WhyChooseNTS from "@/components/home/WhyChooseNTS";
 import LatestProjects from "@/components/home/LatestProjects";
 import Testimonials from "@/components/home/Testimonials";
 import GoogleReviewsPromo from "@/components/home/GoogleReviewsPromo";
@@ -26,7 +25,10 @@ export default function Home() {
         <div className="hidden md:block">
           <HeroDesktop />
         </div>
-        <AccreditationsSection />
+
+        {/* Featured News Card - Below Hero */}
+        <FeaturedNewsCard />
+
         <AboutSection />
         {/* Services: Bento layout on mobile, Grid on desktop */}
         <div className="block md:hidden">
@@ -35,7 +37,6 @@ export default function Home() {
         <div className="hidden md:block">
           <ServicesGrid />
         </div>
-        <WhyChooseNTS />
         <LatestProjects />
         <Testimonials />
         <GoogleReviewsPromo />

@@ -19,6 +19,18 @@ const config: Config = {
       colors: {
         navy: '#1a2f6e',
         green: '#4caf50',
+        'brand-green': {
+          50: '#f9fdf7',
+          100: '#f0fae9',
+          200: '#dff3d1',
+          300: '#c9e8aa',
+          400: '#a6d978',
+          500: '#4caf50',
+          600: '#3d9142',
+          700: '#2d6830',
+          800: '#1f4620',
+          900: '#0f2610',
+        },
         // Admin Bold design tokens
         adm: {
           rail:         '#070912',

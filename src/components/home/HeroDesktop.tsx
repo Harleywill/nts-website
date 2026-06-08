@@ -45,16 +45,16 @@ export default function HeroDesktop() {
 
         <div className="mx-auto mt-10 max-w-2xl lg:mx-0 lg:max-w-none">
           <div className="grid grid-cols-1 gap-x-8 gap-y-6 text-base/7 font-semibold text-white sm:grid-cols-2 md:flex lg:gap-x-10">
-            <Link href="/contact" className="hover:text-green-400 transition-colors">
+            <Link href="/contact" className="hover:text-brand-green-400 transition-colors">
               Get a Free Quote <span aria-hidden="true">&rarr;</span>
             </Link>
-            <Link href="/services" className="hover:text-green-400 transition-colors">
+            <Link href="/services" className="hover:text-brand-green-400 transition-colors">
               View Our Services <span aria-hidden="true">&rarr;</span>
             </Link>
-            <Link href="/projects" className="hover:text-green-400 transition-colors">
+            <Link href="/projects" className="hover:text-brand-green-400 transition-colors">
               Recent Projects <span aria-hidden="true">&rarr;</span>
             </Link>
-            <Link href="/about" className="hover:text-green-400 transition-colors">
+            <Link href="/about" className="hover:text-brand-green-400 transition-colors">
               About Us <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>

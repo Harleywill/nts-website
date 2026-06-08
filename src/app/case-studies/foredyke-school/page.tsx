@@ -21,7 +21,7 @@ export default function ForedykeSchoolCaseStudy() {
               transition={{ duration: 0.8 }}
               className="text-center"
             >
-              <p className="text-green-400 font-semibold mb-2">Case Study</p>
+              <p className="text-brand-green-400 font-semibold mb-2">Case Study</p>
               <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl mb-6">
                 Foredyke School HVAC Overhaul
               </h1>
@@ -32,15 +32,15 @@ export default function ForedykeSchoolCaseStudy() {
               {/* Quick Stats */}
               <div className="grid grid-cols-3 gap-4 mt-12">
                 <div className="bg-white/10 rounded-lg p-4 backdrop-blur">
-                  <p className="text-green-400 font-bold text-2xl">£180K</p>
+                  <p className="text-brand-green-400 font-bold text-2xl">£180K</p>
                   <p className="text-gray-300 text-sm">Project Value</p>
                 </div>
                 <div className="bg-white/10 rounded-lg p-4 backdrop-blur">
-                  <p className="text-green-400 font-bold text-2xl">3 months</p>
+                  <p className="text-brand-green-400 font-bold text-2xl">3 months</p>
                   <p className="text-gray-300 text-sm">Duration</p>
                 </div>
                 <div className="bg-white/10 rounded-lg p-4 backdrop-blur">
-                  <p className="text-green-400 font-bold text-2xl">25%</p>
+                  <p className="text-brand-green-400 font-bold text-2xl">25%</p>
                   <p className="text-gray-300 text-sm">Energy Savings</p>
                 </div>
               </div>
@@ -67,19 +67,19 @@ export default function ForedykeSchoolCaseStudy() {
               </p>
               <ul className="mt-4 space-y-3 text-gray-700">
                 <li className="flex gap-3">
-                  <FaCheckCircle className="text-green-600 flex-shrink-0 mt-1" />
+                  <FaCheckCircle className="text-brand-green-600 flex-shrink-0 mt-1" />
                   <span>Reliable heating for 15,000+ sq ft of new space</span>
                 </li>
                 <li className="flex gap-3">
-                  <FaCheckCircle className="text-green-600 flex-shrink-0 mt-1" />
+                  <FaCheckCircle className="text-brand-green-600 flex-shrink-0 mt-1" />
                   <span>Energy-efficient operation to reduce running costs</span>
                 </li>
                 <li className="flex gap-3">
-                  <FaCheckCircle className="text-green-600 flex-shrink-0 mt-1" />
+                  <FaCheckCircle className="text-brand-green-600 flex-shrink-0 mt-1" />
                   <span>Remote monitoring and control via internet</span>
                 </li>
                 <li className="flex gap-3">
-                  <FaCheckCircle className="text-green-600 flex-shrink-0 mt-1" />
+                  <FaCheckCircle className="text-brand-green-600 flex-shrink-0 mt-1" />
                   <span>Compliance with building regulations</span>
                 </li>
               </ul>
@@ -132,7 +132,7 @@ export default function ForedykeSchoolCaseStudy() {
               <div className="grid md:grid-cols-3 gap-6 mb-8">
                 <div className="border-l-4 border-green-600 pl-6 py-3">
                   <div className="flex items-center gap-2 mb-2">
-                    <FaChartLine className="text-green-600" />
+                    <FaChartLine className="text-brand-green-600" />
                     <p className="font-bold text-gray-900">25% Energy Savings</p>
                   </div>
                   <p className="text-gray-700 text-sm">
@@ -142,7 +142,7 @@ export default function ForedykeSchoolCaseStudy() {
 
                 <div className="border-l-4 border-green-600 pl-6 py-3">
                   <div className="flex items-center gap-2 mb-2">
-                    <FaClock className="text-green-600" />
+                    <FaClock className="text-brand-green-600" />
                     <p className="font-bold text-gray-900">100% Uptime</p>
                   </div>
                   <p className="text-gray-700 text-sm">
@@ -152,7 +152,7 @@ export default function ForedykeSchoolCaseStudy() {
 
                 <div className="border-l-4 border-green-600 pl-6 py-3">
                   <div className="flex items-center gap-2 mb-2">
-                    <FaCheckCircle className="text-green-600" />
+                    <FaCheckCircle className="text-brand-green-600" />
                     <p className="font-bold text-gray-900">Full Compliance</p>
                   </div>
                   <p className="text-gray-700 text-sm">

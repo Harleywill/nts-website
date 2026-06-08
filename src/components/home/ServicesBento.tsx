@@ -158,11 +158,11 @@ export default function ServicesBento() {
                 onClick={() => setSelectedId(service.id)}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 whileTap={{ scale: 0.98 }}
-                className="h-full rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-8 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 flex flex-col justify-between group text-left"
+                className="h-full rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-8 border border-gray-700/50 hover:border-brand-green-500/50 transition-all duration-300 flex flex-col justify-between group text-left"
                 style={{ pointerEvents: "auto" }}
               >
                 <div>
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-lg bg-green-500/10 mb-6 group-hover:bg-green-500/20 transition-colors">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-lg bg-brand-green-500/10 mb-6 group-hover:bg-brand-green-500/20 transition-colors">
                     <Icon size={32} style={{ color: "#4caf50" }} />
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-4">{service.title}</h3>
@@ -170,7 +170,7 @@ export default function ServicesBento() {
                     {service.description}
                   </p>
                 </div>
-                <div style={{ color: "#4caf50" }} className="mt-6 inline-flex items-center gap-2 font-semibold transition-colors hover:text-green-400">
+                <div style={{ color: "#4caf50" }} className="mt-6 inline-flex items-center gap-2 font-semibold transition-colors hover:text-brand-green-400">
                   Learn More <span aria-hidden="true">→</span>
                 </div>
               </motion.button>

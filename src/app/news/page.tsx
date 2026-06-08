@@ -90,7 +90,7 @@ export default function NewsPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true, amount: 0.2 }}
-                    className="flex flex-col items-start justify-between  border border-gray-200 rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:border-green-500 transition-all duration-300 h-full bg-white"
+                    className="flex flex-col items-start justify-between  border border-gray-200 rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:border-brand-green-500 transition-all duration-300 h-full bg-white"
                   >
                     {item.imageUrl && (
                       <div className="relative w-full overflow-hidden">
@@ -122,7 +122,7 @@ export default function NewsPage() {
                       </div>
 
                       <div className="group relative grow w-full">
-                        <h3 className="text-lg/7 font-bold text-gray-900 group-hover:text-green-600 transition-colors">
+                        <h3 className="text-lg/7 font-bold text-gray-900 group-hover:text-brand-green-600 transition-colors">
                           <Link href={`/news/${item.id}`}>
                             <span className="absolute inset-0"></span>
                             {item.title}

@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
 import { signToken } from "@/lib/auth";
-import bcryptjs from "bcryptjs";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,38 +13,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { username },
-    });
+    // Simple environment-based auth for admin
+    const adminUsername = process.env.ADMIN_USERNAME || "admin";
+    const adminPassword = process.env.ADMIN_PASSWORD || "NTSAdmin2026!";
 
-    if (!user) {
+    if (username !== adminUsername || password !== adminPassword) {
       return NextResponse.json(
         { error: "Invalid credentials" },
         { status: 401 }
       );
     }
 
-    const isPasswordValid = await bcryptjs.compare(password, user.password);
-    if (!isPasswordValid) {
-      return NextResponse.json(
-        { error: "Invalid credentials" },
-        { status: 401 }
-      );
-    }
-
-    const token = await signToken({ userId: user.id, username: user.username });
+    // Generate token
+    const token = await signToken({ userId: 1, username: "admin" });
 
     const response = NextResponse.json({ success: true });
 
-    // Set httpOnly token cookie (for API requests - secure)
-    response.cookies.set("auth-token", token, {
+    // Set admin-session cookie (what middleware expects)
+    response.cookies.set("admin-session", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60,
     });
 
-    // Set non-httpOnly auth status cookie (for client-side checks)
+    // Also set auth-status for client-side checks
     response.cookies.set("auth-status", "authenticated", {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",

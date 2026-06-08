@@ -81,8 +81,8 @@ export default function ContactSubmissionModal({
               </h3>
               <p className="text-blue-700">{formatDate(submission.createdAt)}</p>
             </div>
-            <div className={`rounded-lg p-4 ${submission.read ? "bg-green-50" : "bg-yellow-50"}`}>
-              <h3 className={`text-sm font-semibold ${submission.read ? "text-green-900" : "text-yellow-900"} mb-2`}>
+            <div className={`rounded-lg p-4 ${submission.read ? "bg-brand-green-50" : "bg-yellow-50"}`}>
+              <h3 className={`text-sm font-semibold ${submission.read ? "text-brand-green-900" : "text-yellow-900"} mb-2`}>
                 Status
               </h3>
               <p className={submission.read ? "text-green-700" : "text-yellow-700"}>
@@ -110,7 +110,7 @@ export default function ContactSubmissionModal({
                 <div className="flex items-center gap-2">
                   <a
                     href={`mailto:${submission.email}`}
-                    className="text-green-600 hover:text-green-700 font-medium break-all"
+                    className="text-brand-green-600 hover:text-green-700 font-medium break-all"
                   >
                     {submission.email}
                   </a>
@@ -132,7 +132,7 @@ export default function ContactSubmissionModal({
                   </label>
                   <a
                     href={`tel:${submission.phone}`}
-                    className="text-green-600 hover:text-green-700 font-medium"
+                    className="text-brand-green-600 hover:text-green-700 font-medium"
                   >
                     {submission.phone}
                   </a>
@@ -172,7 +172,7 @@ export default function ContactSubmissionModal({
                     <h4 className="font-semibold text-gray-900 flex items-center gap-2">
                       {submission.emailSentToAdmin ? (
                         <>
-                          <FaCheck size={16} className="text-green-600" />
+                          <FaCheck size={16} className="text-brand-green-600" />
                           <span>Admin Notification Sent</span>
                         </>
                       ) : (
@@ -201,7 +201,7 @@ export default function ContactSubmissionModal({
                         <div
                           className={`w-3 h-3 rounded-full flex-shrink-0 ${
                             submission.emailSentToAdmin
-                              ? "bg-green-500"
+                              ? "bg-brand-green-500"
                               : "bg-red-500"
                           }`}
                         />
@@ -226,7 +226,7 @@ export default function ContactSubmissionModal({
                       <h4 className="font-semibold text-gray-900 flex items-center gap-2">
                         {submission.emailSentToUser ? (
                           <>
-                            <FaCheck size={16} className="text-green-600" />
+                            <FaCheck size={16} className="text-brand-green-600" />
                             <span>User Confirmation Sent</span>
                           </>
                         ) : (
@@ -252,7 +252,7 @@ export default function ContactSubmissionModal({
                       <div
                         className={`w-3 h-3 rounded-full flex-shrink-0 ${
                           submission.emailSentToUser
-                            ? "bg-green-500"
+                            ? "bg-brand-green-500"
                             : "bg-red-500"
                         }`}
                       />

@@ -346,7 +346,7 @@ export default function NewProjectPage() {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
-                className="w-full py-2 px-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-500 text-gray-700 font-semibold disabled:opacity-50"
+                className="w-full py-2 px-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-brand-green-500 text-gray-700 font-semibold disabled:opacity-50"
               >
                 {uploading ? "Uploading..." : "Upload Main Image"}
               </button>
@@ -367,7 +367,7 @@ export default function NewProjectPage() {
               name="featured"
               checked={formData.featured}
               onChange={handleChange}
-              className="w-4 h-4 text-green-500 rounded focus:ring-2 focus:ring-green-500"
+              className="w-4 h-4 text-brand-green-500 rounded focus:ring-2 focus:ring-green-500"
             />
             <label htmlFor="featured" className="ml-3 text-sm font-medium text-gray-900">
               Featured on homepage
@@ -415,7 +415,7 @@ export default function NewProjectPage() {
               type="button"
               onClick={() => galleryInputRef.current?.click()}
               disabled={uploading}
-              className="w-full py-3 px-4 border-2 border-dashed border-green-300 rounded-lg hover:border-green-500 hover:bg-green-50 text-green-700 font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-3 px-4 border-2 border-dashed border-green-300 rounded-lg hover:border-brand-green-500 hover:bg-brand-green-50 text-green-700 font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
             >
               <FaPlus size={18} />
               {uploading ? "Uploading..." : "Add Image to Gallery"}
@@ -435,7 +435,7 @@ export default function NewProjectPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 py-2 px-4 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 disabled:opacity-50"
+            className="flex-1 py-2 px-4 bg-brand-green-500 text-white font-semibold rounded-lg hover:bg-brand-green-600 disabled:opacity-50"
           >
             {loading ? "Creating..." : "Create Project"}
           </button>

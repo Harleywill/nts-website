@@ -54,7 +54,7 @@ export default function EmailLogPage() {
       <div className="mb-6">
         <Link
           href="/admin/dashboard"
-          className="text-green-600 hover:text-green-700 flex items-center gap-2 mb-4"
+          className="text-brand-green-600 hover:text-green-700 flex items-center gap-2 mb-4"
         >
           <FaArrowLeft size={14} /> Back to Dashboard
         </Link>
@@ -70,9 +70,9 @@ export default function EmailLogPage() {
           <p className="text-blue-600 text-sm font-medium">Total Emails</p>
           <p className="text-2xl font-bold text-blue-900">{emails.length}</p>
         </div>
-        <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-          <p className="text-green-600 text-sm font-medium">Delivered</p>
-          <p className="text-2xl font-bold text-green-900">{deliveredCount}</p>
+        <div className="bg-brand-green-50 rounded-lg p-4 border border-green-200">
+          <p className="text-brand-green-600 text-sm font-medium">Delivered</p>
+          <p className="text-2xl font-bold text-brand-green-900">{deliveredCount}</p>
         </div>
         <div className="bg-red-50 rounded-lg p-4 border border-red-200">
           <p className="text-red-600 text-sm font-medium">Failed</p>
@@ -182,7 +182,7 @@ export default function EmailLogPage() {
                   <td className="px-6 py-4 text-gray-600 text-sm break-all">
                     <a
                       href={`mailto:${email.to}`}
-                      className="text-green-600 hover:underline"
+                      className="text-brand-green-600 hover:underline"
                     >
                       {email.to}
                     </a>
@@ -195,7 +195,7 @@ export default function EmailLogPage() {
                   <td className="px-6 py-4">
                     {email.status === "delivered" ? (
                       <span className="inline-flex items-center gap-1 text-green-700 text-sm">
-                        <FaCheck size={14} className="text-green-600" />
+                        <FaCheck size={14} className="text-brand-green-600" />
                         Delivered
                       </span>
                     ) : (

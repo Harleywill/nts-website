@@ -1,0 +1,207 @@
+"filename", "language", "TypeScript", "TypeScript JSX", "JSON with Comments", "JSON", "JavaScript", "XML", "HTML", "PostCSS", "Log", "Markdown", "Shell Script", "MS SQL", "comment", "blank", "total"
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/.claude/launch.json", "JSON with Comments", 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 12
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/.superpowers/brainstorm/83271-1779979306/content/design-summary.html", "HTML", 0, 0, 0, 0, 0, 0, 75, 0, 0, 0, 0, 0, 2, 7, 84
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/.superpowers/brainstorm/83271-1779979306/content/hybrid-homepage-mockup.html", "HTML", 0, 0, 0, 0, 0, 0, 55, 0, 0, 0, 0, 0, 6, 9, 70
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/.superpowers/brainstorm/83271-1779979306/content/nts-actual-reviews.html", "HTML", 0, 0, 0, 0, 0, 0, 97, 0, 0, 0, 0, 0, 6, 10, 113
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/.superpowers/brainstorm/83271-1779979306/content/review-integration-options.html", "HTML", 0, 0, 0, 0, 0, 0, 48, 0, 0, 0, 0, 0, 0, 4, 52
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/.superpowers/brainstorm/83271-1779979306/content/top-3-reviews-mockup.html", "HTML", 0, 0, 0, 0, 0, 0, 94, 0, 0, 0, 0, 0, 6, 9, 109
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/.superpowers/brainstorm/83271-1779979306/state/server.log", "Log", 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 1, 18
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/README.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 30, 112
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/check-db.js", "JavaScript", 0, 0, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 8, 38
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/check_db.mjs", "JavaScript", 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 5, 21
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/check_users.js", "JavaScript", 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 3, 16
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/deploy.sh", "Shell Script", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 67, 0, 7, 24, 98
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/docs/superpowers/plans/2026-05-28-google-reviews-implementation.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 0, 0, 973, 0, 0, 0, 221, 1194
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/docs/superpowers/plans/2026-06-04-admin-auth-logo-trust-implementation.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 0, 0, 312, 0, 0, 0, 152, 464
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/docs/superpowers/specs/2026-05-28-google-reviews-trustpilot-integration-design.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 0, 0, 201, 0, 0, 0, 67, 268
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/docs/superpowers/specs/2026-06-04-admin-auth-logo-trust-features.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 0, 0, 178, 0, 0, 0, 48, 226
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/next.config.ts", "TypeScript", 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 17
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/package-lock.json", "JSON", 0, 0, 0, 6522, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6523
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/package.json", "JSON", 0, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 51
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/postcss.config.mjs", "JavaScript", 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 2, 9
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/prisma/migrations/20260428095407_init/migration.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 6, 6, 62
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/prisma/migrations/20260526093242_add_contact_and_settings/migration.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 2, 2, 27
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/prisma/migrations/20260526135726_add_careers/migration.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 43, 9, 9, 61
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/prisma/migrations/20260527074504_add_email_tracking_to_contact_submissions/migration.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 7, 1, 31
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/prisma/migrations/20260527110844_add_user_role/migration.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 1, 1, 17
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/prisma/migrations/20260604072456_add_logo_version/migration.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 47, 5, 5, 57
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/prisma/migrations/create_daily_stats.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 1, 2, 16
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/prisma/seed.ts", "TypeScript", 246, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 12, 263
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/public/email-preview.html", "HTML", 0, 0, 0, 0, 0, 0, 317, 0, 0, 0, 0, 0, 4, 5, 326
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/public/file.svg", "XML", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/public/globe.svg", "XML", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/public/next.svg", "XML", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/public/sitemap.xml", "XML", 0, 0, 0, 0, 0, 95, 0, 0, 0, 0, 0, 0, 9, 17, 121
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/public/vercel.svg", "XML", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/public/window.svg", "XML", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/about/page.tsx", "TypeScript JSX", 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 21
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/careers/[id]/edit/page.tsx", "TypeScript JSX", 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 45
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/careers/applications/[id]/page.tsx", "TypeScript JSX", 0, 153, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 169
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/careers/applications/page.tsx", "TypeScript JSX", 0, 161, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 174
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/careers/new/page.tsx", "TypeScript JSX", 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 21
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/careers/page.tsx", "TypeScript JSX", 0, 159, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 166
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/contact-submissions/page.tsx", "TypeScript JSX", 0, 205, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 16, 222
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/dashboard/page.tsx", "TypeScript JSX", 0, 296, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 27, 338
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/email-log/page.tsx", "TypeScript JSX", 0, 238, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 14, 255
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/layout.tsx", "TypeScript JSX", 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 21
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/login/layout.tsx", "TypeScript JSX", 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 12
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/login/page.tsx", "TypeScript JSX", 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 106
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/news/[id]/edit/page.tsx", "TypeScript JSX", 0, 225, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 247
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/news/new/page.tsx", "TypeScript JSX", 0, 175, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 192
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/news/page.tsx", "TypeScript JSX", 0, 134, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 141
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/page.tsx", "TypeScript JSX", 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/projects/[id]/edit/page.tsx", "TypeScript JSX", 0, 448, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 45, 498
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/projects/new/page.tsx", "TypeScript JSX", 0, 406, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 42, 453
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/projects/page.tsx", "TypeScript JSX", 0, 139, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 146
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/reviews/[id]/page.tsx", "TypeScript JSX", 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 31
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/reviews/new/page.tsx", "TypeScript JSX", 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 16
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/reviews/page.tsx", "TypeScript JSX", 0, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 121
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/settings/page.tsx", "TypeScript JSX", 0, 218, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 246
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/testimonials/[id]/edit/page.tsx", "TypeScript JSX", 0, 214, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 235
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/testimonials/new/page.tsx", "TypeScript JSX", 0, 167, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 183
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/testimonials/page.tsx", "TypeScript JSX", 0, 138, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 145
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/users/[id]/edit/page.tsx", "TypeScript JSX", 0, 173, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 196
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/users/new/page.tsx", "TypeScript JSX", 0, 143, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 160
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/admin/users/page.tsx", "TypeScript JSX", 0, 123, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 130
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/admin/activity/route.ts", "TypeScript", 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 13, 125
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/admin/applications/[id]/route.ts", "TypeScript", 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 94
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/admin/applications/route.ts", "TypeScript", 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 12, 75
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/admin/jobs/[id]/route.ts", "TypeScript", 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 13, 117
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/admin/jobs/route.ts", "TypeScript", 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 13, 125
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/admin/reviews/[id]/route.ts", "TypeScript", 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 57
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/admin/reviews/route.ts", "TypeScript", 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 45
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/admin/settings/route.ts", "TypeScript", 61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 10, 73
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/admin/stats/history/route.ts", "TypeScript", 84, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 10, 101
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/analytics/route.ts", "TypeScript", 225, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 27, 266
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/applications/[id]/cv/route.ts", "TypeScript", 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 15, 104
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/auth/login/route.ts", "TypeScript", 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 11, 65
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/auth/logout/route.ts", "TypeScript", 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 9
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/careers/[slug]/apply/route.ts", "TypeScript", 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 15, 125
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/careers/route.ts", "TypeScript", 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 34
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/contact-submissions/route.ts", "TypeScript", 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 13, 80
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/contact/route.ts", "TypeScript", 85, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 13, 106
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/emails/log/route.ts", "TypeScript", 61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 9, 76
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/google-reviews/route.ts", "TypeScript", 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 26
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/news/[id]/route.ts", "TypeScript", 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 116
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/news/route.ts", "TypeScript", 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 58
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/newsletter/route.ts", "TypeScript", 117, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 10, 129
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/notifications/route.ts", "TypeScript", 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 6, 69
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/projects/[id]/route.ts", "TypeScript", 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 9, 106
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/projects/route.ts", "TypeScript", 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 50
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/retell/access-token/route.ts", "TypeScript", 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, 55
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/settings/route.ts", "TypeScript", 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 80
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/testimonials/[id]/route.ts", "TypeScript", 77, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 7, 85
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/testimonials/route.ts", "TypeScript", 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 38
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/upload/route.ts", "TypeScript", 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 10, 63
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/users/[id]/route.ts", "TypeScript", 132, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 153
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/api/users/route.ts", "TypeScript", 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7, 68
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/auth/layout.tsx", "TypeScript JSX", 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 12
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/auth/login/page.tsx", "TypeScript JSX", 0, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 103
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/careers/[slug]/apply/page.tsx", "TypeScript JSX", 0, 431, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 35, 483
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/careers/[slug]/apply/success/page.tsx", "TypeScript JSX", 0, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 10, 137
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/careers/[slug]/page.tsx", "TypeScript JSX", 0, 203, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 22, 240
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/careers/page.tsx", "TypeScript JSX", 0, 171, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 14, 194
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/case-studies/foredyke-school/page.tsx", "TypeScript JSX", 0, 209, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 16, 233
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/contact/page.tsx", "TypeScript JSX", 0, 105, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 13, 136
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/faq/page.tsx", "TypeScript JSX", 0, 230, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 11, 246
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/globals.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 80, 0, 0, 0, 0, 10, 17, 107
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/layout.tsx", "TypeScript JSX", 0, 253, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 13, 276
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/lead-magnets/heating-checklist/page.tsx", "TypeScript JSX", 0, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 21, 222
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/login/page.tsx", "TypeScript JSX", 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 106
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/news/[id]/page.tsx", "TypeScript JSX", 0, 138, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 18, 163
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/news/page.tsx", "TypeScript JSX", 0, 141, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 12, 155
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/not-found.tsx", "TypeScript JSX", 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 35
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/page.tsx", "TypeScript JSX", 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 48
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/privacy/page.tsx", "TypeScript JSX", 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 13, 108
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/projects/[id]/page.tsx", "TypeScript JSX", 0, 140, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 16, 164
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/projects/page.tsx", "TypeScript JSX", 0, 139, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 12, 159
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/services/[slug]/page.tsx", "TypeScript JSX", 0, 280, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 11, 296
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/services/hull/page.tsx", "TypeScript JSX", 0, 266, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 12, 283
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/services/page.tsx", "TypeScript JSX", 0, 142, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7, 152
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/terms/page.tsx", "TypeScript JSX", 0, 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 16, 114
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/app/testimonials/page.tsx", "TypeScript JSX", 0, 141, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 13, 161
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/about/AboutPageContent.tsx", "TypeScript JSX", 0, 313, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 12, 335
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/AnalyticsDashboard.tsx", "TypeScript JSX", 0, 229, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 18, 258
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/ContactSubmissionModal.tsx", "TypeScript JSX", 0, 276, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 19, 305
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/DeleteButton.tsx", "TypeScript JSX", 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 11, 60
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/DeleteJobButton.tsx", "TypeScript JSX", 0, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 58
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/DeleteNewsButton.tsx", "TypeScript JSX", 0, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 58
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/DeleteProjectButton.tsx", "TypeScript JSX", 0, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 58
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/DeleteTestimonialButton.tsx", "TypeScript JSX", 0, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 58
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/DeleteUserButton.tsx", "TypeScript JSX", 0, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 58
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/NotificationPanel.tsx", "TypeScript JSX", 0, 167, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 16, 189
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/ProtectedLayout.tsx", "TypeScript JSX", 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 12, 64
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/careers/ApplicationStatusForm.tsx", "TypeScript JSX", 0, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 92
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/careers/JobForm.tsx", "TypeScript JSX", 0, 304, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 34, 349
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/palette/CommandPalette.tsx", "TypeScript JSX", 0, 180, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 21, 212
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/reviews/DeleteReviewButton.tsx", "TypeScript JSX", 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 48
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/reviews/ReviewForm.tsx", "TypeScript JSX", 0, 215, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 22, 245
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/shell/AdminShell.tsx", "TypeScript JSX", 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 33
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/shell/IconRail.tsx", "TypeScript JSX", 0, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 62
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/shell/StatusBar.tsx", "TypeScript JSX", 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 13, 59
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/shell/TopBar.tsx", "TypeScript JSX", 0, 61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 12, 79
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/templates/AdminDetailPage.tsx", "TypeScript JSX", 0, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 10, 134
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/templates/AdminListPage.tsx", "TypeScript JSX", 0, 203, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 12, 219
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/ui/Avatar.tsx", "TypeScript JSX", 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 65
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/ui/BlueprintBg.tsx", "TypeScript JSX", 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1, 18
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/ui/BoldButton.tsx", "TypeScript JSX", 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 54
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/ui/BoldPanel.tsx", "TypeScript JSX", 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 39
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/ui/CornerBrackets.tsx", "TypeScript JSX", 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 29
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/ui/Sparkline.tsx", "TypeScript JSX", 0, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 53
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/admin/ui/StatusPill.tsx", "TypeScript JSX", 0, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 34
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/careers/ApplicationForm.tsx", "TypeScript JSX", 0, 377, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 42, 429
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/careers/JobCard.tsx", "TypeScript JSX", 0, 61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 69
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/AnimatedHeading.tsx", "TypeScript JSX", 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 46
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/ChatbotDemo.tsx", "TypeScript JSX", 0, 275, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 25, 312
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/Counter.tsx", "TypeScript JSX", 0, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 62
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/DuctWaves.tsx", "TypeScript JSX", 0, 153, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 20, 207
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/EngineeringBackground.tsx", "TypeScript JSX", 0, 304, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 16, 356
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/FaviconManager.tsx", "TypeScript JSX", 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 15, 116
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/Gallery.tsx", "TypeScript JSX", 0, 171, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 25, 201
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/Lightbox.tsx", "TypeScript JSX", 0, 120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 17, 142
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/Parallax.tsx", "TypeScript JSX", 0, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 39
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/QuickEnquiryModal.tsx", "TypeScript JSX", 0, 171, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 12, 193
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/RetellChatWidget.tsx", "TypeScript JSX", 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 11, 79
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/ScrollProgress.tsx", "TypeScript JSX", 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/StickyButton.tsx", "TypeScript JSX", 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 11, 77
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/StickyButtonClient.tsx", "TypeScript JSX", 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 14, 101
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/Toast.tsx", "TypeScript JSX", 0, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 9, 100
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/common/ToastContainer.tsx", "TypeScript JSX", 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 64
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/contact/ContactInfoCards.tsx", "TypeScript JSX", 0, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 106
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/AboutSection.tsx", "TypeScript JSX", 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 98
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/AccreditationsCarousel.tsx", "TypeScript JSX", 0, 74, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 18, 98
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/AccreditationsSection.tsx", "TypeScript JSX", 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 7, 71
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/AccreditationsStrip.tsx", "TypeScript JSX", 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 76
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/ColorBends.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 7
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/ColorBends.tsx", "TypeScript JSX", 0, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 25, 223
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/Contact.tsx", "TypeScript JSX", 0, 315, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 25, 342
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/ContactPageContent.tsx", "TypeScript JSX", 0, 367, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 33, 411
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/FeaturedNews.tsx", "TypeScript JSX", 0, 198, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 26, 227
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/GoogleReviewsPromo.tsx", "TypeScript JSX", 0, 141, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 13, 157
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/GoogleReviewsSection.tsx", "TypeScript JSX", 0, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 13, 130
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/HeroCarousel.tsx", "TypeScript JSX", 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 12, 70
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/HeroDesktop.tsx", "TypeScript JSX", 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 9, 86
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/HeroMobile.tsx", "TypeScript JSX", 0, 106, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 11, 125
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/LatestProjects.tsx", "TypeScript JSX", 0, 205, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 27, 235
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/QuickEnquiry.tsx", "TypeScript JSX", 0, 376, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 30, 421
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/ServicesBento.tsx", "TypeScript JSX", 0, 271, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 19, 303
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/ServicesGrid.tsx", "TypeScript JSX", 0, 259, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 26, 300
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/Testimonials.tsx", "TypeScript JSX", 0, 190, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 24, 218
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/home/WhyChooseNTS.tsx", "TypeScript JSX", 0, 138, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 9, 149
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/layout/Footer.tsx", "TypeScript JSX", 0, 197, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 219
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/layout/NavBlobIndicator.tsx", "TypeScript JSX", 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7, 55
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/layout/Navbar.tsx", "TypeScript JSX", 0, 251, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 27, 295
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/components/layout/PageTransition.tsx", "TypeScript JSX", 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 29
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/lib/admin/permissions.ts", "TypeScript", 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 9, 96
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/lib/ai-schemas.ts", "TypeScript", 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5, 108
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/lib/animations.ts", "TypeScript", 287, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 51, 359
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/lib/auth.ts", "TypeScript", 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 23
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/lib/careers.ts", "TypeScript", 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 58
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/lib/constants.ts", "TypeScript", 175, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 189
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/lib/db.ts", "TypeScript", 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 12
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/lib/email.ts", "TypeScript", 373, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 15, 399
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/lib/rate-limit.ts", "TypeScript", 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 11, 57
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/src/middleware.ts", "TypeScript", 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 9, 43
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/tailwind.config.ts", "TypeScript", 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 55
+"/Users/harleywilliams/websites/NTS Ltd website/nts-website/tsconfig.json", "JSON with Comments", 0, 0, 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 43
+"Total", "-", 3827, 17018, 53, 6572, 66, 100, 686, 86, 17, 1746, 67, 214, 838, 2821, 34111

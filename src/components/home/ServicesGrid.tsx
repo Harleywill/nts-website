@@ -108,7 +108,7 @@ export default function ServicesGrid() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true, amount: 0.2 }}
-          className="mb-12 p-6 rounded-lg text-center border border-green-500/30"
+          className="mb-12 p-6 rounded-lg text-center border border-brand-green-500/30"
           style={{ backgroundColor: "rgba(76, 175, 80, 0.08)" }}
         >
           <p className="text-lg font-semibold text-white flex items-center justify-center gap-2">
@@ -140,11 +140,11 @@ export default function ServicesGrid() {
               onClick={() => handleCardClick(service.id)}
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
               whileTap={{ scale: 0.98 }}
-              className="group rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-green-500 cursor-pointer flex flex-col h-full w-full text-left bg-transparent"
+              className="group rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-brand-green-500 cursor-pointer flex flex-col h-full w-full text-left bg-transparent"
               style={{ backgroundColor: "#1f2937", pointerEvents: "auto" }}
             >
               <div
-                className="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-lg transition-all duration-300 group-hover:bg-green-500/20"
+                className="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-lg transition-all duration-300 group-hover:bg-brand-green-500/20"
                 style={{ backgroundColor: "rgba(76, 175, 80, 0.1)" }}
               >
                 <div style={{ color: "#4caf50" }}>

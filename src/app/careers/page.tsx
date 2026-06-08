@@ -90,22 +90,41 @@ export default async function CareersPage() {
               </div>
             )}
 
-            {/* Speculative Footer */}
-            <div className="mt-8 p-5 bg-white/70 backdrop-blur border border-dashed border-gray-300 rounded-xl flex items-center justify-between gap-6">
-              <div>
-                <div className="font-semibold text-gray-900">
-                  Don't see your role?
+            {/* General Application & Contact Footer */}
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-5 bg-white/70 backdrop-blur border border-dashed border-gray-300 rounded-xl flex items-center justify-between gap-6">
+                <div>
+                  <div className="font-semibold text-gray-900">
+                    Don't see your role?
+                  </div>
+                  <div className="text-sm text-gray-600 mt-1">
+                    Submit your CV for our talent pool.
+                  </div>
                 </div>
-                <div className="text-sm text-gray-600 mt-1">
-                  We're always interested in talented HVAC professionals. Drop us a line.
-                </div>
+                <Link
+                  href="/careers/apply"
+                  className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-emerald-500 hover:bg-emerald-600 transition-colors whitespace-nowrap"
+                >
+                  Apply now →
+                </Link>
               </div>
-              <Link
-                href="/contact"
-                className="px-5 py-2.5 rounded-lg text-sm font-semibold text-gray-900 border border-gray-300 bg-white hover:bg-gray-50 transition-colors whitespace-nowrap"
-              >
-                Get in touch →
-              </Link>
+
+              <div className="p-5 bg-white/70 backdrop-blur border border-dashed border-gray-300 rounded-xl flex items-center justify-between gap-6">
+                <div>
+                  <div className="font-semibold text-gray-900">
+                    Have questions?
+                  </div>
+                  <div className="text-sm text-gray-600 mt-1">
+                    Get in touch with our team.
+                  </div>
+                </div>
+                <Link
+                  href="/contact"
+                  className="px-5 py-2.5 rounded-lg text-sm font-semibold text-gray-900 border border-gray-300 bg-white hover:bg-gray-50 transition-colors whitespace-nowrap"
+                >
+                  Contact us →
+                </Link>
+              </div>
             </div>
           </div>
         </section>

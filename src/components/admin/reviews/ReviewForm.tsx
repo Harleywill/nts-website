@@ -198,7 +198,7 @@ export default function ReviewForm({ initialData }: ReviewFormProps) {
           name="featured"
           checked={formData.featured}
           onChange={handleChange}
-          className="w-4 h-4 rounded border-gray-300 text-green-500 focus:ring-green-500"
+          className="w-4 h-4 rounded border-gray-300 text-brand-green-500 focus:ring-green-500"
         />
         <label htmlFor="featured" className="text-sm font-medium text-gray-900">
           Display on homepage
@@ -227,7 +227,7 @@ export default function ReviewForm({ initialData }: ReviewFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 disabled:opacity-50 transition-colors"
+          className="px-6 py-2 bg-brand-green-500 text-white font-semibold rounded-lg hover:bg-brand-green-600 disabled:opacity-50 transition-colors"
         >
           {loading ? "Saving..." : initialData ? "Update Review" : "Add Review"}
         </button>

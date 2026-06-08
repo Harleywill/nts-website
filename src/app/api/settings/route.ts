@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
           address: "Unit F2 Rotterdam Park",
           city: "Hull",
           postalCode: "HU7 0AN",
+          logoVersion: 1,
         },
       });
     }
@@ -33,7 +34,18 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { companyName, phone, email, address, city, postalCode, facebookUrl, linkedinUrl, twitterUrl } = body;
+    const {
+      companyName,
+      phone,
+      email,
+      address,
+      city,
+      postalCode,
+      facebookUrl,
+      linkedinUrl,
+      twitterUrl,
+      logoVersion
+    } = body;
 
     let settings = await prisma.siteSettings.findFirst();
 
@@ -49,6 +61,7 @@ export async function PUT(request: NextRequest) {
           facebookUrl: facebookUrl || null,
           linkedinUrl: linkedinUrl || null,
           twitterUrl: twitterUrl || null,
+          logoVersion: logoVersion || 1,
         },
       });
     } else {
@@ -58,12 +71,13 @@ export async function PUT(request: NextRequest) {
           companyName: companyName || settings.companyName,
           phone: phone || settings.phone,
           email: email || settings.email,
-          address: address || settings.address,
-          city: city || settings.city,
-          postalCode: postalCode || settings.postalCode,
-          facebookUrl: facebookUrl || settings.facebookUrl,
-          linkedinUrl: linkedinUrl || settings.linkedinUrl,
-          twitterUrl: twitterUrl || settings.twitterUrl,
+          address: address !== undefined ? address : settings.address,
+          city: city !== undefined ? city : settings.city,
+          postalCode: postalCode !== undefined ? postalCode : settings.postalCode,
+          facebookUrl: facebookUrl !== undefined ? facebookUrl : settings.facebookUrl,
+          linkedinUrl: linkedinUrl !== undefined ? linkedinUrl : settings.linkedinUrl,
+          twitterUrl: twitterUrl !== undefined ? twitterUrl : settings.twitterUrl,
+          logoVersion: logoVersion !== undefined ? logoVersion : settings.logoVersion,
         },
       });
     }

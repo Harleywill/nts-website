@@ -85,7 +85,7 @@ export default function HeroMobile() {
               >
                 <Link
                   href="/contact"
-                  className="h-14 sm:h-16 flex items-center justify-center px-6 bg-[#4caf50] text-white font-bold rounded-lg hover:bg-green-600 transition-colors"
+                  className="h-14 sm:h-16 flex items-center justify-center px-6 bg-[#4caf50] text-white font-bold rounded-lg hover:bg-brand-green-600 transition-colors"
                 >
                   Get Free Quote
                 </Link>

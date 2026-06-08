@@ -142,7 +142,7 @@ export default function NewUserPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 py-2 px-4 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 disabled:opacity-50"
+            className="flex-1 py-2 px-4 bg-brand-green-500 text-white font-semibold rounded-lg hover:bg-brand-green-600 disabled:opacity-50"
           >
             {loading ? "Creating..." : "Create User"}
           </button>

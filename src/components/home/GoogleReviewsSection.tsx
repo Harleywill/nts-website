@@ -103,7 +103,7 @@ export default function GoogleReviewsSection() {
                 </p>
 
                 {/* CTA */}
-                <div className="flex items-center gap-2 text-green-600 group-hover:text-green-700 font-semibold text-sm">
+                <div className="flex items-center gap-2 text-brand-green-600 group-hover:text-green-700 font-semibold text-sm">
                   <span>Read on Google</span>
                   <span>→</span>
                 </div>
@@ -118,7 +118,7 @@ export default function GoogleReviewsSection() {
             href="https://www.google.com/maps/search/NTS+Ltd+Hull"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block px-6 py-3 border-2 border-green-500 text-green-600 font-semibold rounded-lg hover:bg-green-50 transition-colors"
+            className="inline-block px-6 py-3 border-2 border-brand-green-500 text-brand-green-600 font-semibold rounded-lg hover:bg-brand-green-50 transition-colors"
           >
             View All Reviews on Google →
           </a>

@@ -172,6 +172,27 @@ model GoogleReview {
   updatedAt     DateTime @updatedAt
 }
 
+model GeneralApplication {
+  id          String            @id @default(cuid())
+  reference   String            @unique
+  fullName    String
+  email       String
+  phone       String
+  desiredRole String?
+  skills      String?
+  experience  String?
+  message     String?
+  cvUrl       String
+  cvFilename  String
+  status      ApplicationStatus @default(NEW)
+  notes       String?
+  submittedAt DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([status])
+  @@index([submittedAt])
+}
+
 enum UserRole {
   ADMIN
   MANAGER
