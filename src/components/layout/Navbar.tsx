@@ -8,17 +8,17 @@ import { COMPANY, NAV_LINKS } from "@/lib/constants";
 import { FaBars, FaTimes, FaArrowRight } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import NavBlobIndicator from "./NavBlobIndicator";
+import { useLogoVersion } from "@/hooks/useLogoVersion";
 
 export default function Navbar() {
+  const logoVersion = useLogoVersion();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isHoveringTop, setIsHoveringTop] = useState(false);
   const [shouldShowBackground, setShouldShowBackground] = useState(false);
-  const [logoVersion, setLogoVersion] = useState<'old' | 'new'>('new');
-  const [logoLoading, setLogoLoading] = useState(true);
-  // Calculate selected index based on pathname - use memo to avoid recalculation
+    // Calculate selected index based on pathname - use memo to avoid recalculation
   const selectedIndex = useMemo(() => {
     const currentIndex = NAV_LINKS.findIndex((link) => {
       if (link.href === "/") return pathname === "/";
@@ -61,25 +61,7 @@ export default function Navbar() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Fetch logo version from API on mount
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const res = await fetch("/api/admin/settings");
-        if (res.ok) {
-          const data = await res.json();
-          setLogoVersion(data.logoVersion || "new");
-        }
-      } catch (error) {
-        console.error("Failed to fetch logo version:", error);
-        setLogoVersion("new"); // Default to new logo on error
-      } finally {
-        setLogoLoading(false);
-      }
-    };
 
-    fetchSettings();
-  }, []);
 
   // Calculate nav item positions and navbar height
   useEffect(() => {
@@ -186,7 +168,6 @@ export default function Navbar() {
               height={48}
               priority
               className="h-9 sm:h-10 lg:h-12 w-auto"
-              onError={() => setLogoVersion("new")}
             />
           </Link>
 

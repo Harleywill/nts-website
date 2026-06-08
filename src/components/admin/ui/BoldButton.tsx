@@ -6,7 +6,7 @@ type Variant = 'primary' | 'secondary' | 'danger' | 'ghost';
 type Size = 'sm' | 'md' | 'lg';
 
 const variants = {
-  primary: 'bg-nts-green text-white hover:bg-green-600 active:bg-green-700',
+  primary: 'bg-nts-green text-white hover:bg-brand-green-600 active:bg-green-700',
   secondary: 'bg-adm-panel border border-adm-border text-adm-textBody hover:bg-adm-panelAlt hover:text-adm-textPri',
   danger: 'bg-nts-danger text-white hover:bg-red-600 active:bg-red-700',
   ghost: 'text-adm-textBody hover:text-adm-textPri hover:bg-adm-panel/50',

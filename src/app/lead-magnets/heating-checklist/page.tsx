@@ -66,19 +66,19 @@ export default function HeatingChecklistLeadMagnet() {
 
                 <div className="space-y-4 mb-8">
                   <div className="flex gap-3">
-                    <FaCheckCircle className="text-green-400 flex-shrink-0 mt-1" />
+                    <FaCheckCircle className="text-brand-green-400 flex-shrink-0 mt-1" />
                     <span className="text-gray-200">5 essential maintenance steps</span>
                   </div>
                   <div className="flex gap-3">
-                    <FaCheckCircle className="text-green-400 flex-shrink-0 mt-1" />
+                    <FaCheckCircle className="text-brand-green-400 flex-shrink-0 mt-1" />
                     <span className="text-gray-200">Professional engineer recommendations</span>
                   </div>
                   <div className="flex gap-3">
-                    <FaCheckCircle className="text-green-400 flex-shrink-0 mt-1" />
+                    <FaCheckCircle className="text-brand-green-400 flex-shrink-0 mt-1" />
                     <span className="text-gray-200">Tips to save 15%+ on energy bills</span>
                   </div>
                   <div className="flex gap-3">
-                    <FaCheckCircle className="text-green-400 flex-shrink-0 mt-1" />
+                    <FaCheckCircle className="text-brand-green-400 flex-shrink-0 mt-1" />
                     <span className="text-gray-200">Printable checklist included</span>
                   </div>
                 </div>
@@ -106,7 +106,7 @@ export default function HeatingChecklistLeadMagnet() {
                       exit={{ opacity: 0, scale: 0.9 }}
                       className="text-center py-8"
                     >
-                      <FaDownload className="text-green-400 text-4xl mx-auto mb-4" />
+                      <FaDownload className="text-brand-green-400 text-4xl mx-auto mb-4" />
                       <h4 className="text-white font-semibold mb-2">
                         Download Started!
                       </h4>

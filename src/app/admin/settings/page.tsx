@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
 
@@ -15,9 +16,11 @@ interface SiteSettings {
   facebookUrl?: string;
   linkedinUrl?: string;
   twitterUrl?: string;
+  logoVersion?: number;
 }
 
 export default function SettingsPage() {
+  const router = useRouter();
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -31,7 +34,7 @@ export default function SettingsPage() {
   const fetchSettings = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/settings");
+      const res = await fetch("/api/admin/settings", { credentials: 'include' });
       if (!res.ok) throw new Error("Failed to fetch settings");
       const data = await res.json();
       setSettings(data);
@@ -42,10 +45,13 @@ export default function SettingsPage() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (settings) {
-      setSettings({ ...settings, [name]: value });
+      setSettings({
+        ...settings,
+        [name]: name === 'logoVersion' ? parseInt(value) : value
+      });
     }
   };
 
@@ -58,9 +64,10 @@ export default function SettingsPage() {
       setError(null);
       setSuccess(false);
 
-      const res = await fetch("/api/settings", {
+      const res = await fetch("/api/admin/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify(settings),
       });
 
@@ -68,6 +75,10 @@ export default function SettingsPage() {
       const updated = await res.json();
       setSettings(updated);
       setSuccess(true);
+
+      // Refresh the page to update navbar logo
+      router.refresh();
+
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save");
@@ -112,6 +123,28 @@ export default function SettingsPage() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Logo Version Section */}
+        <div className="border border-adm-border rounded-lg p-4 bg-adm-bg">
+          <h2 className="text-sm font-mono font-semibold text-adm-textPri uppercase mb-4">Logo Settings</h2>
+
+          <div className="max-w-xs">
+            <label className="block text-xs font-mono font-semibold text-adm-textMut uppercase mb-2">Logo Version</label>
+            <select
+              name="logoVersion"
+              value={settings.logoVersion || 1}
+              onChange={handleChange}
+              className="w-full px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
+            >
+              <option value="1">Old Logo</option>
+              <option value="2">New Logo</option>
+            </select>
+            <p className="text-xs text-adm-textMut mt-2">
+              Current: <span className="font-semibold text-adm-textBody">{settings.logoVersion === 2 ? 'New Logo' : 'Old Logo'}</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Company Info Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-mono font-semibold text-adm-textMut uppercase mb-2">Company Name</label>
@@ -232,7 +265,7 @@ export default function SettingsPage() {
           <button
             type="submit"
             disabled={saving}
-            className="px-4 py-2 bg-nts-green text-white font-mono font-semibold rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
+            className="px-4 py-2 bg-nts-green text-white font-mono font-semibold rounded-lg hover:bg-brand-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
           >
             {saving ? "Saving..." : "Save Settings"}
           </button>

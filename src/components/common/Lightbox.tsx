@@ -98,7 +98,7 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
             e.stopPropagation();
             handlePrevious();
           }}
-          className="p-3 rounded-full bg-green-500 hover:bg-green-600 hover:scale-110 transition-all duration-200 text-white shadow-lg"
+          className="p-3 rounded-full bg-brand-green-500 hover:bg-brand-green-600 hover:scale-110 transition-all duration-200 text-white shadow-lg"
           aria-label="Previous image"
         >
           <FaChevronLeft size={28} />
@@ -113,7 +113,7 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
             e.stopPropagation();
             handleNext();
           }}
-          className="p-3 rounded-full bg-green-500 hover:bg-green-600 hover:scale-110 transition-all duration-200 text-white shadow-lg"
+          className="p-3 rounded-full bg-brand-green-500 hover:bg-brand-green-600 hover:scale-110 transition-all duration-200 text-white shadow-lg"
           aria-label="Next image"
         >
           <FaChevronRight size={28} />

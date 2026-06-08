@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -32,8 +30,8 @@ export default function LoginPage() {
       }
 
       console.log("Login successful, redirecting...");
-      await new Promise(resolve => setTimeout(resolve, 500));
-      router.push("/admin/dashboard");
+      // Use window.location for full page refresh to ensure cookies are sent
+      window.location.href = "/admin/dashboard";
     } catch (err) {
       console.error("Login error:", err);
       setError("An error occurred. Please try again.");
@@ -94,7 +92,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 px-4 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 disabled:opacity-50"
+            className="w-full py-2 px-4 bg-brand-green-500 text-white font-semibold rounded-lg hover:bg-brand-green-600 disabled:opacity-50"
           >
             {loading ? "Logging in..." : "Login"}
           </button>

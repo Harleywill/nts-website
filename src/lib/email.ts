@@ -396,3 +396,156 @@ export async function sendContactNotification(
     throw error;
   }
 }
+
+export async function sendGeneralApplicationNotification(
+  applicantName: string,
+  applicantEmail: string,
+  applicationReference: string
+) {
+  try {
+    await resend.emails.send({
+      from: "noreply@nevilletuckerservices.co.uk",
+      to: CAREERS_ADMIN_EMAILS,
+      subject: `New General Application Submission`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+            <tr>
+              <td style="padding: 20px;">
+                <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                  ${emailHeader}
+                  <tr>
+                    <td style="padding: 40px 30px;">
+                      <h2 style="color: #1a2f6e; margin: 0 0 25px 0; font-size: 24px;">New General Application</h2>
+                      <p style="color: #333333; margin: 0 0 20px 0; font-size: 15px; line-height: 1.6;">A new general application (talent pool submission) has been received.</p>
+
+                      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9f9f9; border-left: 4px solid #4caf50; margin: 25px 0;">
+                        <tr>
+                          <td style="padding: 20px;">
+                            <p style="margin: 0 0 15px 0; color: #666666; font-size: 13px;"><strong style="color: #1a2f6e;">Applicant Name:</strong><br>${applicantName}</p>
+                            <p style="margin: 0 0 15px 0; color: #666666; font-size: 13px;"><strong style="color: #1a2f6e;">Email:</strong><br>${applicantEmail}</p>
+                            <p style="margin: 0; color: #666666; font-size: 13px;"><strong style="color: #1a2f6e;">Reference Number:</strong><br><code style="background-color: #e8f5e9; padding: 5px 10px; border-radius: 3px; color: #2e7d32; font-weight: bold;">${applicationReference}</code></p>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <div style="text-align: center; margin: 30px 0;">
+                        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/admin/careers/applications?filter=general" style="display: inline-block; background-color: #4caf50; color: white; padding: 14px 32px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 15px;">View Application in Admin Panel</a>
+                      </div>
+
+                      <p style="color: #888888; font-size: 13px; margin: 25px 0 0 0; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+                        Please log in to your admin panel to review the full application details and CV.
+                      </p>
+                    </td>
+                  </tr>
+                  ${emailFooter}
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `,
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error sending general application notification:", error);
+    throw error;
+  }
+}
+
+export async function sendGeneralApplicationConfirmationEmail(
+  applicantEmail: string,
+  applicantName: string,
+  applicationReference: string,
+  applicationId: string
+) {
+  try {
+    await resend.emails.send({
+      from: "noreply@nevilletuckerservices.co.uk",
+      to: applicantEmail,
+      subject: "Application Received - NTS Ltd",
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+            <tr>
+              <td style="padding: 20px;">
+                <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                  ${emailHeader}
+                  <tr>
+                    <td style="padding: 40px 30px;">
+                      <h2 style="color: #1a2f6e; margin: 0 0 10px 0; font-size: 24px;">Thank You for Your Application</h2>
+                      <p style="color: #4caf50; margin: 0 0 25px 0; font-size: 16px; font-weight: bold;">We've received your CV and skills submission</p>
+
+                      <p style="color: #333333; margin: 0 0 15px 0; font-size: 15px; line-height: 1.6;">Dear ${applicantName},</p>
+
+                      <p style="color: #333333; margin: 0 0 15px 0; font-size: 15px; line-height: 1.6;">
+                        Thank you for your interest in joining NTS Ltd! We appreciate you submitting your CV and skills for our talent pool.
+                      </p>
+
+                      <p style="color: #333333; margin: 0 0 25px 0; font-size: 15px; line-height: 1.6;">
+                        We have successfully received your application. Below is your reference number for future correspondence:
+                      </p>
+
+                      <table width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #1a2f6e 0%, #2d4a8f 100%); border-radius: 6px; margin: 25px 0;">
+                        <tr>
+                          <td style="padding: 30px; text-align: center;">
+                            <p style="color: #e0e0e0; margin: 0 0 10px 0; font-size: 13px;">APPLICATION REFERENCE</p>
+                            <p style="color: #4caf50; margin: 0; font-size: 28px; font-weight: bold; font-family: 'Courier New', monospace;">${applicationReference}</p>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <p style="color: #333333; margin: 0 0 15px 0; font-size: 15px; line-height: 1.6;">
+                        <strong>What happens next?</strong>
+                      </p>
+
+                      <ul style="color: #333333; margin: 0 0 25px 0; font-size: 15px; line-height: 1.8; padding-left: 20px;">
+                        <li>We'll review your CV and qualifications</li>
+                        <li>If your skills match our upcoming opportunities, we'll get in touch within 5 business days</li>
+                        <li>Your application will remain on file for future positions that match your expertise</li>
+                      </ul>
+
+                      <p style="color: #333333; margin: 0 0 25px 0; font-size: 15px; line-height: 1.6;">
+                        We're always looking for talented professionals in the HVAC and mechanical services industry. Thank you for considering NTS Ltd!
+                      </p>
+
+                      <p style="color: #333333; margin: 0 0 5px 0; font-size: 15px; line-height: 1.6;">
+                        Best regards,<br>
+                        <strong>The NTS Ltd Team</strong>
+                      </p>
+
+                      <p style="color: #888888; font-size: 13px; margin: 25px 0 0 0; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+                        If you have any questions about your application, please reply to this email or contact us at <a href="tel:01482838080" style="color: #4caf50; text-decoration: none; font-weight: bold;">01482 838080</a>.
+                      </p>
+                    </td>
+                  </tr>
+                  ${emailFooter}
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `,
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error sending general application confirmation email:", error);
+    throw error;
+  }
+}

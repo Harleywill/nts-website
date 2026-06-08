@@ -93,7 +93,7 @@ export default function Privacy() {
               </ul>
 
               <div className="mt-8 pt-8 border-t border-gray-200">
-                <Link href="/terms" className="text-green-600 hover:text-green-700 font-semibold">
+                <Link href="/terms" className="text-brand-green-600 hover:text-green-700 font-semibold">
                   View Terms of Service →
                 </Link>
               </div>

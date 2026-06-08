@@ -15,11 +15,11 @@ interface ToastProps {
 
 const typeConfig = {
   success: {
-    bgColor: "bg-green-50",
+    bgColor: "bg-brand-green-50",
     borderColor: "border-green-200",
     textColor: "text-green-800",
     icon: FaCheck,
-    iconBgColor: "bg-green-100",
+    iconBgColor: "bg-brand-green-100",
   },
   error: {
     bgColor: "bg-red-50",

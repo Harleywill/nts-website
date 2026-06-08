@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AnimatedHeading from "@/components/common/AnimatedHeading";
 import Image from "next/image";
+import { useLogoVersion } from "@/hooks/useLogoVersion";
 
 interface Testimonial {
   id: number;
@@ -15,6 +16,7 @@ interface Testimonial {
 }
 
 export default function Testimonials() {
+  const logoVersion = useLogoVersion();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -100,7 +102,7 @@ export default function Testimonials() {
           className="flex justify-center mb-8 sm:mb-12"
         >
           <Image
-            src="/images/ntsLogo.png"
+            src={logoVersion === "old" ? "/images/ntsLogo-old.png" : "/images/ntsLogo.png"}
             alt="NTS Ltd Logo"
             width={140}
             height={70}

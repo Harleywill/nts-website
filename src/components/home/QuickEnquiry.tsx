@@ -148,11 +148,11 @@ export default function QuickEnquiry() {
 
             {/* Urgency & Trust Signals */}
             <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <div className="flex items-center gap-2 text-green-600 font-semibold">
+              <div className="flex items-center gap-2 text-brand-green-600 font-semibold">
                 <FaClock size={18} />
                 <span>Response in 2 hours</span>
               </div>
-              <div className="flex items-center gap-2 text-green-600 font-semibold">
+              <div className="flex items-center gap-2 text-brand-green-600 font-semibold">
                 <FaPhone size={18} />
                 <span>Or call: 01482 838080</span>
               </div>
@@ -351,7 +351,7 @@ export default function QuickEnquiry() {
                 <motion.button
                   type="button"
                   onClick={handleNextStep}
-                  className="px-8 py-3 rounded-lg font-semibold text-white bg-green-500 hover:bg-green-600 transition-all"
+                  className="px-8 py-3 rounded-lg font-semibold text-white bg-brand-green-500 hover:bg-brand-green-600 transition-all"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >

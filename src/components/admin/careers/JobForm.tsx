@@ -280,7 +280,7 @@ export default function JobForm({ job, mode }: JobFormProps) {
           />
           <p className="text-xs text-gray-500 mt-2">One item per line</p>
         </div>
-
+ 
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-6">Requirements</h2>
 
@@ -317,7 +317,7 @@ export default function JobForm({ job, mode }: JobFormProps) {
                   value={option.value}
                   checked={formData.status === option.value}
                   onChange={handleInputChange}
-                  className="w-4 h-4 text-green-500"
+                  className="w-4 h-4 text-brand-green-500"
                 />
                 <span className="text-gray-900">{option.label}</span>
               </label>
@@ -331,7 +331,7 @@ export default function JobForm({ job, mode }: JobFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50"
+          className="px-6 py-2 bg-brand-green-500 text-white rounded-lg hover:bg-brand-green-600 disabled:opacity-50"
         >
           {loading ? "Saving..." : mode === "new" ? "Create Job" : "Update Job"}
         </button>

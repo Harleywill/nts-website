@@ -143,7 +143,7 @@ export default function Contact() {
         <AnimatePresence>
           {submitted && (
             <motion.div
-              className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm"
+              className="mb-6 p-4 bg-brand-green-50 border border-green-200 rounded-lg text-green-700 text-sm"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
@@ -266,7 +266,7 @@ export default function Contact() {
 
           <motion.div className="flex gap-x-4 sm:col-span-2" variants={staggerItemVariants}>
             <div className="flex h-6 items-center">
-              <div className="group relative inline-flex w-8 shrink-0 rounded-full bg-gray-200 p-px ring ring-gray-300 outline-offset-2 outline-green-500 transition-colors duration-200 ease-in-out has-checked:bg-green-500 has-focus-visible:outline-2">
+              <div className="group relative inline-flex w-8 shrink-0 rounded-full bg-gray-200 p-px ring ring-gray-300 outline-offset-2 outline-green-500 transition-colors duration-200 ease-in-out has-checked:bg-brand-green-500 has-focus-visible:outline-2">
                 <motion.span
                   className="size-4 rounded-full bg-white shadow-xs ring-1 ring-gray-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-3.5"
                   animate={formData.agreed ? { x: 16 } : { x: 0 }}
@@ -285,7 +285,7 @@ export default function Contact() {
             </div>
             <label htmlFor="agreed" className="text-sm/6 text-gray-600 cursor-pointer">
               By selecting this, you agree to our{" "}
-              <a href="/privacy" className="font-semibold text-green-600 hover:text-green-700">
+              <a href="/privacy" className="font-semibold text-brand-green-600 hover:text-green-700">
                 privacy policy
               </a>
               .

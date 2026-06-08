@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import DuctWaves from "@/components/common/DuctWaves";
+import { ApplyButton } from "@/components/careers/ApplyButton";
 
 interface JobDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -71,16 +72,16 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
               <div className="lg:col-span-2">
                 {/* Department + Status */}
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#4caf50' }}>
                     {job.department}
                   </span>
-                  <span className="px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-xs font-semibold text-emerald-300">
+                  <span className="px-3 py-1 rounded-full border text-xs font-semibold" style={{ backgroundColor: 'rgba(76, 175, 80, 0.15)', borderColor: 'rgba(76, 175, 80, 0.3)', color: '#4caf50' }}>
                     Accepting applications
                   </span>
                 </div>
 
                 {/* Title */}
-                <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-white leading-tight mb-8">
+                <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-white leading-tight mb-8" style={{ letterSpacing: '-0.02em' }}>
                   {job.title}
                 </h1>
 
@@ -99,7 +100,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                         key={meta.label}
                         className="px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 backdrop-blur"
                       >
-                        <div className="text-xs font-bold text-emerald-300/85 uppercase tracking-wider mb-0.5">
+                        <div className="text-xs font-bold uppercase tracking-wider mb-0.5" style={{ color: 'rgba(76, 175, 80, 0.85)' }}>
                           {meta.label}
                         </div>
                         <div className="text-sm font-semibold text-white">
@@ -112,40 +113,21 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
               {/* Right Column CTA */}
               <div>
-                <Link
-                  href={`/careers/${slug}/apply`}
-                  className={`block w-full px-6 py-4 rounded-lg font-semibold text-center transition-all mb-4 ${
-                    isApplicationOpen
-                      ? "bg-white text-gray-900 hover:bg-gray-100 shadow-lg hover:shadow-xl"
-                      : "bg-gray-700 text-gray-300 cursor-not-allowed"
-                  }`}
-                >
-                  {isApplicationOpen ? "Apply now" : "Applications Closed"}
-                </Link>
-                {isApplicationOpen ? (
-                  <p className="text-xs text-gray-400 font-mono">
-                    Applications close {closesDate}
-                  </p>
-                ) : (
-                  <p className="text-xs text-gray-500">
-                    This position is no longer accepting applications
-                  </p>
-                )}
+                <ApplyButton slug={slug} isOpen={isApplicationOpen} closesDate={closesDate} />
               </div>
             </div>
           </div>
         </section>
 
         {/* Body */}
-        <section className="relative px-6 py-20 sm:py-24 lg:px-8">
+        <section className="relative px-6 py-20 sm:py-24 lg:px-8 bg-white">
           <div className="mx-auto max-w-7xl">
             <div className="grid lg:grid-cols-[1fr_340px] gap-12 lg:gap-16">
               {/* Content */}
               <div className="space-y-12">
                 {/* About the Role */}
                 <div className="bg-white rounded-lg border border-gray-200 p-8 shadow-sm hover:shadow-md transition-shadow">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                    About the role
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">📋 About the role
                   </h2>
                   <div className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap space-y-4">
                     {job.description}
@@ -155,13 +137,12 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                 {/* What You'll Do */}
                 {responsibilities.length > 0 && (
                   <div className="bg-white rounded-lg border border-gray-200 p-8 shadow-sm hover:shadow-md transition-shadow">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      What you'll do
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">✓ What you'll do
                     </h2>
                     <ul className="space-y-3">
                       {responsibilities.map((resp, idx) => (
                         <li key={idx} className="flex items-start gap-4">
-                          <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-emerald-100 text-emerald-600 flex-shrink-0 mt-0.5 font-bold text-sm">
+                          <span className="inline-flex items-center justify-center h-6 w-6 rounded-full text-white flex-shrink-0 mt-0.5 font-bold text-sm" style={{ backgroundColor: '#4caf50' }}>
                             ✓
                           </span>
                           <span className="text-base text-gray-700 leading-relaxed">
@@ -176,13 +157,12 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                 {/* What We're Looking For */}
                 {requirements.length > 0 && (
                   <div className="bg-white rounded-lg border border-gray-200 p-8 shadow-sm hover:shadow-md transition-shadow">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      What we're looking for
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">🎯 What we're looking for
                     </h2>
                     <ul className="space-y-3">
                       {requirements.map((req, idx) => (
                         <li key={idx} className="flex items-start gap-4">
-                          <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-emerald-100 text-emerald-600 flex-shrink-0 mt-0.5 font-bold text-sm">
+                          <span className="inline-flex items-center justify-center h-6 w-6 rounded-full text-white flex-shrink-0 mt-0.5 font-bold text-sm" style={{ backgroundColor: '#4caf50' }}>
                             ✓
                           </span>
                           <span className="text-base text-gray-700 leading-relaxed">
@@ -206,21 +186,12 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
               {/* Sticky Sidebar */}
               <aside className="lg:sticky lg:top-6 space-y-6">
                 {/* Apply Card */}
-                <div className="bg-white rounded-2xl p-7 border border-gray-200 shadow-md">
-                  <Link
-                    href={`/careers/${slug}/apply`}
-                    className={`block w-full px-6 py-3 rounded-lg font-semibold text-center transition-all ${
-                      isApplicationOpen
-                        ? "bg-emerald-500 text-white hover:bg-emerald-600"
-                        : "bg-gray-200 text-gray-500 cursor-not-allowed"
-                    }`}
-                  >
-                    {isApplicationOpen ? "Apply now" : "Applications Closed"}
-                  </Link>
+                <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                  <ApplyButton slug={slug} isOpen={isApplicationOpen} closesDate={closesDate} />
                 </div>
 
                 {/* Closes Date Card */}
-                <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
                   <p className="text-xs font-semibold text-amber-900 uppercase tracking-wider mb-1">
                     Closing date
                   </p>

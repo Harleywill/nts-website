@@ -127,15 +127,15 @@ export default function Services() {
                   <Link
                     key={service.id}
                     href={`/services/${service.id}`}
-                    className="group h-full rounded-2xl  p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-green-500 flex flex-col items-center justify-center text-center bg-white"
+                    className="group h-full rounded-2xl  p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-brand-green-500 flex flex-col items-center justify-center text-center bg-white"
                   >
-                    <div className="inline-block p-3 rounded-lg bg-green-500/10 mb-6 group-hover:bg-green-500/20 transition-colors">
+                    <div className="inline-block p-3 rounded-lg bg-brand-green-500/10 mb-6 group-hover:bg-brand-green-500/20 transition-colors">
                       <Icon size={40} style={{ color: "#4caf50" }} />
                     </div>
                     <h3 className="text-2xl font-bold text-gray-900">
                       {service.title}
                     </h3>
-                    <div className="mt-6 inline-flex items-center gap-2 font-semibold transition-colors hover:text-green-600" style={{ color: "#4caf50" }}>
+                    <div className="mt-6 inline-flex items-center gap-2 font-semibold transition-colors hover:text-brand-green-600" style={{ color: "#4caf50" }}>
                       Learn More <span aria-hidden="true">→</span>
                     </div>
                   </Link>

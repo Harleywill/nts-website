@@ -205,7 +205,7 @@ export default function EditTestimonialPage({
               name="featured"
               checked={formData.featured}
               onChange={handleChange}
-              className="w-4 h-4 text-green-500 rounded focus:ring-2 focus:ring-green-500"
+              className="w-4 h-4 text-brand-green-500 rounded focus:ring-2 focus:ring-green-500"
             />
             <label htmlFor="featured" className="ml-3 text-sm font-medium text-gray-900">
               Featured on homepage
@@ -217,7 +217,7 @@ export default function EditTestimonialPage({
           <button
             type="submit"
             disabled={submitting}
-            className="flex-1 py-2 px-4 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 disabled:opacity-50"
+            className="flex-1 py-2 px-4 bg-brand-green-500 text-white font-semibold rounded-lg hover:bg-brand-green-600 disabled:opacity-50"
           >
             {submitting ? "Saving..." : "Save Testimonial"}
           </button>

@@ -4,11 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const STATUS_OPTIONS = [
-  { value: "NEW", label: "New", color: "bg-green-50 text-green-900" },
+  { value: "NEW", label: "New", color: "bg-brand-green-50 text-brand-green-900" },
   { value: "REVIEWING", label: "Reviewing", color: "bg-yellow-50 text-yellow-900" },
   { value: "INTERVIEW", label: "Interview", color: "bg-blue-50 text-blue-900" },
   { value: "OFFER", label: "Offer", color: "bg-purple-50 text-purple-900" },
-  { value: "HIRED", label: "Hired", color: "bg-emerald-50 text-emerald-900" },
+  { value: "HIRED", label: "Hired", color: "bg-brand-green-50 text-brand-green-900" },
   { value: "REJECTED", label: "Rejected", color: "bg-gray-50 text-gray-900" },
 ];
 

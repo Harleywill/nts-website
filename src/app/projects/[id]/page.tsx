@@ -63,7 +63,7 @@ export default function ProjectDetailPage() {
         <div className="bg-gray-900 min-h-screen py-24 px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
             <p className="text-gray-300">Project not found.</p>
-            <Link href="/" className="text-green-600 hover:text-green-400 mt-4 inline-block font-semibold transition-colors">
+            <Link href="/" className="text-brand-green-600 hover:text-brand-green-400 mt-4 inline-block font-semibold transition-colors">
               ← Back to Home
             </Link>
           </div>

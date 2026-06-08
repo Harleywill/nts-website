@@ -21,7 +21,7 @@ export default async function ReviewsPage() {
         </div>
         <Link
           href="/admin/reviews/new"
-          className="px-4 py-2 bg-nts-green text-white rounded-lg font-semibold hover:bg-green-600 transition-colors"
+          className="px-4 py-2 bg-nts-green text-white rounded-lg font-semibold hover:bg-brand-green-600 transition-colors"
         >
           + Add Review
         </Link>
