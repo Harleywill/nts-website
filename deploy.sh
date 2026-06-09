@@ -47,7 +47,11 @@ mkdir -p .next/standalone/.next/static
 cp -r .next/static/* .next/standalone/.next/static/ || true
 
 echo "📦 Copying prisma folder to standalone build..."
-cp -r prisma .next/standalone/
+mkdir -p .next/standalone/prisma
+cp -r prisma/* .next/standalone/prisma/ || true
+
+echo "📦 Copying .env to standalone build..."
+cp .env .next/standalone/.env
 
 echo "🗄️  Running Prisma migrations in standalone build..."
 cd /root/nts-website/.next/standalone
@@ -55,6 +59,9 @@ npx prisma migrate deploy || echo "Migrations already applied"
 
 echo "🌱 Seeding database with initial data..."
 npx prisma db seed || echo "Database already seeded"
+
+echo "🔧 Generating Prisma client..."
+npx prisma generate || echo "Prisma client already generated"
 
 echo "🔄 Setting up PM2 process..."
 cd /root/nts-website
