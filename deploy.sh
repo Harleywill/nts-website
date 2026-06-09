@@ -39,10 +39,12 @@ npx prisma migrate deploy || echo "Migrations already applied"
 npx prisma db seed || echo "Database already seeded"
 
 echo "📦 Copying public assets to standalone build..."
+mkdir -p .next/standalone/public
 cp -r public/* .next/standalone/public/
 
 echo "📦 Copying static CSS/JS to standalone build..."
-cp -r .next/static .next/standalone/.next/
+mkdir -p .next/standalone/.next/static
+cp -r .next/static/* .next/standalone/.next/static/ || true
 
 echo "📦 Copying prisma folder to standalone build..."
 cp -r prisma .next/standalone/
@@ -57,7 +59,7 @@ npx prisma db seed || echo "Database already seeded"
 echo "🔄 Setting up PM2 process..."
 cd /root/nts-website
 pm2 delete nts-website 2>/dev/null || true
-pm2 start "node .next/standalone/server.js" --name nts-website --cwd /root/nts-website
+PORT=3000 NODE_ENV=production pm2 start "node .next/standalone/server.js" --name nts-website --cwd /root/nts-website
 
 echo "⏳ Waiting for app to start..."
 sleep 3
