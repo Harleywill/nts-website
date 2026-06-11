@@ -54,20 +54,6 @@ export default function Footer() {
               <p className="text-gray-300 text-sm leading-relaxed max-w-md">
                 Professional heating, cooling, and ventilation solutions for residential and commercial clients.
               </p>
-              {/* TrustPilot Badge */}
-              <div className="mt-4 flex items-center gap-2">
-                <span className="text-xs font-semibold text-gray-300">Trusted on:</span>
-                <a
-                  href="https://www.trustpilot.com/review/ntsltd.co.uk"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                  title="View our reviews on TrustPilot"
-                >
-                  <span className="text-xs font-semibold text-brand-green-400">★★★★★ 4.8/5</span>
-                  <span className="text-xs text-gray-400">TrustPilot</span>
-                </a>
-              </div>
             </div>
             <motion.div
               className="flex gap-4"
