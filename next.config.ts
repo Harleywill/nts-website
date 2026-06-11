@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "nevilletuckerservices.co.uk",
+        pathname: "/uploads/**",
+      },
     ],
   },
   allowedDevOrigins: ["192.168.20.81", "localhost"],
