@@ -1,0 +1,135 @@
+
+> nts-website@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.18
+   - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 7.7s
+   Linting and checking validity of types ...
+   Collecting page data ...
+Email Configuration:
+- Contact Form Admin Emails: [ 'info@nt.services' ]
+- Careers Admin Emails: [ 'info@nt.services' ]
+Email Configuration:
+- Contact Form Admin Emails: [ 'info@nt.services' ]
+- Careers Admin Emails: [ 'info@nt.services' ]
+Email Configuration:
+- Contact Form Admin Emails: [ 'info@nt.services' ]
+- Careers Admin Emails: [ 'info@nt.services' ]
+   Generating static pages (0/67) ...
+   Generating static pages (16/67) 
+   Generating static pages (33/67) 
+Email Configuration:
+- Contact Form Admin Emails: [ 'info@nt.services' ]
+- Careers Admin Emails: [ 'info@nt.services' ]
+   Generating static pages (50/67) 
+ ✓ Generating static pages (67/67)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                    11.9 kB         175 kB
+├ ○ /_not-found                            226 B         103 kB
+├ ○ /about                               4.46 kB         167 kB
+├ ○ /admin                                 226 B         103 kB
+├ ƒ /admin/careers                       1.48 kB         107 kB
+├ ƒ /admin/careers/[id]/edit               122 B         105 kB
+├ ƒ /admin/careers/applications          1.49 kB         107 kB
+├ ƒ /admin/careers/applications/[id]     1.22 kB         107 kB
+├ ○ /admin/careers/new                     122 B         105 kB
+├ ○ /admin/contact-submissions           5.05 kB         113 kB
+├ ○ /admin/dashboard                     3.27 kB         109 kB
+├ ○ /admin/email-log                      2.9 kB         114 kB
+├ ○ /admin/login                         1.07 kB         103 kB
+├ ƒ /admin/news                          1.49 kB         107 kB
+├ ƒ /admin/news/[id]/edit                1.75 kB         108 kB
+├ ○ /admin/news/new                      1.53 kB         107 kB
+├ ƒ /admin/projects                      1.49 kB         107 kB
+├ ƒ /admin/projects/[id]/edit            3.65 kB         115 kB
+├ ○ /admin/projects/new                  3.51 kB         115 kB
+├ ○ /admin/reviews                       2.05 kB         114 kB
+├ ƒ /admin/reviews/[id]                    127 B         111 kB
+├ ○ /admin/reviews/new                     128 B         111 kB
+├ ○ /admin/settings                      1.86 kB         104 kB
+├ ƒ /admin/testimonials                  1.49 kB         107 kB
+├ ƒ /admin/testimonials/[id]/edit         1.6 kB         107 kB
+├ ○ /admin/testimonials/new              1.43 kB         107 kB
+├ ƒ /admin/users                         1.49 kB         107 kB
+├ ƒ /admin/users/[id]/edit               1.49 kB         107 kB
+├ ○ /admin/users/new                     1.33 kB         107 kB
+├ ƒ /api/admin/activity                    226 B         103 kB
+├ ƒ /api/admin/applications                226 B         103 kB
+├ ƒ /api/admin/applications/[id]           226 B         103 kB
+├ ƒ /api/admin/jobs                        226 B         103 kB
+├ ƒ /api/admin/jobs/[id]                   226 B         103 kB
+├ ƒ /api/admin/reviews                     226 B         103 kB
+├ ƒ /api/admin/reviews/[id]                226 B         103 kB
+├ ƒ /api/admin/settings                    226 B         103 kB
+├ ƒ /api/admin/stats/history               226 B         103 kB
+├ ƒ /api/analytics                         226 B         103 kB
+├ ƒ /api/applications/[id]/cv              226 B         103 kB
+├ ƒ /api/auth/login                        226 B         103 kB
+├ ƒ /api/auth/logout                       226 B         103 kB
+├ ƒ /api/careers                           226 B         103 kB
+├ ƒ /api/careers/[slug]/apply              226 B         103 kB
+├ ƒ /api/careers/apply-general             226 B         103 kB
+├ ƒ /api/contact                           226 B         103 kB
+├ ƒ /api/contact-submissions               226 B         103 kB
+├ ƒ /api/emails/log                        226 B         103 kB
+├ ƒ /api/google-reviews                    226 B         103 kB
+├ ƒ /api/news                              226 B         103 kB
+├ ƒ /api/news/[id]                         226 B         103 kB
+├ ƒ /api/newsletter                        226 B         103 kB
+├ ƒ /api/notifications                     226 B         103 kB
+├ ƒ /api/projects                          226 B         103 kB
+├ ƒ /api/projects/[id]                     226 B         103 kB
+├ ƒ /api/retell/access-token               226 B         103 kB
+├ ƒ /api/settings                          226 B         103 kB
+├ ƒ /api/testimonials                      226 B         103 kB
+├ ƒ /api/testimonials/[id]                 226 B         103 kB
+├ ƒ /api/upload                            226 B         103 kB
+├ ƒ /api/upload/cv                         226 B         103 kB
+├ ƒ /api/users                             226 B         103 kB
+├ ƒ /api/users/[id]                        226 B         103 kB
+├ ○ /apply                               3.69 kB         167 kB
+├ ○ /auth/login                          1.14 kB         104 kB
+├ ƒ /careers                             1.31 kB         164 kB
+├ ƒ /careers/[slug]                      1.71 kB         165 kB
+├ ƒ /careers/[slug]/apply                 5.6 kB         169 kB
+├ ƒ /careers/[slug]/apply/success        1.43 kB         164 kB
+├ ○ /careers/apply                       3.69 kB         167 kB
+├ ○ /careers/general-application         3.69 kB         167 kB
+├ ○ /case-studies/foredyke-school        2.37 kB         165 kB
+├ ○ /contact                              3.8 kB         167 kB
+├ ○ /faq                                 2.92 kB         166 kB
+├ ○ /featured-news-directions            2.13 kB         105 kB
+├ ○ /lead-magnets/heating-checklist      2.21 kB         165 kB
+├ ○ /login                               1.21 kB         104 kB
+├ ○ /news                                2.59 kB         166 kB
+├ ƒ /news/[id]                           1.42 kB         167 kB
+├ ○ /privacy                             1.31 kB         164 kB
+├ ○ /projects                            2.61 kB         166 kB
+├ ƒ /projects/[id]                       1.45 kB         168 kB
+├ ○ /services                            1.31 kB         164 kB
+├ ƒ /services/[slug]                     5.02 kB         168 kB
+├ ○ /services/hull                       2.32 kB         165 kB
+├ ○ /terms                               1.31 kB         164 kB
+└ ○ /testimonials                        2.48 kB         166 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/1255-b28ea36bf0cdbd65.js      46.3 kB
+  ├ chunks/4bd1b696-f785427dddbba9fb.js  54.2 kB
+  └ other shared chunks (total)          1.93 kB
+
+
+ƒ Middleware                             33.9 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+npm notice
+npm notice New minor version of npm available! 11.4.2 -> 11.16.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.16.0
+npm notice To update run: npm install -g npm@11.16.0
+npm notice

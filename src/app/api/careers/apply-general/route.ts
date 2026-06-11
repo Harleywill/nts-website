@@ -19,13 +19,13 @@ export async function POST(request: NextRequest) {
   try {
     const ip = getRateLimitKey(request);
     const isAllowed = checkRateLimit(ip, {
-      limit: 1,
+      limit: 2,
       window: 24 * 60 * 60 * 1000,
     });
 
     if (!isAllowed) {
       return NextResponse.json(
-        { error: "Only one application per day is allowed." },
+        { error: "Maximum 2 applications per day are allowed. Please try again tomorrow." },
         { status: 429 }
       );
     }
@@ -61,43 +61,52 @@ export async function POST(request: NextRequest) {
 
     const reference = generateApplicationReference();
 
-    const application = await prisma.generalApplication.create({
-      data: {
-        reference,
-        fullName,
-        email,
-        phone,
-        desiredRole: desiredRole || null,
-        skills: skills || null,
-        experience: experience || null,
-        message: message || null,
-        cvUrl,
-        cvFilename,
-        status: "NEW",
-      },
-    });
+    try {
+      const application = await prisma.generalApplication.create({
+        data: {
+          reference,
+          fullName,
+          email,
+          phone,
+          desiredRole: desiredRole || null,
+          skills: skills || null,
+          experience: experience || null,
+          message: message || null,
+          cvUrl,
+          cvFilename,
+          status: "NEW",
+        },
+      });
 
-    await Promise.all([
-      sendGeneralApplicationNotification(fullName, email, reference),
-      sendGeneralApplicationConfirmationEmail(
-        email,
-        fullName,
-        reference,
-        application.id
-      ),
-    ]).catch((err) =>
-      console.error("Failed to send emails:", err)
-    );
+      // Send emails in background (don't wait for them)
+      Promise.all([
+        sendGeneralApplicationNotification(fullName, email, reference),
+        sendGeneralApplicationConfirmationEmail(
+          email,
+          fullName,
+          reference,
+          application.id
+        ),
+      ]).catch((err) => {
+        console.error("Failed to send notification emails:", err);
+      });
 
-    return NextResponse.json(
-      {
-        reference: application.reference,
-        message: "Application submitted successfully",
-      },
-      { status: 201 }
-    );
+      return NextResponse.json(
+        {
+          reference: application.reference,
+          message: "Application submitted successfully",
+        },
+        { status: 201 }
+      );
+    } catch (dbError) {
+      console.error("Database error creating application:", dbError);
+      return NextResponse.json(
+        { error: "Failed to submit application" },
+        { status: 500 }
+      );
+    }
   } catch (error) {
-    console.error("Error submitting application:", error);
+    console.error("Error processing application request:", error);
     return NextResponse.json(
       { error: "Failed to submit application" },
       { status: 500 }

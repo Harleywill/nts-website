@@ -201,7 +201,7 @@ export default function Navbar() {
                   href={link.href}
                   className="font-medium text-sm relative z-20 whitespace-nowrap"
                   style={{
-                    color: (shouldShowBackground || isHoveringTop) ? "#000000" : "#ffffff",
+                    color: (isMobile || shouldShowBackground || isHoveringTop) ? "#000000" : "#ffffff",
                     transition: "color 0.5s cubic-bezier(0.43, 0.13, 0.23, 0.96)",
                   }}
                 >

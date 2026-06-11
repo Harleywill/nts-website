@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
+import { existsSync } from "fs";
 
 export async function GET() {
   try {
@@ -29,12 +30,14 @@ export async function POST(request: NextRequest) {
 
     if (imageFile) {
       const buffer = await imageFile.arrayBuffer();
-      const filename = `${Date.now()}-${Math.random().toString(36).substring(7)}-${imageFile.name}`;
-      const uploadDir = join(process.cwd(), "public/uploads/news");
+      const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${imageFile.name.split(".").pop()}`;
+      const uploadDir = "/var/www/uploads/news";
 
-      await mkdir(uploadDir, { recursive: true });
+      if (!existsSync(uploadDir)) {
+        await mkdir(uploadDir, { recursive: true });
+      }
+
       await writeFile(join(uploadDir, filename), Buffer.from(buffer));
-
       imageUrl = `/uploads/news/${filename}`;
     }
 

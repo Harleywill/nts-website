@@ -20,16 +20,16 @@ export async function POST(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    // Rate limiting: 1 application per day per IP
+    // Rate limiting: 2 applications per day per IP
     const ip = getRateLimitKey(request);
     const isAllowed = checkRateLimit(ip, {
-      limit: 1,
+      limit: 2,
       window: 24 * 60 * 60 * 1000, // 24 hours
     });
 
     if (!isAllowed) {
       return NextResponse.json(
-        { error: "Only one application per day is allowed. Please try again tomorrow." },
+        { error: "Maximum 2 applications per day are allowed. Please try again tomorrow." },
         { status: 429 }
       );
     }
