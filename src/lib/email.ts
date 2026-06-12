@@ -34,7 +34,7 @@ console.log("- Careers Admin Emails:", CAREERS_ADMIN_EMAILS);
 // ---------------------------------------------------------------------------
 
 const SITE_URL = "https://nevilletuckerservices.co.uk";
-const LOGO_URL = `${SITE_URL}/images/ntsLogo.png`;
+const LOGO_URL = `${SITE_URL}/images/ntsLogo-old.png`;
 const NAVY = "#1a2f6e";
 const GREEN = "#4caf50";
 const FROM_ADDRESS = "NTS Ltd <noreply@nevilletuckerservices.co.uk>";
@@ -66,7 +66,7 @@ function renderEmail(content: string): string {
               <tr>
                 <td align="center" style="padding: 28px 30px 24px 30px; background-color: #ffffff; border-bottom: 1px solid #e8eaed;">
                   <a href="${SITE_URL}" style="text-decoration: none;">
-                    <img src="${LOGO_URL}" alt="NTS Ltd - Mechanical Services" width="240" style="display: block; width: 240px; max-width: 100%; height: auto; border: 0;">
+                    <img src="${LOGO_URL}" alt="NTS Ltd - Mechanical Services" width="180" style="display: block; width: 180px; max-width: 100%; height: auto; border: 0;">
                   </a>
                 </td>
               </tr>
