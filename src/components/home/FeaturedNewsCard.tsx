@@ -59,16 +59,16 @@ export default function FeaturedNewsCard() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, amount: 0.2 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-white rounded-lg shadow-lg overflow-hidden border-l-4 border-nts-green hover:shadow-xl transition-shadow duration-300"
+          className="grid grid-cols-1 lg:grid-cols-2 items-stretch bg-white rounded-lg shadow-lg overflow-hidden border-l-4 border-nts-green hover:shadow-xl transition-shadow duration-300"
         >
           {/* Image */}
           {featured.imageUrl && (
-            <div className="relative h-64 lg:h-80 w-full overflow-hidden bg-gray-200">
+            <div className="relative h-64 sm:h-80 lg:h-full lg:min-h-[22rem] w-full overflow-hidden bg-gray-200">
               <Image
                 src={featured.imageUrl}
                 alt={featured.title}
                 fill
-                className="object-cover hover:scale-105 transition-transform duration-300"
+                className="object-cover object-center hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
               />
