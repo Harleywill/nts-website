@@ -2,35 +2,40 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import bcryptjs from "bcryptjs";
 import { verifyToken } from "@/lib/auth";
+import { verifyAuthWithUser } from "@/lib/auth-middleware";
+import { isAdministrator, UserRole } from "@/lib/admin/permissions";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Verify JWT token from cookie
-    const token = request.cookies.get("auth-token")?.value;
-    if (!token) {
+    // Verify JWT token from cookie or auth header
+    const authResult = await verifyAuthWithUser(request);
+    if (!authResult.success || !authResult.user) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
       );
     }
 
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
+    // Check permission - only administrators can view other users
     const { id } = await params;
+    const userId = parseInt(id);
+    const userRole = authResult.user.role as UserRole;
+    if (authResult.user.userId !== userId && !isAdministrator(userRole)) {
+      return NextResponse.json(
+        { error: "Forbidden: You can only view your own profile" },
+        { status: 403 }
+      );
+    }
+
     const user = await prisma.user.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: userId },
       select: {
         id: true,
         username: true,
+        role: true,
         createdAt: true,
       },
     });
@@ -51,17 +56,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Verify JWT token from cookie
-    const token = request.cookies.get("auth-token")?.value;
-    if (!token) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
+    // Verify authentication and get user
+    const authResult = await verifyAuthWithUser(request);
+    if (!authResult.success || !authResult.user) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -69,8 +66,39 @@ export async function PUT(
     }
 
     const { id } = await params;
+    const userId = parseInt(id);
+    const userRole = authResult.user.role as UserRole;
+
+    // Users can only update their own password, admins can update anything
+    if (authResult.user.userId !== userId && !isAdministrator(userRole)) {
+      return NextResponse.json(
+        { error: "Forbidden: You can only update your own profile" },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
-    const { password } = body;
+    const { password, role } = body;
+
+    // Check if trying to change role
+    if (role !== undefined) {
+      // Only administrators can change roles
+      if (!isAdministrator(userRole)) {
+        return NextResponse.json(
+          { error: "Forbidden: Only administrators can change user roles" },
+          { status: 403 }
+        );
+      }
+
+      // Validate role
+      const validRoles = ['administrator', 'editor', 'viewer'];
+      if (!validRoles.includes(role)) {
+        return NextResponse.json(
+          { error: "Invalid role" },
+          { status: 400 }
+        );
+      }
+    }
 
     if (!password) {
       return NextResponse.json(
@@ -81,14 +109,22 @@ export async function PUT(
 
     const hashedPassword = await bcryptjs.hash(password, 10);
 
+    const updateData: any = {
+      password: hashedPassword,
+    };
+
+    // Only admins can update role
+    if (role !== undefined && isAdministrator(userRole)) {
+      updateData.role = role;
+    }
+
     const user = await prisma.user.update({
-      where: { id: parseInt(id) },
-      data: {
-        password: hashedPassword,
-      },
+      where: { id: userId },
+      data: updateData,
       select: {
         id: true,
         username: true,
+        role: true,
         createdAt: true,
       },
     });
@@ -107,28 +143,38 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Verify JWT token from cookie
-    const token = request.cookies.get("auth-token")?.value;
-    if (!token) {
+    // Verify authentication and get user
+    const authResult = await verifyAuthWithUser(request);
+    if (!authResult.success || !authResult.user) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
       );
     }
 
-    const payload = await verifyToken(token);
-    if (!payload) {
+    // Check permission - only administrators can delete users
+    const userRole = authResult.user.role as UserRole;
+    if (!isAdministrator(userRole)) {
       return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
+        { error: "Forbidden: Only administrators can delete users" },
+        { status: 403 }
       );
     }
 
     const { id } = await params;
+    const userId = parseInt(id);
+
+    // Prevent deleting yourself
+    if (authResult.user.userId === userId) {
+      return NextResponse.json(
+        { error: "You cannot delete your own account" },
+        { status: 400 }
+      );
+    }
 
     // Check if user exists first
     const user = await prisma.user.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: userId },
     });
 
     if (!user) {
@@ -139,7 +185,7 @@ export async function DELETE(
     }
 
     await prisma.user.delete({
-      where: { id: parseInt(id) },
+      where: { id: userId },
     });
     return NextResponse.json({ success: true });
   } catch (error) {

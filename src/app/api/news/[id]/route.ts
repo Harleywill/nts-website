@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
+import { verifyAuthWithUser } from "@/lib/auth-middleware";
+import { hasPermission, UserRole } from "@/lib/admin/permissions";
 
 export async function GET(
   request: NextRequest,
@@ -13,17 +13,11 @@ export async function GET(
       where: { id: parseInt(id) },
     });
     if (!newsItem) {
-      return NextResponse.json(
-        { error: "News item not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "News item not found" }, { status: 404 });
     }
     return NextResponse.json(newsItem);
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to fetch news item" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch news item" }, { status: 500 });
   }
 }
 
@@ -32,53 +26,38 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const formData = await request.formData();
-    const title = formData.get("title") as string;
-    const content = formData.get("content") as string;
-    const featured = formData.get("featured") === "true";
-    const imageFile = formData.get("image") as File | null;
-
-    const existingNews = await prisma.newsItem.findUnique({
-      where: { id: parseInt(id) },
-    });
-
-    if (!existingNews) {
+    // Verify authentication and get user
+    const authResult = await verifyAuthWithUser(request);
+    if (!authResult.success || !authResult.user) {
       return NextResponse.json(
-        { error: "News item not found" },
-        { status: 404 }
+        { error: "Unauthorized" },
+        { status: 401 }
       );
     }
 
-    let imageUrl = existingNews.imageUrl;
-
-    if (imageFile) {
-      const buffer = await imageFile.arrayBuffer();
-      const filename = `${Date.now()}-${Math.random().toString(36).substring(7)}-${imageFile.name}`;
-      const uploadDir = join(process.cwd(), "public/uploads/news");
-
-      await mkdir(uploadDir, { recursive: true });
-      await writeFile(join(uploadDir, filename), Buffer.from(buffer));
-
-      imageUrl = `/uploads/news/${filename}`;
+    // Check permission
+    const userRole = authResult.user.role as UserRole;
+    if (!hasPermission(userRole, "news")) {
+      return NextResponse.json(
+        { error: "Forbidden: You do not have permission to edit news items" },
+        { status: 403 }
+      );
     }
 
+    const { id } = await params;
+    const body = await request.json();
     const newsItem = await prisma.newsItem.update({
       where: { id: parseInt(id) },
       data: {
-        title,
-        content,
-        imageUrl,
-        featured,
+        title: body.title,
+        content: body.content,
+        imageUrl: body.imageUrl,
+        featured: body.featured,
       },
     });
     return NextResponse.json(newsItem);
   } catch (error) {
-    console.error("Error updating news item:", error);
-    return NextResponse.json(
-      { error: "Failed to update news item" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update news item" }, { status: 500 });
   }
 }
 
@@ -87,29 +66,30 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-
-    // Check if news item exists first
-    const newsItem = await prisma.newsItem.findUnique({
-      where: { id: parseInt(id) },
-    });
-
-    if (!newsItem) {
+    // Verify authentication and get user
+    const authResult = await verifyAuthWithUser(request);
+    if (!authResult.success || !authResult.user) {
       return NextResponse.json(
-        { error: "News item not found" },
-        { status: 404 }
+        { error: "Unauthorized" },
+        { status: 401 }
       );
     }
 
+    // Check permission
+    const userRole = authResult.user.role as UserRole;
+    if (!hasPermission(userRole, "news")) {
+      return NextResponse.json(
+        { error: "Forbidden: You do not have permission to delete news items" },
+        { status: 403 }
+      );
+    }
+
+    const { id } = await params;
     await prisma.newsItem.delete({
       where: { id: parseInt(id) },
     });
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Delete news item error:", error);
-    return NextResponse.json(
-      { error: "Failed to delete news item" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete news item" }, { status: 500 });
   }
 }

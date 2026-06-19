@@ -1,8 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { verifyAuthWithUser } from "@/lib/auth-middleware";
+import { hasPermission } from "@/lib/admin/permissions";
 
 export async function GET(request: NextRequest) {
   try {
+    // Verify authentication and get user
+    const authResult = await verifyAuthWithUser(request);
+    if (!authResult.success || !authResult.user) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    // Check permission
+    if (!hasPermission(authResult.user.role, "contact-submissions")) {
+      return NextResponse.json(
+        { error: "Forbidden: You do not have permission to view submissions" },
+        { status: 403 }
+      );
+    }
+
     const submissions = await prisma.contactSubmission.findMany({
       orderBy: { createdAt: "desc" },
     });
@@ -19,6 +38,23 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
+    // Verify authentication and get user
+    const authResult = await verifyAuthWithUser(request);
+    if (!authResult.success || !authResult.user) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    // Check permission
+    if (!hasPermission(authResult.user.role, "contact-submissions")) {
+      return NextResponse.json(
+        { error: "Forbidden: You do not have permission to update submissions" },
+        { status: 403 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
@@ -49,6 +85,23 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    // Verify authentication and get user
+    const authResult = await verifyAuthWithUser(request);
+    if (!authResult.success || !authResult.user) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    // Check permission
+    if (!hasPermission(authResult.user.role, "contact-submissions")) {
+      return NextResponse.json(
+        { error: "Forbidden: You do not have permission to delete submissions" },
+        { status: 403 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
