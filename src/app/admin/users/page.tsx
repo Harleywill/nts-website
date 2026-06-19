@@ -1,128 +1,210 @@
-import { prisma } from "@/lib/db";
-import Link from "next/link";
-import { BoldPanel } from "@/components/admin/ui/BoldPanel";
-import { BoldButton } from "@/components/admin/ui/BoldButton";
-import DeleteButton from "@/components/admin/DeleteButton";
+'use client';
 
-async function getUsers(searchQuery?: string) {
-  try {
-    const where = searchQuery
-      ? {
-          username: { contains: searchQuery, mode: "insensitive" as const },
-        }
-      : undefined;
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { canEdit, isAdministrator } from '@/lib/admin/permissions';
 
-    const users = await prisma.user.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-    });
-    return users;
-  } catch (error) {
-    console.error("Failed to fetch users:", error);
-    return [];
-  }
+interface User {
+  id: number;
+  username: string;
+  role: string;
+  createdAt: string;
 }
 
-export default async function AdminUsersPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ search?: string }>;
-}) {
-  const params = await searchParams;
-  const searchQuery = params.search || "";
-  const users = await getUsers(searchQuery);
+export default function UsersPage() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState<string>('viewer');
+
+  useEffect(() => {
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => setUserRole(data.role || 'viewer'))
+      .catch(() => setUserRole('viewer'));
+
+    fetch('/api/users', { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => {
+        const usersData = Array.isArray(data) ? data : data.users || [];
+        setUsers(usersData.sort((a: any, b: any) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ));
+      })
+      .catch((error) => console.error('Failed to fetch users:', error))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleDelete = async (id: number, username: string) => {
+    if (!confirm(`Remove ${username} from admin panel?`)) return;
+
+    try {
+      const res = await fetch(`/api/users/${id}`, { method: 'DELETE', credentials: 'include' });
+      if (res.ok) {
+        setUsers(users.filter((u) => u.id !== id));
+      }
+    } catch (error) {
+      console.error('Failed to delete user:', error);
+    }
+  };
+
+  const getRoleBadgeColor = (role: string) => {
+    switch (role?.toLowerCase()) {
+      case 'administrator':
+        return { bg: '#fef3c7', color: '#b45309' };
+      case 'editor':
+        return { bg: '#dbeafe', color: '#1e40af' };
+      case 'viewer':
+        return { bg: '#f3f4f6', color: '#4b5563' };
+      default:
+        return { bg: '#f3f4f6', color: '#4b5563' };
+    }
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div>
+      <div className="mb-8 flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-mono font-bold text-adm-textPri uppercase">
-            Users
-          </h1>
-          <p className="text-xs text-adm-textMut mt-1">
-            {users.length} {users.length === 1 ? "item" : "items"}
+          <h1 className="mepm-h2 text-navy-700">Team</h1>
+          <p className="mepm-spec mt-1 text-slate-500">
+            {users.length} team member{users.length !== 1 ? 's' : ''} — admin panel access
           </p>
         </div>
-        <Link href="/admin/users/new">
-          <BoldButton variant="primary" size="md">
-            + New User
-          </BoldButton>
-        </Link>
+        {isAdministrator(userRole as any) && (
+          <Link
+            href="/admin/users/new"
+            className="inline-flex items-center gap-2 rounded-md bg-green-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-600"
+          >
+            <Plus size={17} /> Add member
+          </Link>
+        )}
       </div>
 
-      <form className="space-y-3">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            name="search"
-            placeholder="Search by username..."
-            defaultValue={searchQuery}
-            className="flex-1 px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody placeholder-adm-textMut focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
-          />
-          <BoldButton type="submit" variant="primary" size="md">
-            Search
-          </BoldButton>
-          {searchQuery && (
-            <Link href="/admin/users">
-              <BoldButton variant="secondary" size="md">
-                Clear
-              </BoldButton>
-            </Link>
-          )}
+      {loading ? (
+        <div className="flex items-center justify-center py-16">
+          <span className="font-mono text-slate-400">Loading…</span>
         </div>
-      </form>
-
-      {users.length === 0 ? (
-        <BoldPanel cornerBrackets>
-          <div className="py-12 text-center">
-            <p className="text-adm-textMut text-sm font-mono mb-4">No users found</p>
-            <Link href="/admin/users/new">
-              <BoldButton variant="secondary" size="md">
-                + New User
-              </BoldButton>
-            </Link>
-          </div>
-        </BoldPanel>
+      ) : users.length === 0 ? (
+        <div className="rounded-lg border border-dashed border-slate-300 px-6 py-16 text-center">
+          <p className="mepm-spec text-slate-400">No team members yet</p>
+        </div>
       ) : (
-        <BoldPanel cornerBrackets>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-adm-border">
-                  <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-left flex-1">
-                    Username
-                  </th>
-                  <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-left w-32">
-                    Created
-                  </th>
-                  <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-right w-32">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-adm-border/50">
-                {users.map((item: any) => (
-                  <tr key={item.id} className="hover:bg-adm-panelAlt/30 transition-colors">
-                    <td className="px-4 py-3 text-adm-textBody">{item.username}</td>
-                    <td className="px-4 py-3 text-adm-textBody">
-                      {new Date(item.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-3 text-right space-x-2">
-                      <Link
-                        href={`/admin/users/${item.id}/edit`}
-                        className="text-nts-info hover:text-cyan-300 text-xs font-mono transition-colors"
-                        title="Edit"
-                      >
-                        Edit
-                      </Link>
-                      <DeleteButton id={item.id} type="user" name={item.username} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </BoldPanel>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+          gap: '18px',
+        }}>
+          {users.map((user) => {
+            const roleBadge = getRoleBadgeColor(user.role);
+            const initials = user.username.slice(0, 2).toUpperCase();
+            return (
+              <div
+                key={user.id}
+                className="overflow-hidden rounded-lg border border-slate-200 bg-white hover:shadow-md transition-shadow"
+              >
+                <div
+                  style={{
+                    height: '140px',
+                    background: '#f3f4f6',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '64px',
+                      height: '64px',
+                      borderRadius: '50%',
+                      background: '#e5e7eb',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#4b5563',
+                      fontFamily: '"Inter", sans-serif',
+                      fontWeight: 700,
+                      fontSize: '22px',
+                    }}
+                  >
+                    {initials}
+                  </div>
+                </div>
+                <div style={{ padding: '16px 18px' }}>
+                  <div
+                    style={{
+                      fontFamily: '"Inter", sans-serif',
+                      fontWeight: 700,
+                      fontSize: '15px',
+                      color: '#1a2f6e',
+                    }}
+                  >
+                    {user.username}
+                  </div>
+                  <div style={{ marginTop: '8px' }}>
+                    <span
+                      style={{
+                        fontFamily: 'monospace',
+                        fontSize: '10px',
+                        letterSpacing: '.04em',
+                        textTransform: 'uppercase',
+                        padding: '3px 8px',
+                        borderRadius: '4px',
+                        background: roleBadge.bg,
+                        color: roleBadge.color,
+                        display: 'inline-block',
+                      }}
+                    >
+                      {user.role}
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: 'monospace',
+                      fontSize: '11px',
+                      color: '#9ca3af',
+                      marginTop: '8px',
+                    }}
+                  >
+                    {new Date(user.createdAt).toLocaleDateString('en-GB', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: '6px',
+                      marginTop: '12px',
+                      borderTop: '1px solid #e5e7eb',
+                      paddingTop: '12px',
+                    }}
+                  >
+                    {isAdministrator(userRole as any) && (
+                      <>
+                        <Link
+                          href={`/admin/users/${user.id}/edit`}
+                          title="Edit"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded border border-slate-200 bg-white text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                        >
+                          <Pencil size={15} />
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(user.id, user.username)}
+                          title="Delete"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded border border-slate-200 bg-white text-slate-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       )}
     </div>
   );
