@@ -1,276 +1,436 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
+import { useEffect, useState } from 'react';
+import { Save, AlertCircle } from 'lucide-react';
 
-interface SiteSettings {
-  id: number;
-  companyName: string;
-  phone: string;
-  email: string;
+interface SettingsData {
+  phone?: string;
+  email?: string;
   address?: string;
-  city?: string;
-  postalCode?: string;
-  facebookUrl?: string;
-  linkedinUrl?: string;
-  twitterUrl?: string;
-  logoVersion?: number;
+  socialLinks?: {
+    facebook?: string;
+    twitter?: string;
+    instagram?: string;
+    linkedin?: string;
+  };
+}
+
+interface ContentStats {
+  projects: number;
+  posts: number;
+  enquiries: number;
+  teamMembers: number;
+  testimonials: number;
 }
 
 export default function SettingsPage() {
-  const router = useRouter();
-  const [settings, setSettings] = useState<SiteSettings | null>(null);
+  const [settings, setSettings] = useState<SettingsData>({
+    socialLinks: {},
+  });
+  const [stats, setStats] = useState<ContentStats>({
+    projects: 0,
+    posts: 0,
+    enquiries: 0,
+    teamMembers: 0,
+    testimonials: 0,
+  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [userRole, setUserRole] = useState<string>('viewer');
 
   useEffect(() => {
-    fetchSettings();
+    // Fetch user role
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => setUserRole(data.role || 'viewer'))
+      .catch(() => setUserRole('viewer'));
+
+    // Fetch settings
+    fetch('/api/settings', { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.settings) {
+          setSettings(data.settings);
+        }
+      })
+      .catch((error) => console.error('Failed to fetch settings:', error));
+
+    // Fetch stats
+    Promise.all([
+      fetch('/api/projects', { credentials: 'include' }).then((r) => r.json()),
+      fetch('/api/news', { credentials: 'include' }).then((r) => r.json()),
+      fetch('/api/contact-submissions', { credentials: 'include' }).then((r) => r.json()),
+      fetch('/api/users', { credentials: 'include' }).then((r) => r.json()),
+      fetch('/api/testimonials', { credentials: 'include' }).then((r) => r.json()),
+    ])
+      .then(([projects, posts, enquiries, users, testimonials]) => {
+        const projectsArray = Array.isArray(projects) ? projects : projects.projects || [];
+        const postsArray = Array.isArray(posts) ? posts : posts.posts || posts.news || [];
+        const enquiriesArray = Array.isArray(enquiries) ? enquiries : enquiries.submissions || [];
+        const usersArray = Array.isArray(users) ? users : users.users || [];
+        const testimonialsArray = Array.isArray(testimonials) ? testimonials : testimonials.testimonials || [];
+
+        setStats({
+          projects: projectsArray.length,
+          posts: postsArray.length,
+          enquiries: enquiriesArray.length,
+          teamMembers: usersArray.length,
+          testimonials: testimonialsArray.length,
+        });
+      })
+      .catch((error) => console.error('Failed to fetch stats:', error))
+      .finally(() => setLoading(false));
   }, []);
 
-  const fetchSettings = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch("/api/admin/settings", { credentials: 'include' });
-      if (!res.ok) throw new Error("Failed to fetch settings");
-      const data = await res.json();
-      setSettings(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setLoading(false);
+  const handleSave = async () => {
+    if (userRole !== 'administrator') {
+      setMessage({ type: 'error', text: 'Only administrators can modify settings' });
+      return;
     }
-  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    if (settings) {
-      setSettings({
-        ...settings,
-        [name]: name === 'logoVersion' ? parseInt(value) : value
-      });
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!settings) return;
-
+    setSaving(true);
     try {
-      setSaving(true);
-      setError(null);
-      setSuccess(false);
-
-      const res = await fetch("/api/admin/settings", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify(settings),
       });
 
-      if (!res.ok) throw new Error("Failed to save settings");
-      const updated = await res.json();
-      setSettings(updated);
-      setSuccess(true);
-
-      // Refresh the page to update navbar logo
-      router.refresh();
-
-      setTimeout(() => setSuccess(false), 3000);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save");
+      if (res.ok) {
+        setMessage({ type: 'success', text: 'Settings saved successfully' });
+        setTimeout(() => setMessage(null), 3000);
+      } else {
+        setMessage({ type: 'error', text: 'Failed to save settings' });
+      }
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      setMessage({ type: 'error', text: 'Error saving settings' });
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center py-12">
-        <div className="text-adm-textMut font-mono">LOADING SETTINGS...</div>
-      </div>
-    );
-  }
-
-  if (!settings) {
-    return (
-      <div className="flex justify-center py-12">
-        <div className="text-nts-danger font-mono">FAILED TO LOAD SETTINGS</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-mono font-bold text-adm-textPri uppercase">Site Settings</h1>
-        <p className="text-xs text-adm-textMut mt-1">Manage your company information and contact details</p>
+    <div>
+      <div className="mb-8">
+        <h1 className="mepm-h2 text-navy-700">Settings</h1>
+        <p className="mepm-spec mt-1 text-slate-500">Site configuration and statistics</p>
       </div>
 
-      {error && (
-        <div className="p-4 bg-nts-danger/20 border border-nts-danger/40 rounded-lg text-nts-danger font-mono text-sm">
-          ERROR: {error}
+      {/* Message Alert */}
+      {message && (
+        <div style={{
+          marginBottom: '24px',
+          padding: '12px 16px',
+          borderRadius: 'var(--radius-md)',
+          display: 'flex',
+          gap: '10px',
+          alignItems: 'flex-start',
+          background: message.type === 'success' ? '#f0fdf4' : '#fef2f2',
+          border: `1px solid ${message.type === 'success' ? '#dcfce7' : '#fee2e2'}`,
+        }}>
+          <AlertCircle
+            size={16}
+            style={{
+              marginTop: '2px',
+              color: message.type === 'success' ? '#16a34a' : '#dc2626',
+              flexShrink: 0,
+            }}
+          />
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '13px',
+            color: message.type === 'success' ? '#166534' : '#7f1d1d',
+            margin: 0,
+          }}>
+            {message.text}
+          </p>
         </div>
       )}
 
-      {success && (
-        <div className="p-4 bg-nts-green/20 border border-nts-green/40 rounded-lg text-nts-green font-mono text-sm">
-          ✓ Settings saved successfully
+      {loading ? (
+        <div className="flex items-center justify-center py-16">
+          <span className="font-mono text-slate-400">Loading…</span>
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+          {/* Left Column: Content Stats */}
+          <div style={{
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid #e5e7eb',
+            padding: '24px',
+            background: '#fff',
+          }}>
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '16px',
+              fontWeight: 700,
+              color: 'var(--navy-800)',
+              margin: '0 0 18px 0',
+            }}>
+              Content Overview
+            </h2>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              {[
+                { label: 'Projects', value: stats.projects },
+                { label: 'Blog Posts', value: stats.posts },
+                { label: 'Enquiries', value: stats.enquiries },
+                { label: 'Team Members', value: stats.teamMembers },
+                { label: 'Testimonials', value: stats.testimonials },
+              ].map(({ label, value }) => (
+                <div
+                  key={label}
+                  style={{
+                    padding: '12px',
+                    borderRadius: 'var(--radius-md)',
+                    background: 'var(--navy-50)',
+                    border: '1px solid #e5e7eb',
+                  }}
+                >
+                  <p style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '11px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '.03em',
+                    color: 'var(--slate-500)',
+                    margin: '0 0 4px 0',
+                  }}>
+                    {label}
+                  </p>
+                  <p style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '24px',
+                    fontWeight: 700,
+                    color: 'var(--navy-800)',
+                    margin: 0,
+                  }}>
+                    {value}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Column: Edit Settings */}
+          <div style={{
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid #e5e7eb',
+            padding: '24px',
+            background: '#fff',
+          }}>
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '16px',
+              fontWeight: 700,
+              color: 'var(--navy-800)',
+              margin: '0 0 18px 0',
+            }}>
+              Contact Details
+            </h2>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
+              <div>
+                <label style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '.03em',
+                  color: 'var(--slate-600)',
+                  display: 'block',
+                  marginBottom: '6px',
+                }}>
+                  Phone
+                </label>
+                <input
+                  type="tel"
+                  value={settings.phone || ''}
+                  onChange={(e) =>
+                    setSettings({ ...settings, phone: e.target.value })
+                  }
+                  disabled={userRole !== 'administrator'}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid #e5e7eb',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '14px',
+                    opacity: userRole !== 'administrator' ? 0.6 : 1,
+                    cursor: userRole !== 'administrator' ? 'not-allowed' : 'text',
+                    boxSizing: 'border-box',
+                  }}
+                  placeholder="e.g., 01482 838080"
+                />
+              </div>
+
+              <div>
+                <label style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '.03em',
+                  color: 'var(--slate-600)',
+                  display: 'block',
+                  marginBottom: '6px',
+                }}>
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={settings.email || ''}
+                  onChange={(e) =>
+                    setSettings({ ...settings, email: e.target.value })
+                  }
+                  disabled={userRole !== 'administrator'}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid #e5e7eb',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '14px',
+                    opacity: userRole !== 'administrator' ? 0.6 : 1,
+                    cursor: userRole !== 'administrator' ? 'not-allowed' : 'text',
+                    boxSizing: 'border-box',
+                  }}
+                  placeholder="e.g., info@nts-services.com"
+                />
+              </div>
+
+              <div>
+                <label style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '.03em',
+                  color: 'var(--slate-600)',
+                  display: 'block',
+                  marginBottom: '6px',
+                }}>
+                  Address
+                </label>
+                <textarea
+                  value={settings.address || ''}
+                  onChange={(e) =>
+                    setSettings({ ...settings, address: e.target.value })
+                  }
+                  disabled={userRole !== 'administrator'}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid #e5e7eb',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '14px',
+                    minHeight: '64px',
+                    resize: 'vertical',
+                    opacity: userRole !== 'administrator' ? 0.6 : 1,
+                    cursor: userRole !== 'administrator' ? 'not-allowed' : 'text',
+                    boxSizing: 'border-box',
+                  }}
+                  placeholder="Full address"
+                />
+              </div>
+
+              <button
+                onClick={handleSave}
+                disabled={saving || userRole !== 'administrator'}
+                style={{
+                  marginTop: '8px',
+                  padding: '8px 16px',
+                  borderRadius: 'var(--radius-md)',
+                  border: 'none',
+                  background: userRole !== 'administrator' ? '#ccc' : 'var(--green-600)',
+                  color: '#fff',
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 600,
+                  fontSize: '13px',
+                  cursor: userRole !== 'administrator' || saving ? 'not-allowed' : 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  opacity: userRole !== 'administrator' ? 0.6 : 1,
+                }}
+              >
+                <Save size={16} /> {saving ? 'Saving…' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Logo Version Section */}
-        <div className="border border-adm-border rounded-lg p-4 bg-adm-bg">
-          <h2 className="text-sm font-mono font-semibold text-adm-textPri uppercase mb-4">Logo Settings</h2>
+      {/* Social Links Section - Below Main Grid */}
+      {!loading && userRole === 'administrator' && (
+        <div style={{
+          marginTop: '24px',
+          borderRadius: 'var(--radius-lg)',
+          border: '1px solid #e5e7eb',
+          padding: '24px',
+          background: '#fff',
+        }}>
+          <h2 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '16px',
+            fontWeight: 700,
+            color: 'var(--navy-800)',
+            margin: '0 0 18px 0',
+          }}>
+            Social Links
+          </h2>
 
-          <div className="max-w-xs">
-            <label className="block text-xs font-mono font-semibold text-adm-textMut uppercase mb-2">Logo Version</label>
-            <select
-              name="logoVersion"
-              value={settings.logoVersion || 1}
-              onChange={handleChange}
-              className="w-full px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
-            >
-              <option value="1">Old Logo</option>
-              <option value="2">New Logo</option>
-            </select>
-            <p className="text-xs text-adm-textMut mt-2">
-              Current: <span className="font-semibold text-adm-textBody">{settings.logoVersion === 2 ? 'New Logo' : 'Old Logo'}</span>
-            </p>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '16px',
+          }}>
+            {['facebook', 'twitter', 'instagram', 'linkedin'].map((social) => (
+              <div key={social}>
+                <label style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  textTransform: 'capitalize',
+                  letterSpacing: '.03em',
+                  color: 'var(--slate-600)',
+                  display: 'block',
+                  marginBottom: '6px',
+                }}>
+                  {social}
+                </label>
+                <input
+                  type="url"
+                  value={settings.socialLinks?.[social as keyof typeof settings.socialLinks] || ''}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      socialLinks: {
+                        ...settings.socialLinks,
+                        [social]: e.target.value,
+                      },
+                    })
+                  }
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid #e5e7eb',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '14px',
+                    boxSizing: 'border-box',
+                  }}
+                  placeholder={`https://${social}.com/yourpage`}
+                />
+              </div>
+            ))}
           </div>
         </div>
-
-        {/* Company Info Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-mono font-semibold text-adm-textMut uppercase mb-2">Company Name</label>
-            <input
-              type="text"
-              name="companyName"
-              value={settings.companyName}
-              onChange={handleChange}
-              className="w-full px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody placeholder-adm-textMut focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-mono font-semibold text-adm-textMut uppercase mb-2">Phone</label>
-            <input
-              type="tel"
-              name="phone"
-              value={settings.phone}
-              onChange={handleChange}
-              className="w-full px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody placeholder-adm-textMut focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-mono font-semibold text-adm-textMut uppercase mb-2">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={settings.email}
-              onChange={handleChange}
-              className="w-full px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody placeholder-adm-textMut focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-mono font-semibold text-adm-textMut uppercase mb-2">Address</label>
-            <input
-              type="text"
-              name="address"
-              value={settings.address || ""}
-              onChange={handleChange}
-              className="w-full px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody placeholder-adm-textMut focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
-              placeholder="Street address"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-mono font-semibold text-adm-textMut uppercase mb-2">City</label>
-            <input
-              type="text"
-              name="city"
-              value={settings.city || ""}
-              onChange={handleChange}
-              className="w-full px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody placeholder-adm-textMut focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
-              placeholder="City"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-mono font-semibold text-adm-textMut uppercase mb-2">Postal Code</label>
-            <input
-              type="text"
-              name="postalCode"
-              value={settings.postalCode || ""}
-              onChange={handleChange}
-              className="w-full px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody placeholder-adm-textMut focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
-              placeholder="Postal code"
-            />
-          </div>
-        </div>
-
-        <div className="border-t border-adm-border pt-6">
-          <h2 className="text-sm font-mono font-semibold text-adm-textPri uppercase mb-4">Social Media Links</h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-xs font-mono font-semibold text-adm-textMut uppercase mb-2">Facebook URL</label>
-              <input
-                type="url"
-                name="facebookUrl"
-                value={settings.facebookUrl || ""}
-                onChange={handleChange}
-                className="w-full px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody placeholder-adm-textMut focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
-                placeholder="https://facebook.com/..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-mono font-semibold text-adm-textMut uppercase mb-2">LinkedIn URL</label>
-              <input
-                type="url"
-                name="linkedinUrl"
-                value={settings.linkedinUrl || ""}
-                onChange={handleChange}
-                className="w-full px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody placeholder-adm-textMut focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
-                placeholder="https://linkedin.com/..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-mono font-semibold text-adm-textMut uppercase mb-2">Twitter/X URL</label>
-              <input
-                type="url"
-                name="twitterUrl"
-                value={settings.twitterUrl || ""}
-                onChange={handleChange}
-                className="w-full px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody placeholder-adm-textMut focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
-                placeholder="https://twitter.com/..."
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-3 pt-4">
-          <button
-            type="submit"
-            disabled={saving}
-            className="px-4 py-2 bg-nts-green text-white font-mono font-semibold rounded-lg hover:bg-brand-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
-          >
-            {saving ? "Saving..." : "Save Settings"}
-          </button>
-        </div>
-      </form>
+      )}
     </div>
   );
 }
