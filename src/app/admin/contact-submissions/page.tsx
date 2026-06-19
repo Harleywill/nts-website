@@ -1,13 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { BoldPanel } from '@/components/admin/ui/BoldPanel';
-import { BoldButton } from '@/components/admin/ui/BoldButton';
-import DeleteButton from '@/components/admin/DeleteButton';
-import ContactSubmissionModal from '@/components/admin/ContactSubmissionModal';
+import { Trash2 } from 'lucide-react';
+import { canDelete } from '@/lib/admin/permissions';
 
-interface ContactSubmission {
+interface Enquiry {
   id: number;
   name: string;
   email: string;
@@ -15,207 +12,387 @@ interface ContactSubmission {
   service?: string;
   message: string;
   read: boolean;
-  emailSentToAdmin: boolean;
-  emailSentToUser: boolean;
-  adminEmails?: string;
-  userEmail?: string;
-  emailError?: string;
   createdAt: string;
 }
 
 export default function ContactSubmissionsPage() {
-  const [submissions, setSubmissions] = useState<ContactSubmission[]>([]);
+  const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedSubmission, setSelectedSubmission] = useState<ContactSubmission | null>(null);
+  const [userRole, setUserRole] = useState<string>('viewer');
 
   useEffect(() => {
-    fetchSubmissions();
+    // Fetch user role
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => setUserRole(data.role || 'viewer'))
+      .catch(() => setUserRole('viewer'));
+
+    // Fetch enquiries
+    fetch('/api/contact-submissions', { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => {
+        const enquiriesData = Array.isArray(data) ? data : data.submissions || [];
+        setEnquiries(enquiriesData);
+        if (enquiriesData.length > 0 && selectedId === null) {
+          setSelectedId(enquiriesData[0].id);
+          markAsRead(enquiriesData[0].id);
+        }
+      })
+      .catch((error) => console.error('Failed to fetch enquiries:', error))
+      .finally(() => setLoading(false));
   }, []);
 
-  const fetchSubmissions = async () => {
+  const markAsRead = async (id: number) => {
     try {
-      setLoading(true);
-      const res = await fetch('/api/contact-submissions');
-      if (!res.ok) throw new Error('Failed to fetch submissions');
-      const data = await res.json();
-      setSubmissions(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+      await fetch(`/api/contact-submissions?id=${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ read: true }),
+        credentials: 'include',
+      });
+
+      setEnquiries(
+        enquiries.map((e) => (e.id === id ? { ...e, read: true } : e))
+      );
+    } catch (error) {
+      console.error('Failed to mark as read:', error);
     }
   };
 
-  const deleteSubmission = async (id: number) => {
+  const handleDelete = async (id: number, name: string) => {
+    if (!confirm(`Delete enquiry from ${name}?`)) return;
+
     try {
       const res = await fetch(`/api/contact-submissions?id=${id}`, {
         method: 'DELETE',
+        credentials: 'include',
       });
-      if (!res.ok) throw new Error('Failed to delete submission');
-      setSubmissions(submissions.filter((s) => s.id !== id));
-      setSelectedSubmission(null);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const markAsRead = async (id: number, read: boolean) => {
-    try {
-      const res = await fetch(`/api/contact-submissions?id=${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ read }),
-      });
-      if (!res.ok) throw new Error('Failed to update submission');
-      const updated = submissions.map((s) => (s.id === id ? { ...s, read } : s));
-      setSubmissions(updated);
-      if (selectedSubmission?.id === id) {
-        setSelectedSubmission({ ...selectedSubmission, read });
+      if (res.ok) {
+        const remaining = enquiries.filter((e) => e.id !== id);
+        setEnquiries(remaining);
+        if (selectedId === id) {
+          setSelectedId(remaining.length > 0 ? remaining[0].id : null);
+        }
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error('Failed to delete enquiry:', error);
     }
   };
 
-  const unreadCount = submissions.filter((s) => !s.read).length;
-  const emailSuccessCount = submissions.filter((s) => s.emailSentToAdmin).length;
-  const emailFailureCount = submissions.filter((s) => !s.emailSentToAdmin).length;
-
-  const kpiStats = [
-    { label: 'Total', count: submissions.length, icon: '📬' },
-    { label: 'Unread', count: unreadCount, icon: '🆕' },
-    { label: 'Email Success', count: emailSuccessCount, icon: '✓' },
-    { label: 'Email Failed', count: emailFailureCount, icon: '✗' },
-  ];
-
-  if (loading) {
-    return (
-      <div className="flex justify-center py-12">
-        <div className="text-adm-textMut font-mono">LOADING SUBMISSIONS...</div>
-      </div>
-    );
-  }
+  const selected = enquiries.find((e) => e.id === selectedId);
+  const showDelete = canDelete(userRole as any);
 
   return (
-    <>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-mono font-bold text-adm-textPri uppercase">
-              Contact Submissions
-            </h1>
-            <p className="text-xs text-adm-textMut mt-1">
-              {submissions.length} {submissions.length === 1 ? 'item' : 'items'}
-            </p>
-          </div>
+    <div style={{ display: 'flex', gap: '20px', height: 'calc(100vh - 180px)' }}>
+      {/* List Column */}
+      <div style={{
+        flex: '0 0 320px',
+        borderRadius: 'var(--radius-lg)',
+        border: '1px solid var(--border)',
+        backgroundColor: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+      }}>
+        <div style={{
+          padding: '16px',
+          borderBottom: '1px solid var(--border)',
+          background: 'var(--navy-50)',
+        }}>
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '13px',
+            fontWeight: 500,
+            color: 'var(--slate-600)',
+            margin: 0,
+            textTransform: 'uppercase',
+            letterSpacing: '.03em',
+          }}>
+            {enquiries.length} enquir{enquiries.length !== 1 ? 'ies' : 'y'}
+          </p>
         </div>
 
-        <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(auto-fit, minmax(150px, 1fr))` }}>
-          {kpiStats.map((stat, idx) => (
-            <BoldPanel key={idx} title={stat.label}>
-              <div className="flex items-end justify-between">
-                <div className="text-2xl font-mono font-bold text-nts-green">
-                  {stat.count}
-                </div>
-                {stat.icon && <span className="text-2xl">{stat.icon}</span>}
-              </div>
-            </BoldPanel>
-          ))}
-        </div>
-
-        <form className="space-y-3">
-          <div className="flex gap-2">
-            <input
-              type="text"
-              placeholder="Search by name or email..."
-              className="flex-1 px-3 py-2 bg-adm-input border border-adm-border rounded-lg text-sm text-adm-textBody placeholder-adm-textMut focus:outline-none focus:ring-2 focus:ring-nts-green focus:border-transparent font-mono"
-            />
-            <BoldButton type="submit" variant="primary" size="md">
-              Search
-            </BoldButton>
+        {loading ? (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '32px 16px',
+            color: 'var(--slate-400)',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '13px',
+          }}>
+            Loading…
           </div>
-        </form>
-
-        {submissions.length === 0 ? (
-          <BoldPanel cornerBrackets>
-            <div className="py-12 text-center">
-              <p className="text-adm-textMut text-sm font-mono">No contact submissions found</p>
-            </div>
-          </BoldPanel>
+        ) : enquiries.length === 0 ? (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '32px 16px',
+            color: 'var(--slate-400)',
+            fontFamily: 'var(--font-body)',
+            fontSize: '13px',
+            textAlign: 'center',
+          }}>
+            No enquiries
+          </div>
         ) : (
-          <BoldPanel cornerBrackets>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-adm-border">
-                    <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-left w-32">
-                      Name
-                    </th>
-                    <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-left flex-1">
-                      Email
-                    </th>
-                    <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-left w-32">
-                      Service
-                    </th>
-                    <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-center w-20">
-                      Status
-                    </th>
-                    <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-center w-20">
-                      Email
-                    </th>
-                    <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-left w-32">
-                      Date
-                    </th>
-                    <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-right w-32">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-adm-border/50">
-                  {submissions.map((submission) => (
-                    <tr key={submission.id} className="hover:bg-adm-panelAlt/30 transition-colors">
-                      <td className="px-4 py-3 text-adm-textBody">{submission.name}</td>
-                      <td className="px-4 py-3 text-adm-textBody">{submission.email}</td>
-                      <td className="px-4 py-3 text-adm-textBody text-xs">{submission.service}</td>
-                      <td className="px-4 py-3 text-center">
-                        <span className={`text-xs font-mono ${submission.read ? 'text-nts-green' : 'text-nts-warn'}`}>
-                          {submission.read ? 'Read' : 'New'}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <span className={`text-xs font-mono ${submission.emailSentToAdmin ? 'text-nts-green' : 'text-nts-danger'}`}>
-                          {submission.emailSentToAdmin ? '✓' : '✗'}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-adm-textBody text-xs">
-                        {new Date(submission.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-4 py-3 text-right space-x-2">
-                        <button
-                          onClick={() => setSelectedSubmission(submission)}
-                          className="text-nts-info hover:text-cyan-300 text-xs font-mono transition-colors"
-                          title="View details"
-                        >
-                          View
-                        </button>
-                        <DeleteButton id={submission.id} type="contact" name={submission.name} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </BoldPanel>
+          <div style={{ overflowY: 'auto', flex: 1 }}>
+            {enquiries.map((enquiry) => (
+              <button
+                key={enquiry.id}
+                onClick={() => {
+                  setSelectedId(enquiry.id);
+                  markAsRead(enquiry.id);
+                }}
+                style={{
+                  width: '100%',
+                  padding: '12px 14px',
+                  borderBottom: '1px solid var(--border)',
+                  background: selectedId === enquiry.id ? 'var(--navy-50)' : '#fff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'background 0.15s',
+                }}
+                onMouseEnter={(e) => {
+                  if (selectedId !== enquiry.id) {
+                    (e.currentTarget as HTMLElement).style.background = '#f9fafb';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (selectedId !== enquiry.id) {
+                    (e.currentTarget as HTMLElement).style.background = '#fff';
+                  }
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                  {!enquiry.read && (
+                    <div style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      background: '#4caf50',
+                      marginTop: '5px',
+                      flexShrink: 0,
+                    }} />
+                  )}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      color: '#1a2f6e',
+                      margin: '0 0 2px 0',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}>
+                      {enquiry.name}
+                    </div>
+                    <div style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '12px',
+                      color: 'var(--slate-500)',
+                      margin: 0,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}>
+                      {enquiry.email}
+                    </div>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
         )}
       </div>
 
-      {/* Modal */}
-      <ContactSubmissionModal
-        submission={selectedSubmission}
-        onClose={() => setSelectedSubmission(null)}
-        onDelete={deleteSubmission}
-        onMarkAsRead={markAsRead}
-      />
-    </>
+      {/* Detail Column */}
+      <div style={{
+        flex: 1,
+        borderRadius: 'var(--radius-lg)',
+        border: '1px solid var(--border)',
+        backgroundColor: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+      }}>
+        {selected ? (
+          <>
+            <div style={{
+              padding: '20px 24px',
+              borderBottom: '1px solid var(--border)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}>
+              <div>
+                <h2 style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '18px',
+                  fontWeight: 700,
+                  color: '#1a2f6e',
+                  margin: '0 0 4px 0',
+                }}>
+                  {selected.name}
+                </h2>
+                <p style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '13px',
+                  color: 'var(--slate-500)',
+                  margin: 0,
+                }}>
+                  {new Date(selected.createdAt).toLocaleDateString('en-GB', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </p>
+              </div>
+              {showDelete && (
+                <button
+                  onClick={() => handleDelete(selected.id, selected.name)}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded border border-slate-200 bg-white text-slate-400 hover:bg-red-50 hover:text-red-600"
+                  title="Delete"
+                >
+                  <Trash2 size={15} />
+                </button>
+              )}
+            </div>
+
+            <div style={{ padding: '24px', overflowY: 'auto', flex: 1 }}>
+              <div style={{ marginBottom: '24px' }}>
+                <p style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '.03em',
+                  color: 'var(--slate-500)',
+                  margin: '0 0 6px 0',
+                }}>
+                  Email
+                </p>
+                <p style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '14px',
+                  color: '#1a2f6e',
+                  margin: 0,
+                  wordBreak: 'break-all',
+                }}>
+                  <a
+                    href={`mailto:${selected.email}`}
+                    style={{
+                      color: '#4caf50',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    {selected.email}
+                  </a>
+                </p>
+              </div>
+
+              {selected.phone && (
+                <div style={{ marginBottom: '24px' }}>
+                  <p style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '.03em',
+                    color: 'var(--slate-500)',
+                    margin: '0 0 6px 0',
+                  }}>
+                    Phone
+                  </p>
+                  <p style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '14px',
+                    color: '#1a2f6e',
+                    margin: 0,
+                  }}>
+                    <a
+                      href={`tel:${selected.phone}`}
+                      style={{
+                        color: '#4caf50',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {selected.phone}
+                    </a>
+                  </p>
+                </div>
+              )}
+
+              {selected.service && (
+                <div style={{ marginBottom: '24px' }}>
+                  <p style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '.03em',
+                    color: 'var(--slate-500)',
+                    margin: '0 0 6px 0',
+                  }}>
+                    Service
+                  </p>
+                  <p style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '14px',
+                    color: '#1a2f6e',
+                    margin: 0,
+                  }}>
+                    {selected.service}
+                  </p>
+                </div>
+              )}
+
+              <div>
+                <p style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '.03em',
+                  color: 'var(--slate-500)',
+                  margin: '0 0 6px 0',
+                }}>
+                  Message
+                </p>
+                <p style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '14px',
+                  color: '#1a2f6e',
+                  lineHeight: 1.6,
+                  margin: 0,
+                  whiteSpace: 'pre-wrap',
+                }}>
+                  {selected.message}
+                </p>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            color: 'var(--slate-400)',
+            fontFamily: 'var(--font-body)',
+            fontSize: '14px',
+          }}>
+            Select an enquiry to view details
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
