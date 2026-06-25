@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 
 interface SiteSettings {
@@ -21,6 +21,7 @@ interface Accreditation {
   id: number;
   name: string;
   slug: string;
+  imageUrl?: string | null;
   enabled: boolean;
   order: number;
 }
@@ -52,6 +53,12 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [savingAccreditations, setSavingAccreditations] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [newName, setNewName] = useState('');
+  const [newImageUrl, setNewImageUrl] = useState('');
+  const [newImagePreview, setNewImagePreview] = useState('');
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [addingAccred, setAddingAccred] = useState(false);
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, type });
@@ -134,6 +141,74 @@ export default function SettingsPage() {
       showToast('Error saving accreditations', 'error');
     } finally {
       setSavingAccreditations(false);
+    }
+  };
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingLogo(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      if (res.ok) {
+        const { url } = await res.json() as { url: string };
+        setNewImageUrl(url);
+        setNewImagePreview(url);
+      } else {
+        showToast('Upload failed', 'error');
+      }
+    } catch {
+      showToast('Upload failed', 'error');
+    } finally {
+      setUploadingLogo(false);
+      if (logoInputRef.current) logoInputRef.current.value = '';
+    }
+  };
+
+  const handleAddAccreditation = async () => {
+    if (!newName.trim()) { showToast('Name is required', 'error'); return; }
+    setAddingAccred(true);
+    try {
+      const res = await fetch('/api/accreditations', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName.trim(), imageUrl: newImageUrl || undefined }),
+      });
+      if (res.ok) {
+        const created = await res.json() as Accreditation;
+        setAccreditations(prev => [...prev, created]);
+        setNewName('');
+        setNewImageUrl('');
+        setNewImagePreview('');
+        showToast('Accreditation added');
+      } else {
+        showToast('Failed to add', 'error');
+      }
+    } catch {
+      showToast('Error adding', 'error');
+    } finally {
+      setAddingAccred(false);
+    }
+  };
+
+  const handleDeleteAccreditation = async (id: number) => {
+    if (!confirm('Remove this accreditation?')) return;
+    try {
+      const res = await fetch(`/api/accreditations/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (res.ok) {
+        setAccreditations(prev => prev.filter(a => a.id !== id));
+        showToast('Removed');
+      } else {
+        showToast('Failed to remove', 'error');
+      }
+    } catch {
+      showToast('Error removing', 'error');
     }
   };
 
@@ -254,51 +329,136 @@ export default function SettingsPage() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '12px' }}>
           {accreditations.map((a) => {
-            const ext = SLUG_TO_EXT[a.slug] ?? 'jpg';
-            const imgPath = `/images/accreditations/${a.slug}.${ext}`;
+            const imgSrc = a.imageUrl ?? `/images/accreditations/${a.slug}.${SLUG_TO_EXT[a.slug] ?? 'jpg'}`;
             return (
-              <button
-                key={a.slug}
-                onClick={() => handleToggleAccreditation(a.slug)}
-                style={{
-                  padding: '16px 12px', borderRadius: 'var(--radius-md)',
-                  border: `2px solid ${a.enabled ? 'var(--green-600)' : 'var(--border)'}`,
-                  background: a.enabled ? 'var(--green-50)' : 'var(--slate-50)',
-                  cursor: 'pointer', textAlign: 'center',
-                  transition: 'border-color 0.15s, background 0.15s',
-                  opacity: a.enabled ? 1 : 0.5,
-                }}
-              >
-                <div style={{
-                  height: '48px', display: 'flex', alignItems: 'center',
-                  justifyContent: 'center', marginBottom: '8px',
-                }}>
-                  <Image
-                    src={imgPath}
-                    alt={a.name}
-                    width={80}
-                    height={48}
-                    style={{ objectFit: 'contain', maxHeight: '48px', filter: a.enabled ? 'none' : 'grayscale(1)' }}
-                  />
-                </div>
-                <div style={{
-                  fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 600,
-                  textTransform: 'uppercase', letterSpacing: '.03em',
-                  color: a.enabled ? 'var(--green-700)' : 'var(--slate-500)',
-                }}>
-                  {a.name}
-                </div>
-              </button>
+              <div key={a.slug} style={{ position: 'relative' }}>
+                <button
+                  onClick={() => handleToggleAccreditation(a.slug)}
+                  style={{
+                    width: '100%', padding: '16px 12px', borderRadius: 'var(--radius-md)',
+                    border: `2px solid ${a.enabled ? 'var(--green-600)' : 'var(--border)'}`,
+                    background: a.enabled ? 'var(--green-50)' : 'var(--slate-50)',
+                    cursor: 'pointer', textAlign: 'center',
+                    transition: 'border-color 0.15s, background 0.15s',
+                    opacity: a.enabled ? 1 : 0.5,
+                  }}
+                >
+                  <div style={{ height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px' }}>
+                    <Image
+                      src={imgSrc}
+                      alt={a.name}
+                      width={80}
+                      height={48}
+                      style={{ objectFit: 'contain', maxHeight: '48px', filter: a.enabled ? 'none' : 'grayscale(1)' }}
+                    />
+                  </div>
+                  <div style={{
+                    fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 600,
+                    textTransform: 'uppercase', letterSpacing: '.03em',
+                    color: a.enabled ? 'var(--green-700)' : 'var(--slate-500)',
+                  }}>
+                    {a.name}
+                  </div>
+                </button>
+                {/* Delete button */}
+                <button
+                  onClick={() => handleDeleteAccreditation(a.id)}
+                  title="Remove"
+                  style={{
+                    position: 'absolute', top: '4px', right: '4px',
+                    width: '20px', height: '20px', borderRadius: '50%',
+                    border: 'none', background: '#dc2626', color: '#fff',
+                    fontSize: '11px', fontWeight: 700, cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    lineHeight: 1, padding: 0,
+                    opacity: 0.8,
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+                  onMouseLeave={e => (e.currentTarget.style.opacity = '0.8')}
+                >
+                  ×
+                </button>
+              </div>
             );
           })}
         </div>
 
-        <p style={{
-          marginTop: '14px', fontFamily: 'var(--font-body)', fontSize: '12px',
-          color: 'var(--slate-500)',
-        }}>
-          {accreditations.filter(a => a.enabled).length} of {accreditations.length} enabled
+        <p style={{ marginTop: '14px', fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--slate-500)' }}>
+          {accreditations.filter(a => a.enabled).length} of {accreditations.length} enabled · Click a logo to toggle · × to remove
         </p>
+
+        {/* ── Add new accreditation ── */}
+        <div style={{
+          marginTop: '20px', paddingTop: '20px',
+          borderTop: '1px solid var(--border)',
+        }}>
+          <div style={{
+            fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600,
+            textTransform: 'uppercase', letterSpacing: '.04em',
+            color: 'var(--slate-600)', marginBottom: '12px',
+          }}>
+            Add New Accreditation
+          </div>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+
+            {/* Logo upload */}
+            <div>
+              <input ref={logoInputRef} type="file" accept="image/*" onChange={handleLogoUpload} style={{ display: 'none' }} />
+              <button
+                onClick={() => logoInputRef.current?.click()}
+                disabled={uploadingLogo}
+                style={{
+                  width: '80px', height: '64px', borderRadius: 'var(--radius-md)',
+                  border: `2px dashed ${newImagePreview ? 'var(--green-600)' : 'var(--border)'}`,
+                  background: newImagePreview ? 'var(--green-50)' : 'var(--slate-50)',
+                  cursor: uploadingLogo ? 'default' : 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  overflow: 'hidden', padding: 0,
+                  opacity: uploadingLogo ? 0.6 : 1,
+                }}
+              >
+                {newImagePreview ? (
+                  <img src={newImagePreview} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '6px' }} />
+                ) : (
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--slate-500)', textAlign: 'center', padding: '6px' }}>
+                    {uploadingLogo ? '…' : '+ Logo'}
+                  </span>
+                )}
+              </button>
+            </div>
+
+            {/* Name input */}
+            <div style={{ flex: 1, minWidth: '160px' }}>
+              <label style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--slate-600)', display: 'block', marginBottom: '5px' }}>
+                Name
+              </label>
+              <input
+                type="text"
+                value={newName}
+                onChange={e => setNewName(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleAddAccreditation(); }}
+                placeholder="e.g. NICEIC"
+                style={{ width: '100%', padding: '8px 12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--navy-800)', background: '#fff', boxSizing: 'border-box' as const }}
+              />
+            </div>
+
+            {/* Add button */}
+            <button
+              onClick={handleAddAccreditation}
+              disabled={addingAccred || !newName.trim()}
+              style={{
+                padding: '8px 18px', height: '38px', borderRadius: 'var(--radius-md)',
+                border: 'none', background: 'var(--green-600)', color: '#fff',
+                fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600,
+                cursor: addingAccred || !newName.trim() ? 'default' : 'pointer',
+                opacity: addingAccred || !newName.trim() ? 0.5 : 1,
+                flexShrink: 0,
+              }}
+            >
+              {addingAccred ? 'Adding…' : '+ Add'}
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* ── CONTACT DETAILS ── */}
