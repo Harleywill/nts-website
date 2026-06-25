@@ -351,6 +351,69 @@ export async function sendGeneralApplicationNotification(
   }
 }
 
+// ---------------------------------------------------------------------------
+// Application status update notifications
+// ---------------------------------------------------------------------------
+
+const STATUS_EMAIL_CONFIG: Record<string, { subject: string; headline: string; subtitle: string; body: string }> = {
+  INTERVIEW: {
+    subject: "Interview Invitation — NTS Ltd",
+    headline: "You've been invited to interview!",
+    subtitle: "Great news about your application",
+    body: "We've reviewed your application and we're pleased to invite you for an interview. A member of our team will be in touch shortly with the date, time, and format.",
+  },
+  OFFER: {
+    subject: "We have an offer for you — NTS Ltd",
+    headline: "Congratulations — we'd like to make you an offer!",
+    subtitle: "Exciting news about your application",
+    body: "We're delighted to let you know that we would like to make you a job offer. A member of our team will be contacting you very soon with the full details.",
+  },
+  HIRED: {
+    subject: "Welcome to NTS Ltd!",
+    headline: "You're officially part of the team!",
+    subtitle: "Your application was successful",
+    body: "We're thrilled to confirm that you've been hired. Welcome to NTS Ltd — we can't wait to have you on board! We'll be in touch with your start date and everything you need to know.",
+  },
+};
+
+export async function sendApplicationStatusUpdate(
+  applicantName: string,
+  applicantEmail: string,
+  jobTitle: string,
+  applicationReference: string,
+  newStatus: string
+) {
+  const config = STATUS_EMAIL_CONFIG[newStatus];
+  if (!config) return { success: false, reason: 'no_email_for_status' };
+
+  const trackUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nevilletuckerservices.co.uk'}/careers/track?ref=${encodeURIComponent(applicationReference)}`;
+
+  try {
+    await resend.emails.send({
+      from: FROM_ADDRESS,
+      to: applicantEmail,
+      subject: config.subject,
+      html: renderEmail(`
+        ${heading(config.headline, config.subtitle)}
+        ${para(`Dear ${applicantName},`)}
+        ${para(config.body)}
+        ${detailsBox([
+          { label: 'Position', value: jobTitle },
+          { label: 'Your Reference', value: `<code style="background-color:#e8f5e9;padding:4px 10px;border-radius:3px;color:#2e7d32;font-weight:bold;">${applicationReference}</code>` },
+        ])}
+        ${ctaButton(trackUrl, 'Track Your Application')}
+        ${para(`If you have any questions, please contact us at <a href="mailto:info@nt.services" style="color:${GREEN};text-decoration:none;font-weight:bold;">info@nt.services</a> or call <a href="tel:01482838080" style="color:${GREEN};text-decoration:none;font-weight:bold;">01482 838080</a>.`)}
+        ${signOff}
+        ${smallPrint(`You can check your application status at any time at <a href="${trackUrl}" style="color:${GREEN};">nevilletuckerservices.co.uk/careers/track</a>.`)}
+      `),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending status update email:', error);
+    return { success: false, error };
+  }
+}
+
 export async function sendGeneralApplicationConfirmationEmail(
   applicantEmail: string,
   applicantName: string,
