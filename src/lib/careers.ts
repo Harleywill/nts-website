@@ -1,4 +1,4 @@
-import { ApplicationStatus } from "@prisma/client";
+export type ApplicationStatus = "NEW" | "REVIEWING" | "INTERVIEW" | "OFFER" | "HIRED" | "REJECTED";
 
 export function generateApplicationReference(): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
