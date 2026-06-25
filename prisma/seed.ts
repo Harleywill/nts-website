@@ -133,7 +133,6 @@ async function main() {
           text: "Rob is brilliant he has been working solid at my house all day, I have seen anything like it. I am old and don't know what I am doing and he has been talking me through everything and showing me how to use the controls, very polite and professional I shall be spreading the word to all my friends",
           name: "Mrs Kemp",
           featured: true,
-          published: true,
         },
         {
           text: "Myself and Suzzanne are very impressed with the new Firebird, its looks lovely. A big thank you to you the Professionalism you showed from first contact to seeing the job through. We would also like to express a very big thank you to Rob and Ryan for their workmanship in installing the Firebird\n\n",
@@ -246,14 +245,12 @@ async function main() {
           author: "John Smith",
           rating: 5,
           text: "Excellent service! The team was professional, punctual, and did a fantastic job on our heating system. Highly recommended!",
-          published: true,
           order: 1,
         },
         {
           author: "Sarah Johnson",
           rating: 5,
           text: "NTS Ltd transformed our office climate control. The engineers were knowledgeable and the installation was seamless.",
-          published: true,
           order: 2,
         },
         {
@@ -267,7 +264,6 @@ async function main() {
           author: "Emily Davis",
           rating: 5,
           text: "Outstanding service from start to finish. The team explained everything clearly and kept us informed throughout.",
-          published: true,
           order: 4,
         },
         {
