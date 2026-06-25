@@ -11,7 +11,8 @@ export function useLogoVersion() {
         const res = await fetch(`/api/settings?t=${Date.now()}`);
         if (res.ok) {
           const data = await res.json();
-          const version = data.logoVersion === 1 ? 'old' : 'new';
+          const logoV = (data.settings ?? data).logoVersion;
+          const version = logoV === 1 ? 'old' : 'new';
           setLogoVersion(version);
         }
       } catch (error) {
