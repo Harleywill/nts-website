@@ -5,12 +5,17 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AnimatedHeading from "@/components/common/AnimatedHeading";
+import { getCropStyles, getCropContainerStyles } from "@/lib/image-crop";
 
 interface NewsItem {
   id: number;
   title: string;
   content: string;
   imageUrl: string | null;
+  cropX?: number;
+  cropY?: number;
+  cropWidth?: number;
+  cropHeight?: number;
   featured: boolean;
   createdAt: string;
 }
@@ -130,11 +135,15 @@ export default function FeaturedNews() {
                 whileHover={{ scale: 1.05, y: -6, boxShadow: "0 20px 25px -5px rgba(76, 175, 80, 0.2)" }}
               >
                 {newsItem.imageUrl && (
-                  <div className="relative w-full h-40 sm:h-56 overflow-hidden bg-gray-600 flex-shrink-0">
+                  <div
+                    className="relative w-full h-40 sm:h-56 overflow-hidden bg-gray-600 flex-shrink-0"
+                    style={getCropContainerStyles(newsItem.cropWidth, newsItem.cropHeight)}
+                  >
                     <motion.img
                       src={newsItem.imageUrl}
                       alt={newsItem.title}
                       className="w-full h-full object-cover"
+                      style={getCropStyles(newsItem.cropX, newsItem.cropY, newsItem.cropWidth, newsItem.cropHeight)}
                       whileHover={{ scale: 1.1 }}
                       transition={{ duration: 0.4 }}
                     />
