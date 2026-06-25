@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { sendApplicationStatusUpdate } from "@/lib/email";
+
+const EMAIL_TRIGGER_STATUSES = new Set(["INTERVIEW", "OFFER", "HIRED"]);
 
 function isAdminAuthenticated(request: NextRequest): boolean {
   return !!request.cookies.get("auth-token");
@@ -21,15 +24,15 @@ export async function PATCH(
     const body = await request.json();
     const { status, notes } = body;
 
+    // Fetch current status before updating so we only email on genuine transitions
+    const existing = await prisma.application.findUnique({
+      where: { id },
+      select: { status: true, fullName: true, email: true, reference: true },
+    });
+
     const updateData: Record<string, unknown> = {};
-
-    if (status !== undefined) {
-      updateData.status = status;
-    }
-
-    if (notes !== undefined) {
-      updateData.notes = notes;
-    }
+    if (status !== undefined) updateData.status = status;
+    if (notes !== undefined) updateData.notes = notes;
 
     const application = await prisma.application.update({
       where: { id },
@@ -38,6 +41,22 @@ export async function PATCH(
         job: { select: { title: true } },
       },
     });
+
+    // Fire status-change email for key milestones (only on genuine status change)
+    if (
+      existing &&
+      status !== undefined &&
+      status !== existing.status &&
+      EMAIL_TRIGGER_STATUSES.has(status)
+    ) {
+      sendApplicationStatusUpdate(
+        existing.fullName,
+        existing.email,
+        application.job.title,
+        existing.reference,
+        status
+      ).catch((err) => console.error("Status update email failed:", err));
+    }
 
     return NextResponse.json(application);
   } catch (error) {
