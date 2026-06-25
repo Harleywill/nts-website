@@ -157,6 +157,16 @@ model GoogleReview {
   updatedAt DateTime @updatedAt
 }
 
+model Accreditation {
+  id      Int     @id @default(autoincrement())
+  name    String
+  slug    String  @unique
+  enabled Boolean @default(true)
+  order   Int     @default(0)
+
+  @@index([order])
+}
+
 model DailyStats {
   id                    Int      @id @default(autoincrement())
   date                  DateTime @unique
