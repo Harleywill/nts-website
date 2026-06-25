@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { MdDashboard, MdWork, MdArticle, MdFolder, MdMailOutline, MdPeople, MdSettings, MdLogout, MdRateReview, MdLock } from 'react-icons/md';
+import { MdDashboard, MdWork, MdArticle, MdFolder, MdMailOutline, MdPeople, MdSettings, MdLogout, MdRateReview, MdLock, MdPhotoLibrary } from 'react-icons/md';
 
 const mainNavItems = [
   { icon: MdDashboard, label: 'Dashboard', href: '/admin/dashboard', key: 'dashboard', requiredRole: 'EDITOR' as const },
   { icon: MdWork, label: 'Careers', href: '/admin/careers', key: 'careers', requiredRole: 'MANAGER' as const },
   { icon: MdFolder, label: 'Projects', href: '/admin/projects', key: 'projects', requiredRole: 'EDITOR' as const },
+  { icon: MdPhotoLibrary, label: 'Gallery', href: '/admin/gallery', key: 'gallery', requiredRole: 'EDITOR' as const },
   { icon: MdArticle, label: 'News', href: '/admin/news', key: 'news', requiredRole: 'EDITOR' as const },
   { icon: MdRateReview, label: 'Reviews', href: '/admin/reviews', key: 'reviews', requiredRole: 'EDITOR' as const },
   { icon: MdMailOutline, label: 'Contact', href: '/admin/contact-submissions', key: 'contact', requiredRole: 'MANAGER' as const },
