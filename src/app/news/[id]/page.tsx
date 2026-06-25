@@ -16,6 +16,7 @@ interface NewsItem {
   imageUrl: string | null;
   featured: boolean;
   createdAt: string;
+  images?: Array<{ imageUrl: string }>;
   gallery?: string[];
 }
 
@@ -30,8 +31,10 @@ export default function NewsDetailPage() {
       try {
         const res = await fetch(`/api/news`);
         const data = await res.json();
-        const item = data.find((n: NewsItem) => n.id === parseInt(id as string));
-        setNews(item);
+        const raw = data.find((n: NewsItem) => n.id === parseInt(id as string));
+        if (raw) {
+          setNews({ ...raw, gallery: raw.images?.map((img: { imageUrl: string }) => img.imageUrl) ?? [] });
+        }
       } catch (error) {
         console.error("Failed to fetch news:", error);
       } finally {

@@ -11,6 +11,7 @@ export async function GET(
     const { id } = await params;
     const newsItem = await prisma.newsItem.findUnique({
       where: { id: parseInt(id) },
+      include: { images: { orderBy: { order: "asc" } } },
     });
     if (!newsItem) {
       return NextResponse.json({ error: "News item not found" }, { status: 404 });
@@ -26,39 +27,44 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Verify authentication and get user
     const authResult = await verifyAuthWithUser(request);
     if (!authResult.success || !authResult.user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check permission
     const userRole = authResult.user.role as UserRole;
     if (!hasPermission(userRole, "news")) {
-      return NextResponse.json(
-        { error: "Forbidden: You do not have permission to edit news items" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const { id } = await params;
     const body = await request.json();
+    const { title, content, imageUrl, featured, published, gallery } = body as {
+      title: string;
+      content: string;
+      imageUrl?: string;
+      featured?: boolean;
+      published?: boolean;
+      gallery?: string[];
+    };
+
     const newsItem = await prisma.newsItem.update({
       where: { id: parseInt(id) },
       data: {
-        title: body.title,
-        content: body.content,
-        imageUrl: body.imageUrl,
-        cropX: body.cropX !== undefined ? body.cropX : undefined,
-        cropY: body.cropY !== undefined ? body.cropY : undefined,
-        cropWidth: body.cropWidth !== undefined ? body.cropWidth : undefined,
-        cropHeight: body.cropHeight !== undefined ? body.cropHeight : undefined,
-        featured: body.featured,
+        title,
+        content,
+        imageUrl: imageUrl ?? "",
+        featured: featured ?? false,
+        published: published ?? false,
+        // Replace all gallery images
+        images: {
+          deleteMany: {},
+          create: (gallery ?? []).map((url, i) => ({ imageUrl: url, order: i })),
+        },
       },
+      include: { images: { orderBy: { order: "asc" } } },
     });
+
     return NextResponse.json(newsItem);
   } catch (error) {
     return NextResponse.json({ error: "Failed to update news item" }, { status: 500 });
@@ -70,28 +76,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Verify authentication and get user
     const authResult = await verifyAuthWithUser(request);
     if (!authResult.success || !authResult.user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check permission
     const userRole = authResult.user.role as UserRole;
     if (!hasPermission(userRole, "news")) {
-      return NextResponse.json(
-        { error: "Forbidden: You do not have permission to delete news items" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const { id } = await params;
-    await prisma.newsItem.delete({
-      where: { id: parseInt(id) },
-    });
+    await prisma.newsItem.delete({ where: { id: parseInt(id) } });
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete news item" }, { status: 500 });
