@@ -56,7 +56,7 @@ export default function NewNewsPage() {
     }
   };
 
-  const handleCropComplete = (croppedArea: Crop, croppedAreaPixels: CropData) => {
+  const handleCropComplete = (croppedArea: any, croppedAreaPixels: CropData) => {
     setCroppedArea(croppedAreaPixels);
   };
 
