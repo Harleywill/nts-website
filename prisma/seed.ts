@@ -14,7 +14,7 @@ async function main() {
   if (existingAdmin) {
     const updatedAdmin = await prisma.user.update({
       where: { username: adminUsername },
-      data: { password: hashedPassword, role: "ADMIN", passwordChanged: true },
+      data: { password: hashedPassword, role: "ADMIN" },
     });
     console.log("Admin user updated:", updatedAdmin.username, "role:", updatedAdmin.role);
   } else {
@@ -23,7 +23,6 @@ async function main() {
         username: adminUsername,
         password: hashedPassword,
         role: "ADMIN",
-        passwordChanged: true,
       },
     });
     console.log("Admin user created:", admin.username, "role:", admin.role);
