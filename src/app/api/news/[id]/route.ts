@@ -52,6 +52,10 @@ export async function PUT(
         title: body.title,
         content: body.content,
         imageUrl: body.imageUrl,
+        cropX: body.cropX !== undefined ? body.cropX : undefined,
+        cropY: body.cropY !== undefined ? body.cropY : undefined,
+        cropWidth: body.cropWidth !== undefined ? body.cropWidth : undefined,
+        cropHeight: body.cropHeight !== undefined ? body.cropHeight : undefined,
         featured: body.featured,
       },
     });

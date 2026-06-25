@@ -3,12 +3,25 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Cropper from "react-easy-crop";
+import { Crop } from "react-easy-crop";
+
+interface CropData {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
 
 export default function NewNewsPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [showCropper, setShowCropper] = useState(false);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedArea, setCroppedArea] = useState<CropData | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -36,9 +49,20 @@ export default function NewNewsPage() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
+        setShowCropper(true);
+        setCrop({ x: 0, y: 0 });
+        setZoom(1);
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleCropComplete = (croppedArea: Crop, croppedAreaPixels: CropData) => {
+    setCroppedArea(croppedAreaPixels);
+  };
+
+  const handleCropConfirm = () => {
+    setShowCropper(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,6 +79,33 @@ export default function NewNewsPage() {
         data.append("image", imageFile);
       }
 
+      if (croppedArea && imagePreview) {
+        const img = new Image();
+        img.src = imagePreview;
+        img.onload = async () => {
+          const cropX = croppedArea.x / img.width;
+          const cropY = croppedArea.y / img.height;
+          const cropWidth = croppedArea.width / img.width;
+          const cropHeight = croppedArea.height / img.height;
+
+          data.append("cropX", String(cropX));
+          data.append("cropY", String(cropY));
+          data.append("cropWidth", String(cropWidth));
+          data.append("cropHeight", String(cropHeight));
+
+          await submitForm(data);
+        };
+      } else {
+        await submitForm(data);
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again.");
+      setLoading(false);
+    }
+  };
+
+  const submitForm = async (data: FormData) => {
+    try {
       const res = await fetch("/api/news", {
         method: "POST",
         body: data,
@@ -144,16 +195,70 @@ export default function NewNewsPage() {
               accept="image/*"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {imagePreview && (
+            {imagePreview && !showCropper && (
               <div className="mt-4">
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="max-w-xs h-48 object-cover rounded-lg"
+                <p className="text-sm text-gray-600 mb-2">Crop area selected</p>
+                <div
+                  className="max-w-xs h-48 rounded-lg overflow-hidden border-2 border-green-500"
+                  style={{
+                    backgroundImage: `url(${imagePreview})`,
+                    backgroundPosition: croppedArea
+                      ? `${-croppedArea.x}px ${-croppedArea.y}px`
+                      : "0 0",
+                    backgroundSize: `${imagePreview ? "100% 100%" : "cover"}`,
+                    backgroundRepeat: "no-repeat",
+                  }}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowCropper(true)}
+                  className="mt-2 text-sm text-green-600 hover:text-green-700 font-medium"
+                >
+                  Edit Crop
+                </button>
               </div>
             )}
           </div>
+
+          {showCropper && imagePreview && (
+            <div className="border border-gray-300 rounded-lg p-4">
+              <p className="text-sm font-medium text-gray-900 mb-3">
+                Select the area of the image to display
+              </p>
+              <div className="relative bg-gray-100 rounded" style={{ height: "400px" }}>
+                <Cropper
+                  image={imagePreview}
+                  crop={crop}
+                  zoom={zoom}
+                  onCropChange={setCrop}
+                  onCropComplete={handleCropComplete}
+                  onZoomChange={setZoom}
+                  restrictPosition={false}
+                />
+              </div>
+              <div className="mt-4 space-y-3">
+                <div>
+                  <label className="text-sm font-medium text-gray-900">Zoom</label>
+                  <input
+                    type="range"
+                    min="1"
+                    max="3"
+                    step="0.1"
+                    value={zoom}
+                    onChange={(e) => setZoom(parseFloat(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCropConfirm}
+                  className="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700"
+                >
+                  Confirm Crop
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="flex items-center">
             <input

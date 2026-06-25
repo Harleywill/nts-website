@@ -42,6 +42,10 @@ export async function POST(request: NextRequest) {
     const content = formData.get("content") as string;
     const featured = formData.get("featured") === "true";
     const imageFile = formData.get("image") as File | null;
+    const cropX = parseFloat((formData.get("cropX") as string) || "0");
+    const cropY = parseFloat((formData.get("cropY") as string) || "0");
+    const cropWidth = parseFloat((formData.get("cropWidth") as string) || "1");
+    const cropHeight = parseFloat((formData.get("cropHeight") as string) || "1");
 
     if (!title || !content) {
       return NextResponse.json({ error: "Title and content are required" }, { status: 400 });
@@ -76,6 +80,10 @@ export async function POST(request: NextRequest) {
         title,
         content,
         imageUrl,
+        cropX,
+        cropY,
+        cropWidth,
+        cropHeight,
         featured,
       },
     });

@@ -4,12 +4,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { getCropStyles, getCropContainerStyles } from '@/lib/image-crop';
 
 interface NewsArticle {
   id: number;
   title: string;
   content: string;
   imageUrl: string | null;
+  cropX?: number;
+  cropY?: number;
+  cropWidth?: number;
+  cropHeight?: number;
   createdAt: string;
 }
 
@@ -63,12 +68,16 @@ export default function FeaturedNewsCard() {
         >
           {/* Image */}
           {featured.imageUrl && (
-            <div className="relative h-64 sm:h-80 lg:h-full lg:min-h-[22rem] w-full overflow-hidden bg-gray-200">
+            <div
+              className="relative h-64 sm:h-80 lg:h-full lg:min-h-[22rem] w-full overflow-hidden bg-gray-200"
+              style={getCropContainerStyles(featured.cropWidth, featured.cropHeight)}
+            >
               <Image
                 src={featured.imageUrl}
                 alt={featured.title}
                 fill
-                className="object-cover object-center hover:scale-105 transition-transform duration-300"
+                className="object-cover hover:scale-105 transition-transform duration-300"
+                style={getCropStyles(featured.cropX, featured.cropY, featured.cropWidth, featured.cropHeight)}
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
               />
