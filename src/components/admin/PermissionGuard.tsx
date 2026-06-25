@@ -16,7 +16,7 @@ export default function PermissionGuard({
   children,
   fallback = null,
 }: PermissionGuardProps) {
-  const [userRole, setUserRole] = useState<UserRole>('viewer' as const as UserRole);
+  const [userRole, setUserRole] = useState<UserRole>('VIEWER' as const as UserRole);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,14 +25,14 @@ export default function PermissionGuard({
         const res = await fetch('/api/auth/me');
         if (res.ok) {
           const data = await res.json();
-          const role: UserRole = (data.role as UserRole) || ('viewer' as const);
+          const role: UserRole = (data.role as UserRole) || ('VIEWER' as const);
           setUserRole(role);
         } else {
-          setUserRole('viewer' as const);
+          setUserRole('VIEWER' as const);
         }
       } catch (err) {
         console.error('Failed to fetch user role:', err);
-        setUserRole('viewer' as const);
+        setUserRole('VIEWER' as const);
       } finally {
         setLoading(false);
       }

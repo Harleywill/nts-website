@@ -7,12 +7,11 @@ export async function POST(request: NextRequest) {
 
     const review = await prisma.googleReview.create({
       data: {
-        reviewerName: body.reviewerName,
-        reviewerTitle: body.reviewerTitle || null,
-        reviewText: body.reviewText,
+        author: body.author,
+        text: body.text,
         rating: body.rating || 5,
-        googleUrl: body.googleUrl,
-        featured: body.featured || false,
+        imageUrl: body.imageUrl || null,
+        published: body.published ?? false,
         order: body.order || 0,
       },
     });

@@ -13,12 +13,11 @@ export async function PATCH(
     const review = await prisma.googleReview.update({
       where: { id },
       data: {
-        reviewerName: body.reviewerName,
-        reviewerTitle: body.reviewerTitle || null,
-        reviewText: body.reviewText,
+        author: body.author,
+        text: body.text,
         rating: body.rating || 5,
-        googleUrl: body.googleUrl,
-        featured: body.featured || false,
+        imageUrl: body.imageUrl || null,
+        published: body.published ?? false,
         order: body.order || 0,
       },
     });

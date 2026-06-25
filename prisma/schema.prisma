@@ -157,6 +157,19 @@ model GoogleReview {
   updatedAt DateTime @updatedAt
 }
 
+model DailyStats {
+  id                    Int      @id @default(autoincrement())
+  date                  DateTime @unique
+  userCount             Int      @default(0)
+  projectCount          Int      @default(0)
+  newsCount             Int      @default(0)
+  testimonialCount      Int      @default(0)
+  contactSubmissionCount Int     @default(0)
+  applicationCount      Int      @default(0)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
 model Application {
   id           String   @id @default(cuid())
   fullName     String

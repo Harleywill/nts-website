@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const reviews = await prisma.googleReview.findMany({
       where: {
-        featured: true,
+        published: true,
       },
       orderBy: {
         order: 'asc',
