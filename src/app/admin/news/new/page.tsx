@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Cropper from "react-easy-crop";
-import { Crop } from "react-easy-crop";
 
 interface CropData {
   x: number;
