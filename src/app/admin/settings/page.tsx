@@ -107,7 +107,7 @@ export default function SettingsPage() {
         body: JSON.stringify({ ...settings, logoVersion: version }),
       });
       if (res.ok) {
-        showToast(`Logo switched to ${version === 1 ? 'new' : 'old'}`);
+        showToast(`Logo switched to ${version === 1 ? 'old' : 'new'}`);
       } else {
         setSettings(s => ({ ...s, logoVersion: prev }));
         showToast('Failed to update logo', 'error');
