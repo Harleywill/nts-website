@@ -10,28 +10,35 @@ const SLUG_TO_EXT: Record<string, string> = {
   chas: "jpg", "gas-safe": "jpg", aphc: "jpg", alcumus: "jpg",
 };
 
-const FALLBACK = [
-  { name: "Honeywell", slug: "honeywell" },
-  { name: "Toshiba", slug: "toshiba" },
-  { name: "FGR", slug: "fgr" },
-  { name: "OFTEC", slug: "oftec" },
-  { name: "Mitsubishi", slug: "mitsubishi" },
-  { name: "Magic Box", slug: "magic-box" },
-  { name: "F-Gas", slug: "fgas" },
-  { name: "Cylon", slug: "cylon" },
-  { name: "CHAS", slug: "chas" },
-  { name: "Gas Safe", slug: "gas-safe" },
-  { name: "APHC", slug: "aphc" },
-  { name: "Alcumus", slug: "alcumus" },
+interface AccreditationItem {
+  name: string;
+  slug: string;
+  enabled: boolean;
+  imageUrl?: string | null;
+}
+
+const FALLBACK: AccreditationItem[] = [
+  { name: "Honeywell", slug: "honeywell", enabled: true },
+  { name: "Toshiba", slug: "toshiba", enabled: true },
+  { name: "FGR", slug: "fgr", enabled: true },
+  { name: "OFTEC", slug: "oftec", enabled: true },
+  { name: "Mitsubishi", slug: "mitsubishi", enabled: true },
+  { name: "Magic Box", slug: "magic-box", enabled: true },
+  { name: "F-Gas", slug: "fgas", enabled: true },
+  { name: "Cylon", slug: "cylon", enabled: true },
+  { name: "CHAS", slug: "chas", enabled: true },
+  { name: "Gas Safe", slug: "gas-safe", enabled: true },
+  { name: "APHC", slug: "aphc", enabled: true },
+  { name: "Alcumus", slug: "alcumus", enabled: true },
 ];
 
 export default function AccreditationsStrip() {
-  const [accreditations, setAccreditations] = useState(FALLBACK);
+  const [accreditations, setAccreditations] = useState<AccreditationItem[]>(FALLBACK);
 
   useEffect(() => {
     fetch("/api/accreditations")
       .then(r => r.json())
-      .then((data: { name: string; slug: string; enabled: boolean }[]) => {
+      .then((data: AccreditationItem[]) => {
         if (Array.isArray(data)) {
           setAccreditations(data.filter(a => a.enabled));
         }
@@ -66,7 +73,7 @@ export default function AccreditationsStrip() {
           viewport={{ once: true, amount: 0.2 }}
         >
           {accreditations.map((a, index) => {
-            const ext = SLUG_TO_EXT[a.slug] ?? "jpg";
+            const src = a.imageUrl ?? `/images/accreditations/${a.slug}.${SLUG_TO_EXT[a.slug] ?? "jpg"}`;
             return (
               <motion.div
                 key={a.slug}
@@ -77,7 +84,7 @@ export default function AccreditationsStrip() {
                 viewport={{ once: true, amount: 0.2 }}
               >
                 <Image
-                  src={`/images/accreditations/${a.slug}.${ext}`}
+                  src={src}
                   alt={a.name}
                   width={120}
                   height={80}
