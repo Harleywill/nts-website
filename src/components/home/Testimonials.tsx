@@ -28,9 +28,12 @@ export default function Testimonials() {
       try {
         const res = await fetch("/api/testimonials");
         const data = await res.json();
-        setTestimonials(data);
+        const testimonialsArr = Array.isArray(data) ? data : [];
+        setTestimonials(testimonialsArr);
       } catch (error) {
-        console.error("Failed to fetch testimonials:", error);
+        if (process.env.NODE_ENV === "development") {
+          console.error("Failed to fetch testimonials:", error);
+        }
         setTestimonials([]);
       } finally {
         setLoading(false);

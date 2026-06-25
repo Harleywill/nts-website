@@ -1,213 +1,486 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
-import { canEdit, canDelete } from '@/lib/admin/permissions';
+import { useRouter } from 'next/navigation';
+
+interface ProjectImage {
+  id: number;
+  imageUrl: string;
+  alt?: string;
+}
 
 interface Project {
   id: number;
   title: string;
-  description: string;
-  imageUrl?: string;
   category: string;
+  description: string;
+  imageUrl: string | null;
+  published: boolean;
   featured: boolean;
+  clientName: string | null;
+  date: string;
+  highlights: string | null;
+  metrics: string | null;
+  createdAt: string;
+  images: ProjectImage[];
 }
 
+type DetailTab = 'details' | 'gallery';
+
 export default function ProjectsPage() {
+  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
-  const [userRole, setUserRole] = useState<string>('viewer');
+  const [toggling, setToggling] = useState(false);
+  const [detailTab, setDetailTab] = useState<DetailTab>('details');
+  const [lightbox, setLightbox] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fetch user role
-    fetch('/api/auth/me', { credentials: 'include' })
-      .then((res) => res.json())
-      .then((data) => setUserRole(data.role || 'viewer'))
-      .catch(() => setUserRole('viewer'));
-
-    // Fetch projects
     fetch('/api/projects', { credentials: 'include' })
       .then((res) => res.json())
       .then((data) => {
-        const projectsData = Array.isArray(data) ? data : data.projects || [];
-        setProjects(projectsData);
+        const arr: Project[] = Array.isArray(data) ? data : [];
+        setProjects(arr);
+        if (arr.length > 0 && selectedId === null) setSelectedId(arr[0].id);
       })
-      .catch((error) => console.error('Failed to fetch projects:', error))
+      .catch((err) => console.error('Failed to fetch projects:', err))
       .finally(() => setLoading(false));
   }, []);
 
-  const handleDelete = async (id: number, title: string) => {
-    if (!confirm(`Delete "${title}"?`)) return;
+  const selected = projects.find((p) => p.id === selectedId);
 
+  const toggleStatus = async () => {
+    if (!selected || toggling) return;
+    setToggling(true);
     try {
-      const res = await fetch(`/api/projects/${id}`, {
-        method: 'DELETE',
-        credentials: 'include'
+      const newStatus = !selected.published;
+      const res = await fetch(`/api/projects/${selected.id}/published`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ published: newStatus }),
       });
       if (res.ok) {
-        setProjects(projects.filter((p) => p.id !== id));
+        setProjects((prev) =>
+          prev.map((p) => (p.id === selected.id ? { ...p, published: newStatus } : p))
+        );
       }
-    } catch (error) {
-      console.error('Failed to delete project:', error);
+    } catch (err) {
+      console.error('Failed to toggle status:', err);
+    } finally {
+      setToggling(false);
     }
   };
 
-  const showEditDelete = canEdit(userRole as any) || canDelete(userRole as any);
+  // All images for the selected project: main imageUrl + gallery images, deduplicated
+  const allImages = (() => {
+    if (!selected) return [];
+    const gallery = selected.images.map((img) => ({ url: img.imageUrl, alt: img.alt ?? selected.title }));
+    if (selected.imageUrl && !gallery.some((g) => g.url === selected.imageUrl)) {
+      return [{ url: selected.imageUrl, alt: selected.title }, ...gallery];
+    }
+    return gallery;
+  })();
 
   return (
-    <div>
-      <div className="mb-8 flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-4xl font-bold" style={{ color: "#1a2f6e" }}>Projects</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {projects.length} project{projects.length !== 1 ? 's' : ''}
-          </p>
-        </div>
-        {canEdit(userRole as any) && (
-          <Link
-            href="/admin/projects/new"
-            className="inline-flex items-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold text-white hover:scale-105 transition-all"
-            style={{ backgroundColor: "#4caf50" }}
-          >
-            <Plus size={17} /> Add project
-          </Link>
-        )}
-      </div>
-
-      {loading ? (
-        <div className="flex items-center justify-center py-16">
-          <span className="text-gray-400">Loading…</span>
-        </div>
-      ) : projects.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
-          <p className="text-gray-400 mb-4">No projects yet</p>
-          {canEdit(userRole as any) && (
-            <Link
-              href="/admin/projects/new"
-              className="inline-block px-6 py-2 text-white font-medium rounded-lg hover:scale-105 transition-all"
-              style={{ backgroundColor: "#4caf50" }}
-            >
-              Create your first project
-            </Link>
-          )}
-        </div>
-      ) : (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: '20px',
-        }}>
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              className="overflow-hidden rounded-lg border border-gray-200 bg-white hover:shadow-md transition-shadow"
-            >
-              {/* Image */}
-              <div style={{
-                height: '160px',
-                background: project.imageUrl ? '#000' : '#f3f4f6',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden',
-              }}>
-                {project.imageUrl ? (
-                  <img
-                    src={project.imageUrl}
-                    alt={project.title}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                ) : (
-                  <div style={{ color: '#9ca3af', fontSize: '32px' }}>📁</div>
-                )}
-              </div>
-
-              {/* Content */}
-              <div style={{ padding: '16px' }}>
-                <h3 style={{
-                  fontWeight: 700,
-                  fontSize: '15px',
-                  color: '#1a2f6e',
-                  margin: 0,
-                  marginBottom: '4px',
-                }}>
-                  {project.title}
-                </h3>
-                <p style={{
-                  fontSize: '13px',
-                  color: '#4b5563',
-                  margin: 0,
-                  marginBottom: '10px',
-                  lineHeight: 1.4,
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                }}>
-                  {project.description}
-                </p>
-
-                {/* Category & Featured Badge */}
-                <div style={{ marginBottom: '12px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  <span style={{
-                    display: 'inline-block',
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    textTransform: 'capitalize',
-                    background: '#f3f4f6',
-                    color: '#4b5563',
-                  }}>
-                    {project.category}
-                  </span>
-                  {project.featured && (
-                    <span style={{
-                      display: 'inline-block',
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      background: '#dcfce7',
-                      color: '#166534',
-                    }}>
-                      Featured
-                    </span>
-                  )}
-                </div>
-
-                {/* Actions */}
-                {showEditDelete && (
-                  <div style={{
-                    display: 'flex',
-                    gap: '6px',
-                    borderTop: '1px solid #e5e7eb',
-                    paddingTop: '12px',
-                  }}>
-                    {canEdit(userRole as any) && (
-                      <Link
-                        href={`/admin/projects/${project.id}/edit`}
-                        className="inline-flex h-8 w-8 items-center justify-center rounded border border-gray-200 bg-white text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                      >
-                        <Pencil size={15} />
-                      </Link>
-                    )}
-                    {canDelete(userRole as any) && (
-                      <button
-                        onClick={() => handleDelete(project.id, project.title)}
-                        className="inline-flex h-8 w-8 items-center justify-center rounded border border-gray-200 bg-white text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                      >
-                        <Trash2 size={15} />
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
+    <>
+      {/* Lightbox */}
+      {lightbox && (
+        <div
+          onClick={() => setLightbox(null)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 1000,
+            background: 'rgba(0,0,0,0.88)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'zoom-out',
+          }}
+        >
+          <img
+            src={lightbox}
+            alt=""
+            style={{ maxWidth: '90vw', maxHeight: '90vh', borderRadius: 'var(--radius-md)', objectFit: 'contain' }}
+          />
         </div>
       )}
-    </div>
+
+      <div style={{ display: 'flex', gap: '0', height: 'calc(100vh - 100px)', background: '#fff' }}>
+
+        {/* Left list */}
+        <div style={{
+          flex: '0 0 380px',
+          borderRight: '1px solid var(--border)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}>
+          <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '18px', color: 'var(--navy-800)', margin: 0 }}>
+                Projects
+              </h2>
+              <button
+                onClick={() => router.push('/admin/projects/new')}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: 'var(--radius-md)',
+                  background: 'var(--green-600)',
+                  color: '#fff',
+                  border: 'none',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                + Add
+              </button>
+            </div>
+            <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--slate-500)', margin: 0, textTransform: 'uppercase', letterSpacing: '.04em' }}>
+              {projects.length} project{projects.length !== 1 ? 's' : ''}
+            </p>
+          </div>
+
+          <div style={{ flex: 1, overflowY: 'auto' }}>
+            {loading ? (
+              <div style={{ padding: '32px 24px', textAlign: 'center', color: 'var(--slate-400)', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>Loading…</div>
+            ) : projects.length === 0 ? (
+              <div style={{ padding: '32px 24px', textAlign: 'center', color: 'var(--slate-500)', fontFamily: 'var(--font-body)', fontSize: '14px' }}>No projects yet</div>
+            ) : projects.map((project) => (
+              <button
+                key={project.id}
+                onClick={() => { setSelectedId(project.id); setDetailTab('details'); }}
+                style={{
+                  width: '100%',
+                  padding: '14px 20px',
+                  borderBottom: '1px solid var(--border)',
+                  background: selectedId === project.id ? 'var(--navy-50)' : '#fff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'background 0.15s',
+                  borderLeft: selectedId === project.id ? '3px solid var(--green-600)' : '3px solid transparent',
+                  opacity: project.published ? 1 : 0.65,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                }}
+                onMouseEnter={(e) => { if (selectedId !== project.id) (e.currentTarget as HTMLElement).style.background = 'var(--slate-50)'; }}
+                onMouseLeave={(e) => { if (selectedId !== project.id) (e.currentTarget as HTMLElement).style.background = '#fff'; }}
+              >
+                {/* Thumbnail */}
+                <div style={{
+                  width: '44px', height: '44px', flexShrink: 0,
+                  borderRadius: 'var(--radius-sm)',
+                  overflow: 'hidden',
+                  background: 'var(--navy-100)',
+                  border: '1px solid var(--border)',
+                }}>
+                  {project.imageUrl ? (
+                    <img src={project.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--navy-300)', fontSize: '18px' }}>🏗</div>
+                  )}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '3px' }}>
+                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '13px', color: 'var(--navy-800)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '160px' }}>
+                      {project.title}
+                    </div>
+                    <span style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '10px', fontWeight: 600,
+                      padding: '2px 6px',
+                      borderRadius: 'var(--radius-sm)',
+                      background: project.published ? 'var(--green-100)' : 'var(--slate-200)',
+                      color: project.published ? 'var(--green-700)' : 'var(--slate-600)',
+                      textTransform: 'uppercase', letterSpacing: '.02em', flexShrink: 0,
+                    }}>
+                      {project.published ? 'Live' : 'Draft'}
+                    </span>
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '.03em' }}>
+                    {project.category}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Right detail */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          {selected ? (
+            <>
+              {/* Detail header */}
+              <div style={{
+                padding: '20px 28px',
+                borderBottom: '1px solid var(--border)',
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+              }}>
+                <div>
+                  <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '24px', color: 'var(--navy-800)', margin: '0 0 6px 0' }}>
+                    {selected.title}
+                  </h2>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '.04em' }}>
+                    {selected.category}{selected.clientName ? ` · ${selected.clientName}` : ''}
+                    {selected.date ? ` · ${new Date(selected.date).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}` : ''}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={toggleStatus}
+                    disabled={toggling}
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: 'var(--radius-md)',
+                      border: '1px solid var(--border)',
+                      background: selected.published ? 'var(--green-100)' : 'var(--slate-100)',
+                      color: selected.published ? 'var(--green-700)' : 'var(--slate-600)',
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      cursor: toggling ? 'default' : 'pointer',
+                      opacity: toggling ? 0.6 : 1,
+                    }}
+                  >
+                    {toggling ? 'Updating…' : selected.published ? 'Unpublish' : 'Publish'}
+                  </button>
+                  <button
+                    onClick={() => router.push(`/admin/projects/${selected.id}/edit`)}
+                    style={{
+                      width: '32px', height: '32px',
+                      borderRadius: 'var(--radius-sm)',
+                      border: '1px solid var(--border)',
+                      background: '#fff',
+                      cursor: 'pointer',
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                      color: 'var(--slate-600)', fontSize: '15px',
+                    }}
+                    title="Edit"
+                  >
+                    ✏️
+                  </button>
+                </div>
+              </div>
+
+              {/* Inner tab bar: Details | Gallery */}
+              <div style={{ display: 'flex', borderBottom: '1px solid var(--border)', background: '#fff' }}>
+                {(['details', 'gallery'] as DetailTab[]).map((tab) => {
+                  const isActive = detailTab === tab;
+                  const label = tab === 'details' ? 'Details' : `Gallery (${allImages.length})`;
+                  return (
+                    <button
+                      key={tab}
+                      onClick={() => setDetailTab(tab)}
+                      style={{
+                        padding: '10px 20px',
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        color: isActive ? 'var(--navy-900)' : 'var(--slate-500)',
+                        background: 'transparent',
+                        border: 'none',
+                        borderBottom: isActive ? '2px solid var(--green-600)' : '2px solid transparent',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Detail content */}
+              <div style={{ flex: 1, overflowY: 'auto', padding: '28px' }}>
+
+                {detailTab === 'details' && (
+                  <>
+                    {/* Hero image */}
+                    {selected.imageUrl && (
+                      <div style={{ marginBottom: '28px' }}>
+                        <img
+                          src={selected.imageUrl}
+                          alt={selected.title}
+                          onClick={() => setLightbox(selected.imageUrl!)}
+                          style={{
+                            width: '100%', height: '260px', objectFit: 'cover',
+                            borderRadius: 'var(--radius-md)',
+                            border: '1px solid var(--border)',
+                            cursor: 'zoom-in',
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Meta grid */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
+                      <div>
+                        <div style={labelStyle}>Category</div>
+                        <div style={valueStyle}>{selected.category}</div>
+                      </div>
+                      {selected.clientName && (
+                        <div>
+                          <div style={labelStyle}>Client</div>
+                          <div style={valueStyle}>{selected.clientName}</div>
+                        </div>
+                      )}
+                      <div>
+                        <div style={labelStyle}>Date</div>
+                        <div style={valueStyle}>
+                          {new Date(selected.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        </div>
+                      </div>
+                      <div>
+                        <div style={labelStyle}>Status</div>
+                        <span style={{
+                          display: 'inline-block',
+                          padding: '3px 8px',
+                          borderRadius: 'var(--radius-sm)',
+                          background: selected.published ? 'var(--green-100)' : 'var(--slate-100)',
+                          color: selected.published ? 'var(--green-700)' : 'var(--slate-600)',
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: '11px', fontWeight: 600,
+                          textTransform: 'uppercase', letterSpacing: '.02em',
+                        }}>
+                          {selected.published ? '✓ Published' : '● Draft'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    {selected.description && (
+                      <div style={{ marginBottom: '24px' }}>
+                        <div style={labelStyle}>Description</div>
+                        <div style={contentBoxStyle}>{selected.description}</div>
+                      </div>
+                    )}
+
+                    {/* Highlights */}
+                    {selected.highlights && (
+                      <div style={{ marginBottom: '24px' }}>
+                        <div style={labelStyle}>Highlights</div>
+                        <div style={contentBoxStyle}>{selected.highlights}</div>
+                      </div>
+                    )}
+
+                    {/* Metrics */}
+                    {selected.metrics && (
+                      <div>
+                        <div style={labelStyle}>Metrics / Technical Summary</div>
+                        <div style={contentBoxStyle}>{selected.metrics}</div>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {detailTab === 'gallery' && (
+                  <>
+                    {allImages.length === 0 ? (
+                      <div style={{
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                        height: '200px', color: 'var(--slate-400)',
+                        fontFamily: 'var(--font-body)', fontSize: '14px', gap: '8px',
+                      }}>
+                        <span style={{ fontSize: '32px' }}>🖼</span>
+                        No images attached to this project
+                      </div>
+                    ) : (
+                      <>
+                        <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '.04em', marginBottom: '16px' }}>
+                          {allImages.length} image{allImages.length !== 1 ? 's' : ''} — click to enlarge
+                        </p>
+                        <div style={{
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                          gap: '12px',
+                        }}>
+                          {allImages.map((img, i) => (
+                            <div
+                              key={i}
+                              onClick={() => setLightbox(img.url)}
+                              style={{
+                                borderRadius: 'var(--radius-md)',
+                                overflow: 'hidden',
+                                border: '1px solid var(--border)',
+                                cursor: 'zoom-in',
+                                aspectRatio: '16/10',
+                                background: 'var(--navy-50)',
+                                position: 'relative',
+                              }}
+                            >
+                              <img
+                                src={img.url}
+                                alt={img.alt}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.2s' }}
+                                onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.04)'; }}
+                                onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)'; }}
+                              />
+                              {i === 0 && selected.imageUrl && (
+                                <div style={{
+                                  position: 'absolute', top: '8px', left: '8px',
+                                  background: 'rgba(0,0,0,0.55)',
+                                  color: '#fff',
+                                  fontFamily: 'var(--font-mono)',
+                                  fontSize: '9px', fontWeight: 600,
+                                  padding: '2px 6px',
+                                  borderRadius: 'var(--radius-sm)',
+                                  textTransform: 'uppercase', letterSpacing: '.04em',
+                                }}>
+                                  Cover
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
+            </>
+          ) : (
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              height: '100%', color: 'var(--slate-500)',
+              fontFamily: 'var(--font-body)', fontSize: '14px',
+            }}>
+              Select a project to view details
+            </div>
+          )}
+        </div>
+      </div>
+    </>
   );
 }
+
+const labelStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-mono)',
+  fontSize: '11px',
+  fontWeight: 600,
+  textTransform: 'uppercase',
+  letterSpacing: '.04em',
+  color: 'var(--slate-600)',
+  marginBottom: '8px',
+};
+
+const valueStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-body)',
+  fontSize: '14px',
+  color: 'var(--navy-800)',
+};
+
+const contentBoxStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-body)',
+  fontSize: '14px',
+  lineHeight: 1.65,
+  color: 'var(--navy-800)',
+  whiteSpace: 'pre-wrap',
+  background: 'var(--slate-50)',
+  padding: '16px',
+  borderRadius: 'var(--radius-md)',
+  border: '1px solid var(--border)',
+};

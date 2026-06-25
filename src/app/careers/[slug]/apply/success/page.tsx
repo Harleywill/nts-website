@@ -101,10 +101,10 @@ function SuccessContent() {
               Browse other roles
             </Link>
             <Link
-              href="/"
+              href={`/careers/track?ref=${reference}`}
               className="px-6 py-3 bg-brand-green-500 text-white rounded-lg hover:bg-brand-green-600 font-semibold transition-colors inline-block"
             >
-              Back to home
+              Track your application
             </Link>
           </div>
 

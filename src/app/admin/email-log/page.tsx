@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { FaArrowLeft, FaCheck, FaExclamation, FaEnvelope } from "react-icons/fa";
 
 interface EmailLog {
   id: string;
@@ -50,204 +48,372 @@ export default function EmailLogPage() {
   const failedCount = emails.filter((e) => e.status === "failed").length;
 
   return (
-    <div className="p-8 bg-white rounded-lg">
-      <div className="mb-6">
-        <Link
-          href="/admin/dashboard"
-          className="text-brand-green-600 hover:text-green-700 flex items-center gap-2 mb-4"
-        >
-          <FaArrowLeft size={14} /> Back to Dashboard
-        </Link>
-        <h1 className="text-3xl font-bold text-gray-900">Email Log</h1>
-        <p className="text-gray-600 mt-2">
-          Track all emails sent from your contact form and applications
+    <div style={{ padding: '24px' }}>
+      {/* Header */}
+      <div style={{ marginBottom: '28px' }}>
+        <h1 style={{
+          fontFamily: 'var(--font-display)',
+          fontWeight: 700,
+          fontSize: '28px',
+          color: '#1a2f6e',
+          margin: '0 0 12px 0',
+        }}>
+          Email Log
+        </h1>
+        <p style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: '14px',
+          color: 'var(--slate-600)',
+          margin: 0,
+        }}>
+          Track all emails sent from contact forms and applications
         </p>
       </div>
 
       {/* Statistics */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-          <p className="text-blue-600 text-sm font-medium">Total Emails</p>
-          <p className="text-2xl font-bold text-blue-900">{emails.length}</p>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+        gap: '16px',
+        marginBottom: '24px',
+      }}>
+        <div style={{
+          padding: '16px',
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid var(--border)',
+          backgroundColor: 'var(--navy-50)',
+        }}>
+          <p style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '11px',
+            fontWeight: 600,
+            textTransform: 'uppercase',
+            letterSpacing: '.03em',
+            color: 'var(--slate-600)',
+            margin: '0 0 8px 0',
+          }}>
+            Total
+          </p>
+          <p style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '24px',
+            fontWeight: 700,
+            color: '#1a2f6e',
+            margin: 0,
+          }}>
+            {emails.length}
+          </p>
         </div>
-        <div className="bg-brand-green-50 rounded-lg p-4 border border-green-200">
-          <p className="text-brand-green-600 text-sm font-medium">Delivered</p>
-          <p className="text-2xl font-bold text-brand-green-900">{deliveredCount}</p>
+        <div style={{
+          padding: '16px',
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid var(--border)',
+          backgroundColor: '#f0fdf4',
+        }}>
+          <p style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '11px',
+            fontWeight: 600,
+            textTransform: 'uppercase',
+            letterSpacing: '.03em',
+            color: '#166534',
+            margin: '0 0 8px 0',
+          }}>
+            Delivered
+          </p>
+          <p style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '24px',
+            fontWeight: 700,
+            color: '#4caf50',
+            margin: 0,
+          }}>
+            {deliveredCount}
+          </p>
         </div>
-        <div className="bg-red-50 rounded-lg p-4 border border-red-200">
-          <p className="text-red-600 text-sm font-medium">Failed</p>
-          <p className="text-2xl font-bold text-red-900">{failedCount}</p>
+        <div style={{
+          padding: '16px',
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid var(--border)',
+          backgroundColor: '#fef2f2',
+        }}>
+          <p style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '11px',
+            fontWeight: 600,
+            textTransform: 'uppercase',
+            letterSpacing: '.03em',
+            color: '#991b1b',
+            margin: '0 0 8px 0',
+          }}>
+            Failed
+          </p>
+          <p style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '24px',
+            fontWeight: 700,
+            color: '#ef4444',
+            margin: 0,
+          }}>
+            {emails.length - deliveredCount}
+          </p>
         </div>
-        <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
-          <p className="text-purple-600 text-sm font-medium">Success Rate</p>
-          <p className="text-2xl font-bold text-purple-900">
-            {emails.length === 0 ? "—" : `${Math.round((deliveredCount / emails.length) * 100)}%`}
+        <div style={{
+          padding: '16px',
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid var(--border)',
+          backgroundColor: 'var(--navy-50)',
+        }}>
+          <p style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '11px',
+            fontWeight: 600,
+            textTransform: 'uppercase',
+            letterSpacing: '.03em',
+            color: 'var(--slate-600)',
+            margin: '0 0 8px 0',
+          }}>
+            Success Rate
+          </p>
+          <p style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '24px',
+            fontWeight: 700,
+            color: '#1a2f6e',
+            margin: 0,
+          }}>
+            {emails.length === 0 ? '—' : `${Math.round((deliveredCount / emails.length) * 100)}%`}
           </p>
         </div>
       </div>
 
       {/* Filter Buttons */}
-      <div className="flex gap-2 mb-6">
-        <button
-          onClick={() => setFilter("all")}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-            filter === "all"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-200 text-gray-900 hover:bg-gray-300"
-          }`}
-        >
-          All ({emails.length})
-        </button>
-        <button
-          onClick={() => setFilter("delivered")}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
-            filter === "delivered"
-              ? "bg-green-600 text-white"
-              : "bg-gray-200 text-gray-900 hover:bg-gray-300"
-          }`}
-        >
-          <FaCheck size={12} /> Delivered ({deliveredCount})
-        </button>
-        <button
-          onClick={() => setFilter("failed")}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
-            filter === "failed"
-              ? "bg-red-600 text-white"
-              : "bg-gray-200 text-gray-900 hover:bg-gray-300"
-          }`}
-        >
-          <FaExclamation size={12} /> Failed ({failedCount})
-        </button>
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '24px' }}>
+        {(['all', 'delivered', 'failed'] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            style={{
+              padding: '8px 16px',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--border)',
+              background: filter === f ? '#1a2f6e' : '#fff',
+              color: filter === f ? '#fff' : '#1a2f6e',
+              fontFamily: 'var(--font-body)',
+              fontSize: '13px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.15s',
+            }}
+          >
+            {f === 'all' && `All (${emails.length})`}
+            {f === 'delivered' && `Delivered (${deliveredCount})`}
+            {f === 'failed' && `Failed (${emails.length - deliveredCount})`}
+          </button>
+        ))}
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+        <div style={{
+          marginBottom: '24px',
+          padding: '16px',
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid #fecaca',
+          backgroundColor: '#fef2f2',
+          color: '#7f1d1d',
+          fontFamily: 'var(--font-body)',
+          fontSize: '13px',
+        }}>
           {error}
         </div>
       )}
 
-      {loading ? (
-        <div className="text-center py-12">
-          <p className="text-gray-600">Loading email log...</p>
-        </div>
-      ) : filteredEmails.length === 0 ? (
-        <div className="text-center py-12">
-          <FaEnvelope size={48} className="mx-auto text-gray-300 mb-4" />
-          <p className="text-gray-600">No emails found</p>
-        </div>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-gray-200 bg-gray-50">
-                <th className="text-left px-6 py-3 font-semibold text-gray-700">
-                  Type
-                </th>
-                <th className="text-left px-6 py-3 font-semibold text-gray-700">
-                  From
-                </th>
-                <th className="text-left px-6 py-3 font-semibold text-gray-700">
-                  To
-                </th>
-                <th className="text-left px-6 py-3 font-semibold text-gray-700">
-                  Subject
-                </th>
-                <th className="text-left px-6 py-3 font-semibold text-gray-700">
-                  Status
-                </th>
-                <th className="text-left px-6 py-3 font-semibold text-gray-700">
-                  Sent
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredEmails.map((email) => (
-                <tr key={email.id} className="border-b border-gray-200 hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                        email.type === "admin-notification"
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-purple-100 text-purple-800"
-                      }`}
-                    >
-                      {email.type === "admin-notification"
-                        ? "Admin Alert"
-                        : "User Confirmation"}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-gray-900 font-medium text-sm">
-                    {email.from}
-                  </td>
-                  <td className="px-6 py-4 text-gray-600 text-sm break-all">
-                    <a
-                      href={`mailto:${email.to}`}
-                      className="text-brand-green-600 hover:underline"
-                    >
-                      {email.to}
-                    </a>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600 text-sm">
-                    <span className="truncate max-w-xs block" title={email.subject}>
-                      {email.subject}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    {email.status === "delivered" ? (
-                      <span className="inline-flex items-center gap-1 text-green-700 text-sm">
-                        <FaCheck size={14} className="text-brand-green-600" />
-                        Delivered
-                      </span>
-                    ) : (
-                      <div>
-                        <span className="inline-flex items-center gap-1 text-red-700 text-sm mb-1">
-                          <FaExclamation size={14} className="text-red-600" />
-                          Failed
-                        </span>
-                        {email.error && (
-                          <p className="text-xs text-red-600 font-medium mt-1">
-                            {email.error}
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 text-gray-600 text-sm whitespace-nowrap">
-                    {new Date(email.timestamp).toLocaleString("en-GB", {
-                      month: "short",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </td>
+      {/* Content */}
+      <div style={{
+        borderRadius: 'var(--radius-lg)',
+        border: '1px solid var(--border)',
+        backgroundColor: '#fff',
+        overflow: 'hidden',
+      }}>
+        {loading ? (
+          <div style={{
+            padding: '32px',
+            textAlign: 'center',
+            color: 'var(--slate-400)',
+            fontFamily: 'var(--font-body)',
+            fontSize: '14px',
+          }}>
+            Loading…
+          </div>
+        ) : filteredEmails.length === 0 ? (
+          <div style={{
+            padding: '48px 32px',
+            textAlign: 'center',
+            color: 'var(--slate-400)',
+            fontFamily: 'var(--font-body)',
+            fontSize: '14px',
+          }}>
+            No emails found
+          </div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)', backgroundColor: 'var(--navy-50)' }}>
+                  <th style={{
+                    textAlign: 'left',
+                    padding: '12px 16px',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '.02em',
+                    color: 'var(--slate-600)',
+                  }}>
+                    Type
+                  </th>
+                  <th style={{
+                    textAlign: 'left',
+                    padding: '12px 16px',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '.02em',
+                    color: 'var(--slate-600)',
+                  }}>
+                    From
+                  </th>
+                  <th style={{
+                    textAlign: 'left',
+                    padding: '12px 16px',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '.02em',
+                    color: 'var(--slate-600)',
+                  }}>
+                    To
+                  </th>
+                  <th style={{
+                    textAlign: 'left',
+                    padding: '12px 16px',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '.02em',
+                    color: 'var(--slate-600)',
+                  }}>
+                    Subject
+                  </th>
+                  <th style={{
+                    textAlign: 'left',
+                    padding: '12px 16px',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '.02em',
+                    color: 'var(--slate-600)',
+                  }}>
+                    Status
+                  </th>
+                  <th style={{
+                    textAlign: 'left',
+                    padding: '12px 16px',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '.02em',
+                    color: 'var(--slate-600)',
+                  }}>
+                    Sent
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Legend */}
-      <div className="mt-8 pt-6 border-t border-gray-200">
-        <h3 className="font-semibold text-gray-900 mb-3">Email Type Legend</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm font-medium text-gray-700 mb-1">
-              Admin Alert
-            </p>
-            <p className="text-sm text-gray-600">
-              Notification sent to admin team when a contact form is submitted
-            </p>
+              </thead>
+              <tbody>
+                {filteredEmails.map((email) => (
+                  <tr key={email.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{
+                      padding: '12px 16px',
+                      color: '#1a2f6e',
+                    }}>
+                      <span style={{
+                        display: 'inline-block',
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        background: email.type === 'admin-notification' ? '#dbeafe' : '#e9d5ff',
+                        color: email.type === 'admin-notification' ? '#1e40af' : '#7e22ce',
+                      }}>
+                        {email.type === 'admin-notification' ? 'Admin' : 'User'}
+                      </span>
+                    </td>
+                    <td style={{
+                      padding: '12px 16px',
+                      color: '#1a2f6e',
+                      fontWeight: 500,
+                    }}>
+                      {email.from}
+                    </td>
+                    <td style={{
+                      padding: '12px 16px',
+                      color: '#1a2f6e',
+                    }}>
+                      <a href={`mailto:${email.to}`} style={{
+                        color: '#4caf50',
+                        textDecoration: 'none',
+                      }}>
+                        {email.to}
+                      </a>
+                    </td>
+                    <td style={{
+                      padding: '12px 16px',
+                      color: '#1a2f6e',
+                      maxWidth: '200px',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}>
+                      {email.subject}
+                    </td>
+                    <td style={{
+                      padding: '12px 16px',
+                    }}>
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        color: email.status === 'delivered' ? '#4caf50' : '#ef4444',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                      }}>
+                        {email.status === 'delivered' ? '✓' : '✕'} {email.status === 'delivered' ? 'Delivered' : 'Failed'}
+                      </span>
+                    </td>
+                    <td style={{
+                      padding: '12px 16px',
+                      color: 'var(--slate-500)',
+                      fontSize: '12px',
+                      whiteSpace: 'nowrap',
+                    }}>
+                      {new Date(email.timestamp).toLocaleString('en-GB', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <div>
-            <p className="text-sm font-medium text-gray-700 mb-1">
-              User Confirmation
-            </p>
-            <p className="text-sm text-gray-600">
-              Confirmation email sent to the user who submitted the form
-            </p>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -1,181 +1,297 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Plus, Pencil, Trash2, Quote } from 'lucide-react';
-import { canEdit, canDelete } from '@/lib/admin/permissions';
+import { useRouter } from 'next/navigation';
 
 interface Testimonial {
-  id: string;
-  text: string;
+  id: number;
   name: string;
-  company?: string;
-  featured: boolean;
+  company: string | null;
+  text: string;
+  published: boolean;
+  createdAt: string;
 }
 
 export default function TestimonialsPage() {
+  const router = useRouter();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
-  const [userRole, setUserRole] = useState<string>('viewer');
+  const [toggling, setToggling] = useState(false);
 
   useEffect(() => {
-    fetch('/api/auth/me', { credentials: 'include' })
-      .then((res) => res.json())
-      .then((data) => setUserRole(data.role || 'viewer'))
-      .catch(() => setUserRole('viewer'));
-
-    fetch('/api/testimonials', { credentials: 'include' })
-      .then((res) => res.json())
-      .then((data) => {
-        const testimonialsData = Array.isArray(data) ? data : data.testimonials || [];
-        setTestimonials(testimonialsData);
-      })
-      .catch((error) => console.error('Failed to fetch testimonials:', error))
-      .finally(() => setLoading(false));
+    const fetchTestimonials = async () => {
+      try {
+        const res = await fetch('/api/testimonials', { credentials: 'include' });
+        const data = await res.json();
+        const testimonialsArr = Array.isArray(data) ? data : [];
+        setTestimonials(testimonialsArr);
+        if (testimonialsArr.length > 0 && selectedId === null) {
+          setSelectedId(testimonialsArr[0].id);
+        }
+      } catch (error) {
+        console.error('Failed to fetch testimonials:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTestimonials();
   }, []);
 
-  const handleDelete = async (id: string, author: string) => {
-    if (!confirm(`Delete testimonial from ${author}?`)) return;
+  const selected = testimonials.find((t) => t.id === selectedId);
 
+  const toggleStatus = async () => {
+    if (!selected) return;
+    setToggling(true);
     try {
-      const res = await fetch(`/api/testimonials/${id}`, { method: 'DELETE', credentials: 'include' });
+      const newStatus = !selected.published;
+      const res = await fetch(`/api/testimonials/${selected.id}/published`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ published: newStatus }),
+      });
       if (res.ok) {
-        setTestimonials(testimonials.filter((t) => t.id !== id));
+        setTestimonials((prev) =>
+          prev.map((t) => (t.id === selected.id ? { ...t, published: newStatus } : t))
+        );
       }
     } catch (error) {
-      console.error('Failed to delete testimonial:', error);
+      console.error('Failed to toggle status:', error);
+    } finally {
+      setToggling(false);
     }
   };
 
-  const showEditDelete = canEdit(userRole as any) || canDelete(userRole as any);
+  if (loading) return <div style={{ padding: '24px', color: 'var(--slate-400)' }}>Loading…</div>;
 
   return (
-    <div>
-      <div className="mb-8 flex items-end justify-between gap-4">
-        <div>
-          <h1 className="mepm-h2 text-navy-700">Testimonials</h1>
-          <p className="mepm-spec mt-1 text-slate-500">
+    <div style={{ display: 'flex', gap: '0', height: 'calc(100vh - 100px)', background: 'var(--slate-50)' }}>
+      {/* List Column */}
+      <div
+        style={{
+          flex: '0 0 380px',
+          borderRight: '1px solid var(--border)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          background: '#fff',
+        }}
+      >
+        {/* Header */}
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '18px', color: 'var(--navy-900)', margin: 0 }}>
+              Testimonials
+            </h2>
+            <button
+              onClick={() => router.push('/admin/testimonials/new')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--green-600)',
+                color: '#fff',
+                border: 'none',
+                fontFamily: 'var(--font-body)',
+                fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              + Add
+            </button>
+          </div>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--slate-600)', margin: 0, textTransform: 'uppercase', letterSpacing: '.04em' }}>
             {testimonials.length} testimonial{testimonials.length !== 1 ? 's' : ''}
           </p>
         </div>
-        {canEdit(userRole as any) && (
-          <Link
-            href="/admin/testimonials/new"
-            className="inline-flex items-center gap-2 rounded-md bg-green-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-600"
-          >
-            <Plus size={17} /> Add testimonial
-          </Link>
-        )}
+
+        {/* List */}
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          {testimonials.length === 0 ? (
+            <div style={{ padding: '32px 24px', textAlign: 'center', color: 'var(--slate-500)', fontFamily: 'var(--font-body)', fontSize: '14px' }}>
+              No testimonials yet
+            </div>
+          ) : (
+            testimonials.map((testimonial) => (
+              <button
+                key={testimonial.id}
+                onClick={() => setSelectedId(testimonial.id)}
+                style={{
+                  width: '100%',
+                  padding: '16px 20px',
+                  borderBottom: '1px solid var(--slate-100)',
+                  background: selectedId === testimonial.id ? 'var(--navy-50)' : '#fff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'background 0.15s',
+                  borderLeft: selectedId === testimonial.id ? '3px solid var(--green-600)' : '3px solid transparent',
+                  opacity: testimonial.published ? 1 : 0.6,
+                }}
+                onMouseEnter={(e) => {
+                  if (selectedId !== testimonial.id) {
+                    (e.currentTarget as HTMLElement).style.background = 'var(--slate-50)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (selectedId !== testimonial.id) {
+                    (e.currentTarget as HTMLElement).style.background = '#fff';
+                  }
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '14px', color: 'var(--navy-900)' }}>
+                    {testimonial.name}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '10px',
+                      fontWeight: 600,
+                      padding: '3px 8px',
+                      borderRadius: 'var(--radius-sm)',
+                      background: testimonial.published ? 'var(--green-100)' : 'var(--slate-100)',
+                      color: testimonial.published ? 'var(--green-700)' : 'var(--slate-600)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '.02em',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {testimonial.published ? '✓ Live' : '● Draft'}
+                  </div>
+                </div>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--slate-600)' }}>
+                  {testimonial.company || 'No company'}
+                </div>
+              </button>
+            ))
+          )}
+        </div>
       </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-16">
-          <span className="font-mono text-slate-400">Loading…</span>
-        </div>
-      ) : testimonials.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-slate-300 px-6 py-16 text-center">
-          <p className="mepm-spec text-slate-400">No testimonials yet</p>
-        </div>
-      ) : (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: '18px',
-        }}>
-          {testimonials.map((testimonial) => (
+      {/* Detail Column */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--slate-50)' }}>
+        {selected ? (
+          <>
+            {/* Detail Header with green bar */}
             <div
-              key={testimonial.id}
-              className="rounded-lg border border-slate-200 bg-white hover:shadow-md transition-shadow overflow-hidden"
               style={{
-                borderTop: '3px solid #4caf50',
+                padding: '24px 28px',
+                borderBottom: '1px solid var(--border)',
+                borderLeft: '3px solid var(--green-600)',
+                background: '#fff',
               }}
             >
-              <div style={{ padding: '20px' }}>
-                {/* Quote Icon */}
-                <div style={{ marginBottom: '12px' }}>
-                  <Quote
-                    size={24}
-                    style={{ color: '#4caf50' }}
-                  />
-                </div>
-
-                {/* Quote Text */}
-                <p style={{
-                  fontFamily: '"Inter", sans-serif',
-                  fontSize: '14px',
-                  lineHeight: 1.6,
-                  color: '#1a2f6e',
-                  margin: '0 0 16px 0',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 3,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                }}>
-                  "{testimonial.text}"
-                </p>
-
-                {/* Divider */}
-                <div style={{
-                  height: '1px',
-                  background: '#e5e7eb',
-                  margin: '16px 0',
-                }}></div>
-
-                {/* Author */}
-                <div style={{ marginBottom: '12px' }}>
-                  <p style={{
-                    fontFamily: '"Inter", sans-serif',
-                    fontWeight: 700,
-                    fontSize: '14px',
-                    color: '#1a2f6e',
-                    margin: 0,
-                  }}>
-                    {testimonial.name}
-                  </p>
-                  {testimonial.company && (
-                    <p style={{
-                      fontFamily: '"Inter", sans-serif',
-                      fontSize: '12px',
-                      color: '#6b7280',
-                      margin: '2px 0 0 0',
-                    }}>
-                      {testimonial.company}
-                    </p>
-                  )}
-                </div>
-
-                {/* Actions */}
-                {showEditDelete && (
-                  <div style={{
-                    display: 'flex',
-                    gap: '6px',
-                    borderTop: '1px solid #e5e7eb',
-                    paddingTop: '12px',
-                    marginTop: '12px',
-                  }}>
-                    {canEdit(userRole as any) && (
-                      <Link
-                        href={`/admin/testimonials/${testimonial.id}/edit`}
-                        className="inline-flex h-8 w-8 items-center justify-center rounded border border-slate-200 bg-white text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                      >
-                        <Pencil size={15} />
-                      </Link>
-                    )}
-                    {canDelete(userRole as any) && (
-                      <button
-                        onClick={() => handleDelete(testimonial.id, testimonial.name)}
-                        className="inline-flex h-8 w-8 items-center justify-center rounded border border-slate-200 bg-white text-slate-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                      >
-                        <Trash2 size={15} />
-                      </button>
-                    )}
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                <div>
+                  <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', color: 'var(--navy-900)', margin: '0 0 8px 0' }}>
+                    {selected.name}
+                  </h2>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--slate-600)', textTransform: 'uppercase', letterSpacing: '.04em', marginBottom: '12px' }}>
+                    {selected.company || 'No company listed'}
                   </div>
-                )}
+                  <div
+                    style={{
+                      display: 'inline-block',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      padding: '4px 10px',
+                      borderRadius: 'var(--radius-md)',
+                      background: selected.published ? 'var(--green-50)' : 'var(--slate-100)',
+                      color: selected.published ? 'var(--green-700)' : 'var(--slate-600)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '.03em',
+                    }}
+                  >
+                    {selected.published ? '✓ Published' : '● Draft'}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={toggleStatus}
+                    disabled={toggling}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: 'var(--radius-md)',
+                      border: '1px solid var(--border)',
+                      background: selected.published ? 'var(--green-50)' : 'var(--slate-50)',
+                      color: selected.published ? 'var(--green-700)' : 'var(--slate-600)',
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      cursor: toggling ? 'default' : 'pointer',
+                      opacity: toggling ? 0.6 : 1,
+                    }}
+                  >
+                    {toggling ? 'Updating…' : selected.published ? 'Unpublish' : 'Publish'}
+                  </button>
+                  <button
+                    onClick={() => router.push(`/admin/testimonials/${selected.id}`)}
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: 'var(--radius-md)',
+                      border: '1px solid var(--border)',
+                      background: '#fff',
+                      cursor: 'pointer',
+                      color: 'var(--slate-600)',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '16px',
+                    }}
+                    title="Edit"
+                  >
+                    ✏️
+                  </button>
+                </div>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+
+            {/* Detail Content */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '28px' }}>
+              {/* Testimonial Text */}
+              <div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--slate-600)', marginBottom: '12px' }}>
+                  Testimonial
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '15px',
+                    lineHeight: 1.7,
+                    color: 'var(--navy-900)',
+                    whiteSpace: 'pre-wrap',
+                    background: '#fff',
+                    padding: '20px',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid var(--border)',
+                    fontStyle: 'italic',
+                  }}
+                >
+                  "{selected.text}"
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              color: 'var(--slate-500)',
+              fontFamily: 'var(--font-body)',
+              fontSize: '14px',
+            }}
+          >
+            Select a testimonial to view details
+          </div>
+        )}
+      </div>
     </div>
   );
 }

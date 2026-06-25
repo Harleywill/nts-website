@@ -74,8 +74,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate role if provided
-    const validRoles = ['administrator', 'editor', 'viewer'];
-    const newUserRole = role && validRoles.includes(role) ? role : 'editor';
+    const validRoles = ['ADMIN', 'MANAGER', 'EDITOR', 'VIEWER'];
+    const newUserRole = role && validRoles.includes(role) ? role : 'EDITOR';
 
     const hashedPassword = await bcryptjs.hash(password, 10);
 
