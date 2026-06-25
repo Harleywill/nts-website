@@ -54,12 +54,10 @@ export default function FaviconManager() {
     }
 
     // Monitor for JavaScript errors
-    window.addEventListener("error", function (event) {
-      console.error("Error detected:", event.message);
+    window.addEventListener("error", function () {
       hasError = true;
       updateFavicon();
 
-      // Auto-recover after 3 seconds if no more errors
       setTimeout(() => {
         hasError = false;
         updateFavicon();
@@ -71,9 +69,7 @@ export default function FaviconManager() {
     (window as any).fetch = async function (input: RequestInfo | URL, init?: RequestInit) {
       try {
         const response = await originalFetch(input, init);
-        // Handle 404 and other error status codes
         if (!response.ok && response.status >= 400) {
-          console.error("HTTP Error:", response.status);
           hasError = true;
           updateFavicon();
           setTimeout(() => {
@@ -83,7 +79,6 @@ export default function FaviconManager() {
         }
         return response;
       } catch (error) {
-        console.error("Fetch error:", error);
         hasError = true;
         updateFavicon();
         setTimeout(() => {
@@ -96,19 +91,16 @@ export default function FaviconManager() {
 
     // Monitor network connectivity
     window.addEventListener("offline", function () {
-      console.warn("Network connection lost");
       hasError = true;
       updateFavicon();
     });
 
     window.addEventListener("online", function () {
-      console.log("Network connection restored");
       hasError = false;
       updateFavicon();
     });
 
-    // Set initial favicon
-    setFavicon(NORMAL_FAVICON);
+    updateFavicon();
   }, []);
 
   return null;

@@ -4,7 +4,6 @@ import { verifyAuthWithUser } from "@/lib/auth-middleware";
 export async function GET(request: NextRequest) {
   try {
     const authResult = await verifyAuthWithUser(request);
-
     if (!authResult.success || !authResult.user) {
       return NextResponse.json(
         { error: "Unauthorized" },
@@ -12,14 +11,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
-      userId: authResult.user.userId,
-      username: authResult.user.username,
-      role: authResult.user.role,
-    });
+    return NextResponse.json(authResult.user);
   } catch (error) {
     return NextResponse.json(
-      { error: "Authentication failed" },
+      { error: "Failed to fetch user" },
       { status: 500 }
     );
   }

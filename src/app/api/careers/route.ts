@@ -10,19 +10,9 @@ export async function GET(request: NextRequest) {
       orderBy: {
         createdAt: "desc",
       },
-      include: {
-        _count: {
-          select: { applications: true },
-        },
-      },
     });
 
-    return NextResponse.json({
-      jobs: jobs.map((job) => ({
-        ...job,
-        applicationCount: job._count.applications,
-      })),
-    });
+    return NextResponse.json(jobs);
   } catch (error) {
     console.error("Error fetching careers:", error);
     return NextResponse.json(

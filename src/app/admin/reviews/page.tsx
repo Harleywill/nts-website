@@ -1,123 +1,300 @@
-import Link from "next/link";
-import { prisma } from "@/lib/db";
-import { FaStar, FaEdit } from "react-icons/fa";
-import DeleteReviewButton from "@/components/admin/reviews/DeleteReviewButton";
-import { BoldPanel } from "@/components/admin/ui/BoldPanel";
+'use client';
 
-export default async function ReviewsPage() {
-  const reviews = await prisma.googleReview.findMany({
-    orderBy: { order: 'asc' },
-  });
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+interface Review {
+  id: number;
+  author: string;
+  rating: number;
+  text: string;
+  imageUrl: string | null;
+  published: boolean;
+  createdAt: string;
+}
+
+export default function ReviewsPage() {
+  const router = useRouter();
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [toggling, setToggling] = useState(false);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await fetch('/api/reviews', { credentials: 'include' });
+        const data = await res.json();
+        const reviewsArr = Array.isArray(data) ? data : [];
+        setReviews(reviewsArr);
+        if (reviewsArr.length > 0 && selectedId === null) {
+          setSelectedId(reviewsArr[0].id);
+        }
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to fetch reviews:', error);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReviews();
+  }, []);
+
+  const selected = reviews.find((r) => r.id === selectedId);
+
+  const toggleStatus = async () => {
+    if (!selected) return;
+    setToggling(true);
+    try {
+      const newStatus = !selected.published;
+      const res = await fetch(`/api/reviews/${selected.id}/published`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ published: newStatus }),
+      });
+      if (res.ok) {
+        setReviews((prev) =>
+          prev.map((r) => (r.id === selected.id ? { ...r, published: newStatus } : r))
+        );
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to toggle status:', error);
+      }
+    } finally {
+      setToggling(false);
+    }
+  };
+
+  if (loading) return <div style={{ padding: '24px', color: 'var(--slate-400)' }}>Loading…</div>;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-mono font-bold text-adm-textPri uppercase">Google Reviews</h1>
-          <p className="text-xs text-adm-textMut mt-1">
-            Manage reviews displayed on your homepage
+    <div style={{ display: 'flex', gap: '0', height: 'calc(100vh - 100px)', background: 'var(--slate-50)' }}>
+      {/* List Column */}
+      <div
+        style={{
+          flex: '0 0 380px',
+          borderRight: '1px solid var(--border)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          background: '#fff',
+        }}
+      >
+        {/* Header */}
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '18px', color: 'var(--navy-900)', margin: 0 }}>
+              Reviews
+            </h2>
+            <button
+              onClick={() => router.push('/admin/reviews/new')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--green-600)',
+                color: '#fff',
+                border: 'none',
+                fontFamily: 'var(--font-body)',
+                fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              + Add
+            </button>
+          </div>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--slate-600)', margin: 0, textTransform: 'uppercase', letterSpacing: '.04em' }}>
+            {reviews.length} review{reviews.length !== 1 ? 's' : ''}
           </p>
         </div>
-        <Link
-          href="/admin/reviews/new"
-          className="px-4 py-2 bg-nts-green text-white rounded-lg font-semibold hover:bg-brand-green-600 transition-colors"
-        >
-          + Add Review
-        </Link>
+
+        {/* List */}
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          {reviews.length === 0 ? (
+            <div style={{ padding: '32px 24px', textAlign: 'center', color: 'var(--slate-500)', fontFamily: 'var(--font-body)', fontSize: '14px' }}>
+              No reviews yet
+            </div>
+          ) : (
+            reviews.map((review) => (
+              <button
+                key={review.id}
+                onClick={() => setSelectedId(review.id)}
+                style={{
+                  width: '100%',
+                  padding: '16px 20px',
+                  borderBottom: '1px solid var(--slate-100)',
+                  background: selectedId === review.id ? 'var(--navy-50)' : '#fff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'background 0.15s',
+                  borderLeft: selectedId === review.id ? '3px solid var(--green-600)' : '3px solid transparent',
+                  opacity: review.published ? 1 : 0.6,
+                }}
+                onMouseEnter={(e) => {
+                  if (selectedId !== review.id) {
+                    (e.currentTarget as HTMLElement).style.background = 'var(--slate-50)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (selectedId !== review.id) {
+                    (e.currentTarget as HTMLElement).style.background = '#fff';
+                  }
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '14px', color: 'var(--navy-900)' }}>
+                    {review.author}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '10px',
+                      fontWeight: 600,
+                      padding: '3px 8px',
+                      borderRadius: 'var(--radius-sm)',
+                      background: review.published ? 'var(--green-100)' : 'var(--slate-100)',
+                      color: review.published ? 'var(--green-700)' : 'var(--slate-600)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '.02em',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {review.published ? '✓ Live' : '● Draft'}
+                  </div>
+                </div>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--slate-600)', display: 'flex', gap: '4px' }}>
+                  {'⭐'.repeat(review.rating)}
+                </div>
+              </button>
+            ))
+          )}
+        </div>
       </div>
 
-      {/* Reviews Table */}
-      <BoldPanel cornerBrackets>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-adm-border">
-                <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-left">
-                  Reviewer
-                </th>
-                <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-left">
-                  Review Text
-                </th>
-                <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-center">
-                  Rating
-                </th>
-                <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-center">
-                  Featured
-                </th>
-                <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-center">
-                  Order
-                </th>
-                <th className="px-4 py-3 text-xs font-mono font-semibold text-adm-textMut uppercase tracking-wide text-right">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-adm-border">
-              {reviews.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-adm-textMut text-sm font-mono">
-                    No reviews added yet
-                  </td>
-                </tr>
-              ) : (
-                reviews.map((review) => (
-                  <tr key={review.id} className="hover:bg-adm-panelAlt/50 transition-colors">
-                    <td className="px-4 py-4">
-                      <p className="font-semibold text-adm-textPri">
-                        {review.reviewerName}
-                      </p>
-                      {review.reviewerTitle && (
-                        <p className="text-xs text-adm-textMut">{review.reviewerTitle}</p>
-                      )}
-                    </td>
-                    <td className="px-4 py-4">
-                      <p className="text-sm text-adm-textBody line-clamp-2">
-                        {review.reviewText}
-                      </p>
-                    </td>
-                    <td className="px-4 py-4 text-center">
-                      <div className="flex justify-center gap-1">
-                        {[...Array(review.rating)].map((_, i) => (
-                          <FaStar key={i} size={14} style={{ color: "#fbbf24" }} />
-                        ))}
-                      </div>
-                    </td>
-                    <td className="px-4 py-4 text-center">
-                      <span
-                        className={`px-2 py-1 rounded text-xs font-semibold ${
-                          review.featured
-                            ? "bg-nts-green/20 text-nts-green"
-                            : "bg-adm-panelAlt text-adm-textMut"
-                        }`}
-                      >
-                        {review.featured ? "Yes" : "No"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-4 text-center">
-                      <span className="text-sm font-semibold text-adm-textBody">
-                        {review.order}
-                      </span>
-                    </td>
-                    <td className="px-4 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Link
-                          href={`/admin/reviews/${review.id}`}
-                          className="p-2 hover:bg-adm-panelAlt rounded transition-colors text-adm-textMut hover:text-nts-green"
-                          title="Edit"
-                        >
-                          <FaEdit size={16} />
-                        </Link>
-                        <DeleteReviewButton reviewId={review.id} />
-                      </div>
-                    </td>
-                  </tr>
-                ))
+      {/* Detail Column */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--slate-50)' }}>
+        {selected ? (
+          <>
+            {/* Detail Header with green bar */}
+            <div
+              style={{
+                padding: '24px 28px',
+                borderBottom: '1px solid var(--border)',
+                borderLeft: '3px solid var(--green-600)',
+                background: '#fff',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                <div>
+                  <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', color: 'var(--navy-900)', margin: '0 0 8px 0' }}>
+                    {selected.author}
+                  </h2>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--slate-600)', marginBottom: '12px' }}>
+                    {'⭐'.repeat(selected.rating)}
+                  </div>
+                  <div
+                    style={{
+                      display: 'inline-block',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      padding: '4px 10px',
+                      borderRadius: 'var(--radius-md)',
+                      background: selected.published ? 'var(--green-50)' : 'var(--slate-100)',
+                      color: selected.published ? 'var(--green-700)' : 'var(--slate-600)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '.03em',
+                    }}
+                  >
+                    {selected.published ? '✓ Published' : '● Draft'}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={toggleStatus}
+                    disabled={toggling}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: 'var(--radius-md)',
+                      border: '1px solid var(--border)',
+                      background: selected.published ? 'var(--green-50)' : 'var(--slate-50)',
+                      color: selected.published ? 'var(--green-700)' : 'var(--slate-600)',
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      cursor: toggling ? 'default' : 'pointer',
+                      opacity: toggling ? 0.6 : 1,
+                    }}
+                  >
+                    {toggling ? 'Updating…' : selected.published ? 'Unpublish' : 'Publish'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Detail Content */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '28px' }}>
+              {/* Reviewer Image */}
+              {selected.imageUrl && (
+                <div style={{ marginBottom: '28px' }}>
+                  <img
+                    src={selected.imageUrl}
+                    alt={selected.author}
+                    style={{
+                      width: '100%',
+                      height: '280px',
+                      objectFit: 'cover',
+                      borderRadius: 'var(--radius-md)',
+                      border: '1px solid var(--border)',
+                    }}
+                  />
+                </div>
               )}
-            </tbody>
-          </table>
-        </div>
-      </BoldPanel>
+
+              {/* Review Text */}
+              <div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--slate-600)', marginBottom: '12px' }}>
+                  Review
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '15px',
+                    lineHeight: 1.7,
+                    color: 'var(--navy-900)',
+                    whiteSpace: 'pre-wrap',
+                    background: '#fff',
+                    padding: '20px',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid var(--border)',
+                    fontStyle: 'italic',
+                  }}
+                >
+                  "{selected.text}"
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              color: 'var(--slate-500)',
+              fontFamily: 'var(--font-body)',
+              fontSize: '14px',
+            }}
+          >
+            Select a review to view details
+          </div>
+        )}
+      </div>
     </div>
   );
 }

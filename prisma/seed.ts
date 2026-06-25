@@ -14,17 +14,19 @@ async function main() {
   if (existingAdmin) {
     const updatedAdmin = await prisma.user.update({
       where: { username: adminUsername },
-      data: { password: hashedPassword },
+      data: { password: hashedPassword, role: "ADMIN", passwordChanged: true },
     });
-    console.log("Admin user password updated:", updatedAdmin.username);
+    console.log("Admin user updated:", updatedAdmin.username, "role:", updatedAdmin.role);
   } else {
     const admin = await prisma.user.create({
       data: {
         username: adminUsername,
         password: hashedPassword,
+        role: "ADMIN",
+        passwordChanged: true,
       },
     });
-    console.log("Admin user created:", admin.username);
+    console.log("Admin user created:", admin.username, "role:", admin.role);
   }
 
   // Seed projects
@@ -34,6 +36,7 @@ async function main() {
       data: [
         {
           title: "Boots Store Reading",
+          published: true,
           description: "Case Study: Boots, The Oracle Shopping Centre, Reading\n\nDue to Boots' open door policy, the open shop front on one of its flagship stores located in the Oracle Shopping Centre, Reading was causing more than a headache for the retailer. While the design of the store entrance was helping to promote footfall, cold draughts were becoming a problem for both staff and customers. In addition, the heating/air conditioning system was working extra hard to cope with the heat loss, so energy costs were escalating.\n\nNortek Global HVAC UK worked with M and E contractor Neville Tucker Services of Kingston upon Hull to provide an energy-efficient, cost-effective solution. Fitting air curtains created a barrier of air to deflect the natural convection airflow so that conditioned air would be retained within the store. It also slashed the store's running costs.\n\nBoots Store Reading\nBecause of the size of the open shop front, cold dense air flows in at the bottom of the entrance opening while warm air inside the building exits at the top. Typically, air curtains are installed over the doors to high street shops and above the entrance doors to shopping malls. Here, however, the size of the entrance to the Boots store and the lower ambient temperature in the Oracle Shopping Centre meant it was necessary to install air curtains above the doors to the store.\n\nNortek Global HVAC UK, which incorporates the AmbiRad, Benson, Airbloc and Nordair Niche brands, supplied nine air curtains from its Airbloc AC range. The store's recessed ceiling does not extend to the glazed frontage, so recessed air curtains were not an option as they would not seal the doorway. With a semi-circular profile, which also conceals the inlet grille, the Airbloc AC unit was ideally suited to this application because it could be mounted close to the door for a better seal.\n\nNine three-phase electrically heated air curtains were installed side by side across the store's three 6m glass doors to resemble a single continuous unit. For added safety/ functionality, the units were specified with an illuminated fire exit sign, while a powder-coated finish provided a stylish solution that did not detract from the overall design of the store entrance.\n\nWorking closely with the steelwork contractor, Neville Tucker Services devised an innovative mounting solution to ensure a neat installation that would hide the wiring.  The weld studs were specified such that the air curtains would bolt directly on to the minimal steelwork at the full height glass entrance, without the need for any brackets.\n\nTo ensure optimum performance, the air curtains were installed in conjunction with Nortek's SmartElec energy controller. The wired, Thyristor-controlled system features a digital display and three fan settings allowing a modulation range of 16-35 degrees.  End users typically find that SmartElec halves the running costs of their heating/air conditioning and they stand to make savings of up to 65% on their energy bills.\n\nNeville Tucker Services director Matthew Gartland said: \"Airbloc AC air curtains are powerful, quality units that fit the bill for a variety of retail applications and are easy to install.\n\n\"We particularly like them because they can be linked to the BMS using the SmartElec controller to provide effective HVAC control.  This is a really good feature and was an essential part of the specification for the Boots store in Reading's Oracle Shopping Centre.\"\n\nThe SmartElec controller has built-in digital sensors that allow tighter control through pulsing and modulating of the heated elements, saving energy running costs.  It means the air curtain can be at ambient temperature for as long as possible while still monitoring the required set point output temperature. The system specification also includes MODBUS protocol communication with the store's Building Management System (BMS).  This approach enables the BMS to switch the air curtain on/off and control it – altering the temperature setting and fan speed and identifying fault signals – so that it effectively replaces the standard keypad control.",
           category: "Commercial",
           date: new Date("2026-04-29"),
@@ -132,6 +135,7 @@ async function main() {
           text: "Rob is brilliant he has been working solid at my house all day, I have seen anything like it. I am old and don't know what I am doing and he has been talking me through everything and showing me how to use the controls, very polite and professional I shall be spreading the word to all my friends",
           name: "Mrs Kemp",
           featured: true,
+          published: true,
         },
         {
           text: "Myself and Suzzanne are very impressed with the new Firebird, its looks lovely. A big thank you to you the Professionalism you showed from first contact to seeing the job through. We would also like to express a very big thank you to Rob and Ryan for their workmanship in installing the Firebird\n\n",
@@ -235,6 +239,211 @@ async function main() {
     console.log("News items seeded");
   }
 
+  // Seed Google Reviews
+  const existingReviews = await prisma.googleReview.count();
+  if (existingReviews === 0) {
+    await prisma.googleReview.createMany({
+      data: [
+        {
+          author: "John Smith",
+          rating: 5,
+          text: "Excellent service! The team was professional, punctual, and did a fantastic job on our heating system. Highly recommended!",
+          published: true,
+          order: 1,
+        },
+        {
+          author: "Sarah Johnson",
+          rating: 5,
+          text: "NTS Ltd transformed our office climate control. The engineers were knowledgeable and the installation was seamless.",
+          published: true,
+          order: 2,
+        },
+        {
+          author: "Michael Brown",
+          rating: 4,
+          text: "Great experience with NTS. Quick response time and quality workmanship. Would use again.",
+          published: false,
+          order: 3,
+        },
+        {
+          author: "Emily Davis",
+          rating: 5,
+          text: "Outstanding service from start to finish. The team explained everything clearly and kept us informed throughout.",
+          published: true,
+          order: 4,
+        },
+        {
+          author: "David Wilson",
+          rating: 4,
+          text: "Professional team, fair pricing, and reliable service. Very satisfied with our new air conditioning system.",
+          published: false,
+          order: 5,
+        },
+      ],
+    });
+    console.log("Google Reviews seeded");
+  }
+
+  // Seed Jobs/Careers
+  const existingJobs = await prisma.job.count();
+  if (existingJobs === 0) {
+    await prisma.job.createMany({
+      data: [
+        {
+          slug: "senior-hvac-engineer",
+          title: "Senior HVAC Engineer",
+          department: "Engineering",
+          location: "Hull",
+          employmentType: "FULL_TIME",
+          salaryRange: "£45,000 - £55,000",
+          experience: "5+ years",
+          closesAt: new Date("2026-07-31"),
+          status: "PUBLISHED",
+          description:
+            "We are seeking an experienced Senior HVAC Engineer to join our team. You will be responsible for designing, installing, and maintaining heating, ventilation, and air conditioning systems for commercial and residential clients.",
+          responsibilities:
+            "Design and install HVAC systems\nConduct system inspections and maintenance\nTroubleshoot and repair complex systems\nManage projects and timelines\nTrain junior engineers",
+          requirements:
+            "Gas Safe registered\nF-Gas certified\n5+ years HVAC experience\nStrong problem-solving skills\nExcellent communication",
+        },
+        {
+          slug: "apprentice-engineer",
+          title: "Apprentice Engineer",
+          department: "Engineering",
+          location: "Hull",
+          employmentType: "PART_TIME",
+          salaryRange: "£18,000 - £22,000",
+          experience: "0+ years",
+          closesAt: new Date("2026-08-31"),
+          status: "PUBLISHED",
+          description:
+            "Join our team as an Apprentice Engineer and gain hands-on experience in the HVAC industry. We offer comprehensive training and mentorship to help you develop your skills.",
+          responsibilities:
+            "Assist senior engineers on site\nPerform maintenance and installations\nLearn system diagnostics\nGain practical field experience\nAttend vocational training",
+          requirements: "GCSE Maths and English (or equivalent)\nHard-working and reliable\nWilling to learn\nValid driving license preferred\nCan work at heights",
+        },
+        {
+          slug: "controls-technician",
+          title: "BMS Controls Technician",
+          department: "Technical",
+          location: "Hull",
+          employmentType: "FULL_TIME",
+          salaryRange: "£35,000 - £42,000",
+          experience: "3+ years",
+          closesAt: new Date("2026-09-15"),
+          status: "DRAFT",
+          description:
+            "We are looking for a BMS Controls Technician to manage and maintain our Building Management Systems. This role requires expertise in controls programming and system integration.",
+          responsibilities:
+            "Program and configure BMS systems\nIntegrate HVAC with control systems\nTroubleshoot system issues\nProvide technical support to clients\nMaintain system documentation",
+          requirements:
+            "BMS programming experience (Honeywell, Trane, Johnson)\nKnowledge of HVAC systems\n3+ years in controls\nNetworking knowledge\nProblem-solving abilities",
+        },
+        {
+          slug: "commercial-sales-engineer",
+          title: "Commercial Sales Engineer",
+          department: "Sales",
+          location: "Hull",
+          employmentType: "FULL_TIME",
+          salaryRange: "£30,000 - £40,000 + Commission",
+          experience: "2+ years",
+          closesAt: new Date("2026-08-20"),
+          status: "PUBLISHED",
+          description:
+            "We need a Commercial Sales Engineer to support our growth. You will identify client needs, propose solutions, and manage the sales process for HVAC installations.",
+          responsibilities:
+            "Generate leads and manage prospects\nConduct site surveys\nPrepare technical quotations\nNegotiate contracts\nBuild client relationships",
+          requirements:
+            "Sales experience in technical field\nKnowledge of HVAC systems\nStrong negotiation skills\nExcellent communication\nDriving license required",
+        },
+        {
+          slug: "project-manager",
+          title: "Projects Manager",
+          department: "Management",
+          location: "Hull",
+          employmentType: "FULL_TIME",
+          salaryRange: "£38,000 - £48,000",
+          experience: "4+ years",
+          closesAt: new Date("2026-09-30"),
+          status: "DRAFT",
+          description:
+            "Oversee HVAC and mechanical services projects from planning to completion. Manage budgets, timelines, and teams to ensure quality delivery.",
+          responsibilities:
+            "Plan and schedule projects\nManage budgets and resources\nSupervise installation teams\nEnsure regulatory compliance\nClient communication and reporting",
+          requirements:
+            "Project management experience\nKnowledge of HVAC/mechanical services\nBudget management skills\nStrong leadership abilities\nProblem-solving mindset",
+        },
+      ],
+    });
+    console.log("Jobs seeded");
+  }
+
+  // Seed contact submissions
+  const existingSubmissions = await prisma.contactSubmission.count();
+  if (existingSubmissions === 0) {
+    await prisma.contactSubmission.createMany({
+      data: [
+        {
+          name: "John Smith",
+          email: "john.smith@example.com",
+          phone: "01482 555123",
+          service: "Heating Services",
+          message: "I need to install a new heating system in my house. Can you provide a quote? Looking to upgrade from an old boiler.",
+          read: false,
+        },
+        {
+          name: "Sarah Johnson",
+          email: "sarah.johnson@business.co.uk",
+          phone: "01482 666234",
+          service: "Commercial HVAC",
+          message: "We're building a new office in Hull and need a complete HVAC system. We have 5000 sq ft space. Please contact us for a site survey.",
+          read: false,
+        },
+        {
+          name: "Mike Wilson",
+          email: "mike.w@email.com",
+          phone: "01482 777345",
+          service: "Air Conditioning",
+          message: "Air con unit is not cooling properly. Can someone come out and check it? We need urgent attention.",
+          read: true,
+        },
+        {
+          name: "Emma Davis",
+          email: "emma.davis@school.ac.uk",
+          phone: "01482 888456",
+          service: "Ventilation",
+          message: "School needs better ventilation in classrooms. Looking for a solution that's cost-effective and quiet.",
+          read: false,
+        },
+        {
+          name: "Robert Brown",
+          email: "robert.brown@factory.co.uk",
+          phone: "01482 999567",
+          service: "Commercial Servicing",
+          message: "Need annual maintenance contract for our factory equipment. Currently with another provider but open to switching.",
+          read: true,
+        },
+      ],
+    });
+    console.log("Contact submissions seeded");
+  }
+
+  // Mark all news items as published
+  await prisma.newsItem.updateMany({
+    data: { published: true },
+  });
+
+  // Mark all testimonials with featured=true as published
+  await prisma.testimonial.updateMany({
+    where: { featured: true },
+    data: { published: true },
+  });
+
+  // Mark all projects as published
+  await prisma.project.updateMany({
+    data: { published: true },
+  });
+
   // Initialize SiteSettings
   const existingSettings = await prisma.siteSettings.count();
   if (existingSettings === 0) {
@@ -249,6 +458,132 @@ async function main() {
       },
     });
     console.log("SiteSettings initialized with defaults");
+  }
+
+  // Seed applications
+  const existingApplications = await prisma.application.count();
+  if (existingApplications === 0) {
+    const jobs = await prisma.job.findMany({ take: 5 });
+
+    if (jobs.length > 0) {
+      await prisma.application.createMany({
+        data: [
+          {
+            fullName: "James Mitchell",
+            email: "james.mitchell@email.com",
+            phone: "+44 7700 900123",
+            postcode: "HU1 2AA",
+            cvFilename: "james_mitchell_cv.pdf",
+            cvUrl: "/uploads/cv/james_mitchell.pdf",
+            jobId: jobs[0].id,
+            status: "NEW",
+            reference: "APP-2026-001",
+            coverLetter:
+              "I am very interested in the Senior HVAC Engineer position at NTS Ltd. With over 6 years of experience in commercial HVAC systems, Gas Safe certification, and F-Gas qualifications, I believe I am a strong candidate for this role.",
+            submittedAt: new Date("2026-06-20T10:30:00Z"),
+          },
+          {
+            fullName: "Emma Thompson",
+            email: "emma.t@email.com",
+            phone: "+44 7700 900456",
+            postcode: "HU2 8DX",
+            cvFilename: "emma_thompson_cv.pdf",
+            cvUrl: "/uploads/cv/emma_thompson.pdf",
+            jobId: jobs[0].id,
+            status: "REVIEWING",
+            reference: "APP-2026-002",
+            coverLetter:
+              "I am writing to express my strong interest in the Senior HVAC Engineer position. I bring 7 years of hands-on experience in designing and maintaining HVAC systems for both commercial and industrial facilities.",
+            submittedAt: new Date("2026-06-19T14:15:00Z"),
+          },
+          {
+            fullName: "Michael Chen",
+            email: "m.chen@email.com",
+            phone: "+44 7700 900789",
+            postcode: "HU3 1RA",
+            cvFilename: "michael_chen_cv.pdf",
+            cvUrl: "/uploads/cv/michael_chen.pdf",
+            jobId: jobs[1].id,
+            status: "INTERVIEW",
+            reference: "APP-2026-003",
+            coverLetter:
+              "I am a dedicated engineering student looking for the Apprentice Engineer opportunity at NTS Ltd. I have recently completed my GCSEs in Maths and English with strong grades.",
+            submittedAt: new Date("2026-06-18T09:45:00Z"),
+          },
+          {
+            fullName: "Sarah Williams",
+            email: "sarah.w@email.com",
+            phone: "+44 7700 900234",
+            postcode: "HU4 6PY",
+            cvFilename: "sarah_williams_cv.pdf",
+            cvUrl: "/uploads/cv/sarah_williams.pdf",
+            jobId: jobs[1].id,
+            status: "OFFER",
+            reference: "APP-2026-004",
+            coverLetter:
+              "Thank you for considering my application for the Apprentice Engineer role. I am passionate about pursuing a career in HVAC engineering and am confident that your company would provide excellent training.",
+            submittedAt: new Date("2026-06-17T11:20:00Z"),
+          },
+          {
+            fullName: "David Foster",
+            email: "d.foster@email.com",
+            phone: "+44 7700 900567",
+            postcode: "HU5 5NJ",
+            cvFilename: "david_foster_cv.pdf",
+            cvUrl: "/uploads/cv/david_foster.pdf",
+            jobId: jobs[2]?.id || jobs[0].id,
+            status: "HIRED",
+            reference: "APP-2026-005",
+            coverLetter:
+              "I am excited to apply for this position and believe my experience makes me an excellent fit for your team. Throughout my career, I have demonstrated strong technical skills.",
+            submittedAt: new Date("2026-06-16T15:00:00Z"),
+          },
+          {
+            fullName: "Lisa Rodriguez",
+            email: "lisa.r@email.com",
+            phone: "+44 7700 900890",
+            postcode: "HU6 7LG",
+            cvFilename: "lisa_rodriguez_cv.pdf",
+            cvUrl: "/uploads/cv/lisa_rodriguez.pdf",
+            jobId: jobs[0].id,
+            status: "NEW",
+            reference: "APP-2026-006",
+            coverLetter:
+              "I am writing to apply for the Senior HVAC Engineer position. With my extensive background in HVAC systems and project management, I am confident I can make a significant contribution.",
+            submittedAt: new Date("2026-06-21T13:30:00Z"),
+          },
+          {
+            fullName: "Robert Jackson",
+            email: "r.jackson@email.com",
+            phone: "+44 7700 900321",
+            postcode: "HU7 3EZ",
+            cvFilename: "robert_jackson_cv.pdf",
+            cvUrl: "/uploads/cv/robert_jackson.pdf",
+            jobId: jobs[1].id,
+            status: "NEW",
+            reference: "APP-2026-007",
+            coverLetter:
+              "I am very interested in the Apprentice Engineer position. I am a hardworking individual with a strong desire to build a career in the HVAC industry.",
+            submittedAt: new Date("2026-06-22T08:00:00Z"),
+          },
+          {
+            fullName: "Amanda Hayes",
+            email: "amanda.h@email.com",
+            phone: "+44 7700 900654",
+            postcode: "HU8 9TR",
+            cvFilename: "amanda_hayes_cv.pdf",
+            cvUrl: "/uploads/cv/amanda_hayes.pdf",
+            jobId: jobs[0].id,
+            status: "REVIEWING",
+            reference: "APP-2026-008",
+            coverLetter:
+              "As an experienced Senior HVAC Engineer with 5+ years in the field, I am delighted to apply for this position at NTS Ltd. I have successfully managed complex installations.",
+            submittedAt: new Date("2026-06-23T10:45:00Z"),
+          },
+        ],
+      });
+      console.log("Test applications seeded");
+    }
   }
 }
 

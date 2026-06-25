@@ -1,17 +1,18 @@
-export type UserRole = 'administrator' | 'editor' | 'viewer';
+export type UserRole = 'ADMIN' | 'MANAGER' | 'EDITOR' | 'VIEWER';
 
 const PERMISSIONS: Record<UserRole, Set<string>> = {
-  administrator: new Set(['create', 'edit', 'delete', 'publish', 'manage_roles']),
-  editor: new Set(['create', 'edit', 'delete', 'publish']),
-  viewer: new Set(['view']),
+  ADMIN: new Set(['create', 'edit', 'delete', 'publish', 'manage_roles']),
+  MANAGER: new Set(['create', 'edit', 'delete', 'publish']),
+  EDITOR: new Set(['create', 'edit', 'delete', 'publish']),
+  VIEWER: new Set(['view']),
 };
 
 const RESOURCE_PERMISSIONS: Record<string, Set<UserRole>> = {
-  projects: new Set(['administrator', 'editor']),
-  news: new Set(['administrator', 'editor']),
-  testimonials: new Set(['administrator', 'editor']),
-  users: new Set(['administrator']),
-  'contact-submissions': new Set(['administrator', 'editor']),
+  projects: new Set(['ADMIN', 'EDITOR']),
+  news: new Set(['ADMIN', 'EDITOR']),
+  testimonials: new Set(['ADMIN', 'EDITOR']),
+  users: new Set(['ADMIN']),
+  'contact-submissions': new Set(['ADMIN', 'EDITOR']),
 };
 
 export function can(role: UserRole, action: string): boolean {
@@ -31,7 +32,7 @@ export function canCreate(role: UserRole): boolean {
 }
 
 export function isAdministrator(role: UserRole): boolean {
-  return role === 'administrator';
+  return role === 'ADMIN';
 }
 
 /**
@@ -39,7 +40,7 @@ export function isAdministrator(role: UserRole): boolean {
  * Viewers are always denied write access
  */
 export function hasPermission(role: UserRole | string, resource: string): boolean {
-  if (role === 'viewer') {
+  if (role === 'VIEWER') {
     return false;
   }
   const allowedRoles = RESOURCE_PERMISSIONS[resource];

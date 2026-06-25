@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
-import { canEdit, isAdministrator } from '@/lib/admin/permissions';
+import { isAdministrator } from '@/lib/admin/permissions';
 
 interface User {
   id: number;
@@ -12,8 +11,17 @@ interface User {
   createdAt: string;
 }
 
+const ROLE_COLORS: Record<string, { bg: string; color: string }> = {
+  ADMIN:       { bg: '#fef3c7', color: '#92400e' },
+  MANAGER:     { bg: '#dbeafe', color: '#1e40af' },
+  EDITOR:      { bg: 'var(--green-100)', color: 'var(--green-700)' },
+  VIEWER:      { bg: 'var(--slate-100)', color: 'var(--slate-600)' },
+  ADMINISTRATOR:{ bg: '#fef3c7', color: '#92400e' },
+};
+
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<string>('viewer');
 
@@ -26,186 +34,216 @@ export default function UsersPage() {
     fetch('/api/users', { credentials: 'include' })
       .then((res) => res.json())
       .then((data) => {
-        const usersData = Array.isArray(data) ? data : data.users || [];
-        setUsers(usersData.sort((a: any, b: any) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        ));
+        const arr: User[] = Array.isArray(data) ? data : data.users || [];
+        const sorted = arr.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        setUsers(sorted);
+        if (sorted.length > 0) setSelectedId(sorted[0].id);
       })
-      .catch((error) => console.error('Failed to fetch users:', error))
+      .catch((err) => console.error('Failed to fetch users:', err))
       .finally(() => setLoading(false));
   }, []);
 
   const handleDelete = async (id: number, username: string) => {
     if (!confirm(`Remove ${username} from admin panel?`)) return;
-
-    try {
-      const res = await fetch(`/api/users/${id}`, { method: 'DELETE', credentials: 'include' });
-      if (res.ok) {
-        setUsers(users.filter((u) => u.id !== id));
-      }
-    } catch (error) {
-      console.error('Failed to delete user:', error);
+    const res = await fetch(`/api/users/${id}`, { method: 'DELETE', credentials: 'include' });
+    if (res.ok) {
+      const remaining = users.filter((u) => u.id !== id);
+      setUsers(remaining);
+      setSelectedId(remaining.length > 0 ? remaining[0].id : null);
     }
   };
 
-  const getRoleBadgeColor = (role: string) => {
-    switch (role?.toLowerCase()) {
-      case 'administrator':
-        return { bg: '#fef3c7', color: '#b45309' };
-      case 'editor':
-        return { bg: '#dbeafe', color: '#1e40af' };
-      case 'viewer':
-        return { bg: '#f3f4f6', color: '#4b5563' };
-      default:
-        return { bg: '#f3f4f6', color: '#4b5563' };
-    }
-  };
+  const roleStyle = (role: string) => ROLE_COLORS[role?.toUpperCase()] ?? ROLE_COLORS.VIEWER;
+
+  const selected = users.find((u) => u.id === selectedId);
+  const showAdmin = isAdministrator(userRole as any);
 
   return (
-    <div>
-      <div className="mb-8 flex items-end justify-between gap-4">
-        <div>
-          <h1 className="mepm-h2 text-navy-700">Team</h1>
-          <p className="mepm-spec mt-1 text-slate-500">
-            {users.length} team member{users.length !== 1 ? 's' : ''} — admin panel access
-          </p>
-        </div>
-        {isAdministrator(userRole as any) && (
-          <Link
-            href="/admin/users/new"
-            className="inline-flex items-center gap-2 rounded-md bg-green-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-600"
-          >
-            <Plus size={17} /> Add member
-          </Link>
-        )}
-      </div>
+    <div style={{ display: 'flex', height: 'calc(100vh - 100px)', background: '#fff' }}>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-16">
-          <span className="font-mono text-slate-400">Loading…</span>
+      {/* Left list */}
+      <div style={{
+        flex: '0 0 380px',
+        borderRight: '1px solid var(--border)',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+      }}>
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '18px', color: 'var(--navy-800)', margin: '0 0 4px 0' }}>
+              Team
+            </h2>
+            <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--slate-500)', margin: 0, textTransform: 'uppercase', letterSpacing: '.04em' }}>
+              {users.length} member{users.length !== 1 ? 's' : ''}
+            </p>
+          </div>
+          {showAdmin && (
+            <Link
+              href="/admin/users/new"
+              style={{
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--green-600)',
+                color: '#fff',
+                textDecoration: 'none',
+                fontFamily: 'var(--font-body)',
+                fontSize: '12px',
+                fontWeight: 600,
+              }}
+            >
+              + Add
+            </Link>
+          )}
         </div>
-      ) : users.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-slate-300 px-6 py-16 text-center">
-          <p className="mepm-spec text-slate-400">No team members yet</p>
-        </div>
-      ) : (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-          gap: '18px',
-        }}>
-          {users.map((user) => {
-            const roleBadge = getRoleBadgeColor(user.role);
-            const initials = user.username.slice(0, 2).toUpperCase();
+
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          {loading ? (
+            <div style={{ padding: '32px 24px', textAlign: 'center', color: 'var(--slate-400)', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>Loading…</div>
+          ) : users.length === 0 ? (
+            <div style={{ padding: '32px 24px', textAlign: 'center', color: 'var(--slate-500)', fontFamily: 'var(--font-body)', fontSize: '14px' }}>No users yet</div>
+          ) : users.map((user) => {
+            const { bg, color } = roleStyle(user.role);
             return (
-              <div
+              <button
                 key={user.id}
-                className="overflow-hidden rounded-lg border border-slate-200 bg-white hover:shadow-md transition-shadow"
+                onClick={() => setSelectedId(user.id)}
+                style={{
+                  width: '100%',
+                  padding: '14px 20px',
+                  borderBottom: '1px solid var(--border)',
+                  background: selectedId === user.id ? 'var(--navy-50)' : '#fff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'background 0.15s',
+                  borderLeft: selectedId === user.id ? '3px solid var(--green-600)' : '3px solid transparent',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '12px',
+                }}
+                onMouseEnter={(e) => { if (selectedId !== user.id) (e.currentTarget as HTMLElement).style.background = 'var(--slate-50)'; }}
+                onMouseLeave={(e) => { if (selectedId !== user.id) (e.currentTarget as HTMLElement).style.background = '#fff'; }}
               >
-                <div
-                  style={{
-                    height: '140px',
-                    background: '#f3f4f6',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '64px',
-                      height: '64px',
-                      borderRadius: '50%',
-                      background: '#e5e7eb',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#4b5563',
-                      fontFamily: '"Inter", sans-serif',
-                      fontWeight: 700,
-                      fontSize: '22px',
-                    }}
-                  >
-                    {initials}
-                  </div>
+                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '13px', color: 'var(--navy-800)' }}>
+                  {user.username}
                 </div>
-                <div style={{ padding: '16px 18px' }}>
-                  <div
-                    style={{
-                      fontFamily: '"Inter", sans-serif',
-                      fontWeight: 700,
-                      fontSize: '15px',
-                      color: '#1a2f6e',
-                    }}
-                  >
-                    {user.username}
-                  </div>
-                  <div style={{ marginTop: '8px' }}>
-                    <span
-                      style={{
-                        fontFamily: 'monospace',
-                        fontSize: '10px',
-                        letterSpacing: '.04em',
-                        textTransform: 'uppercase',
-                        padding: '3px 8px',
-                        borderRadius: '4px',
-                        background: roleBadge.bg,
-                        color: roleBadge.color,
-                        display: 'inline-block',
-                      }}
-                    >
-                      {user.role}
-                    </span>
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: 'monospace',
-                      fontSize: '11px',
-                      color: '#9ca3af',
-                      marginTop: '8px',
-                    }}
-                  >
-                    {new Date(user.createdAt).toLocaleDateString('en-GB', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: '6px',
-                      marginTop: '12px',
-                      borderTop: '1px solid #e5e7eb',
-                      paddingTop: '12px',
-                    }}
-                  >
-                    {isAdministrator(userRole as any) && (
-                      <>
-                        <Link
-                          href={`/admin/users/${user.id}/edit`}
-                          title="Edit"
-                          className="inline-flex h-8 w-8 items-center justify-center rounded border border-slate-200 bg-white text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                        >
-                          <Pencil size={15} />
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(user.id, user.username)}
-                          title="Delete"
-                          className="inline-flex h-8 w-8 items-center justify-center rounded border border-slate-200 bg-white text-slate-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                        >
-                          <Trash2 size={15} />
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
+                <span style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '10px', fontWeight: 600,
+                  padding: '2px 8px',
+                  borderRadius: 'var(--radius-sm)',
+                  background: bg, color,
+                  textTransform: 'uppercase', letterSpacing: '.02em',
+                  flexShrink: 0,
+                }}>
+                  {user.role}
+                </span>
+              </button>
             );
           })}
         </div>
-      )}
+      </div>
+
+      {/* Right detail */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {selected ? (
+          <>
+            <div style={{ padding: '20px 28px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '22px', color: 'var(--navy-800)', margin: '0 0 6px 0' }}>
+                  {selected.username}
+                </h2>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '.04em' }}>
+                  Joined {new Date(selected.createdAt).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}
+                </div>
+              </div>
+              {showAdmin && (
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <Link
+                    href={`/admin/users/${selected.id}/edit`}
+                    style={{
+                      height: '32px', padding: '0 12px',
+                      display: 'inline-flex', alignItems: 'center',
+                      borderRadius: 'var(--radius-sm)',
+                      border: '1px solid var(--border)',
+                      background: '#fff',
+                      color: 'var(--slate-600)',
+                      fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 600,
+                      textDecoration: 'none',
+                    }}
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(selected.id, selected.username)}
+                    style={{
+                      width: '32px', height: '32px',
+                      borderRadius: 'var(--radius-sm)',
+                      border: '1px solid var(--border)',
+                      background: '#fff',
+                      color: 'var(--slate-400)',
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                      cursor: 'pointer', fontSize: '14px',
+                    }}
+                    title="Delete"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div style={{ flex: 1, overflowY: 'auto', padding: '28px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                <div>
+                  <div style={labelStyle}>Role</div>
+                  <span style={{
+                    display: 'inline-block',
+                    padding: '4px 10px',
+                    borderRadius: 'var(--radius-sm)',
+                    background: roleStyle(selected.role).bg,
+                    color: roleStyle(selected.role).color,
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '12px', fontWeight: 700,
+                    textTransform: 'uppercase', letterSpacing: '.03em',
+                  }}>
+                    {selected.role}
+                  </span>
+                </div>
+                <div>
+                  <div style={labelStyle}>Joined</div>
+                  <div style={valueStyle}>
+                    {new Date(selected.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </div>
+                </div>
+                <div>
+                  <div style={labelStyle}>Username</div>
+                  <div style={{ ...valueStyle, fontFamily: 'var(--font-mono)' }}>{selected.username}</div>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--slate-500)', fontFamily: 'var(--font-body)', fontSize: '14px' }}>
+            Select a team member to view details
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+
+const labelStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-mono)',
+  fontSize: '11px', fontWeight: 600,
+  textTransform: 'uppercase', letterSpacing: '.04em',
+  color: 'var(--slate-600)', marginBottom: '8px',
+};
+
+const valueStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-body)',
+  fontSize: '14px',
+  color: 'var(--navy-800)',
+};
