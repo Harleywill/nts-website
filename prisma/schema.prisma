@@ -80,18 +80,31 @@ model Testimonial {
 }
 
 model NewsItem {
-  id        Int      @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   title     String
   content   String
   imageUrl  String?
-  cropX     Float    @default(0)
-  cropY     Float    @default(0)
-  cropWidth Float    @default(1)
-  cropHeight Float   @default(1)
-  featured  Boolean  @default(false)
-  published Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  cropX     Float       @default(0)
+  cropY     Float       @default(0)
+  cropWidth Float       @default(1)
+  cropHeight Float      @default(1)
+  featured  Boolean     @default(false)
+  published Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  images    NewsImage[]
+}
+
+model NewsImage {
+  id         Int      @id @default(autoincrement())
+  newsItemId Int
+  imageUrl   String
+  alt        String?
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  newsItem   NewsItem @relation(fields: [newsItemId], references: [id], onDelete: Cascade)
+
+  @@index([newsItemId, order])
 }
 
 model ContactSubmission {
