@@ -1,436 +1,407 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Save, AlertCircle } from 'lucide-react';
+import Image from 'next/image';
 
-interface SettingsData {
+interface SiteSettings {
+  id?: number;
+  companyName?: string;
   phone?: string;
   email?: string;
   address?: string;
-  socialLinks?: {
-    facebook?: string;
-    twitter?: string;
-    instagram?: string;
-    linkedin?: string;
-  };
+  city?: string;
+  postalCode?: string;
+  facebookUrl?: string;
+  linkedinUrl?: string;
+  twitterUrl?: string;
+  logoVersion?: number;
 }
 
-interface ContentStats {
-  projects: number;
-  posts: number;
-  enquiries: number;
-  teamMembers: number;
-  testimonials: number;
+interface Accreditation {
+  id: number;
+  name: string;
+  slug: string;
+  enabled: boolean;
+  order: number;
+}
+
+const SLUG_TO_EXT: Record<string, string> = {
+  honeywell: 'jpg', toshiba: 'png', fgr: 'jpg', oftec: 'jpg',
+  mitsubishi: 'jpg', 'magic-box': 'jpg', fgas: 'jpg', cylon: 'jpg',
+  chas: 'jpg', 'gas-safe': 'jpg', aphc: 'jpg', alcumus: 'jpg',
+};
+
+function Toast({ message, type }: { message: string; type: 'success' | 'error' }) {
+  return (
+    <div style={{
+      position: 'fixed', bottom: '24px', right: '24px', zIndex: 1000,
+      padding: '12px 18px', borderRadius: 'var(--radius-md)',
+      background: type === 'success' ? 'var(--green-600)' : '#dc2626',
+      color: '#fff', fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600,
+      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+    }}>
+      {message}
+    </div>
+  );
 }
 
 export default function SettingsPage() {
-  const [settings, setSettings] = useState<SettingsData>({
-    socialLinks: {},
-  });
-  const [stats, setStats] = useState<ContentStats>({
-    projects: 0,
-    posts: 0,
-    enquiries: 0,
-    teamMembers: 0,
-    testimonials: 0,
-  });
+  const [settings, setSettings] = useState<SiteSettings>({});
+  const [accreditations, setAccreditations] = useState<Accreditation[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [userRole, setUserRole] = useState<string>('viewer');
+  const [savingAccreditations, setSavingAccreditations] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   useEffect(() => {
-    // Fetch user role
-    fetch('/api/auth/me', { credentials: 'include' })
-      .then((res) => res.json())
-      .then((data) => setUserRole(data.role || 'viewer'))
-      .catch(() => setUserRole('viewer'));
-
-    // Fetch settings
-    fetch('/api/settings', { credentials: 'include' })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.settings) {
-          setSettings(data.settings);
-        }
-      })
-      .catch((error) => console.error('Failed to fetch settings:', error));
-
-    // Fetch stats
     Promise.all([
-      fetch('/api/projects', { credentials: 'include' }).then((r) => r.json()),
-      fetch('/api/news', { credentials: 'include' }).then((r) => r.json()),
-      fetch('/api/contact-submissions', { credentials: 'include' }).then((r) => r.json()),
-      fetch('/api/users', { credentials: 'include' }).then((r) => r.json()),
-      fetch('/api/testimonials', { credentials: 'include' }).then((r) => r.json()),
-    ])
-      .then(([projects, posts, enquiries, users, testimonials]) => {
-        const projectsArray = Array.isArray(projects) ? projects : projects.projects || [];
-        const postsArray = Array.isArray(posts) ? posts : posts.posts || posts.news || [];
-        const enquiriesArray = Array.isArray(enquiries) ? enquiries : enquiries.submissions || [];
-        const usersArray = Array.isArray(users) ? users : users.users || [];
-        const testimonialsArray = Array.isArray(testimonials) ? testimonials : testimonials.testimonials || [];
-
-        setStats({
-          projects: projectsArray.length,
-          posts: postsArray.length,
-          enquiries: enquiriesArray.length,
-          teamMembers: usersArray.length,
-          testimonials: testimonialsArray.length,
-        });
-      })
-      .catch((error) => console.error('Failed to fetch stats:', error))
-      .finally(() => setLoading(false));
+      fetch('/api/settings', { credentials: 'include' }).then(r => r.json()),
+      fetch('/api/accreditations', { credentials: 'include' }).then(r => r.json()),
+    ]).then(([settingsData, accreditationsData]) => {
+      setSettings(settingsData.settings || settingsData || {});
+      setAccreditations(Array.isArray(accreditationsData) ? accreditationsData : []);
+    }).catch(console.error).finally(() => setLoading(false));
   }, []);
 
-  const handleSave = async () => {
-    if (userRole !== 'administrator') {
-      setMessage({ type: 'error', text: 'Only administrators can modify settings' });
-      return;
-    }
-
+  const handleSaveContact = async () => {
     setSaving(true);
     try {
       const res = await fetch('/api/settings', {
-        method: 'POST',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify(settings),
       });
-
       if (res.ok) {
-        setMessage({ type: 'success', text: 'Settings saved successfully' });
-        setTimeout(() => setMessage(null), 3000);
+        showToast('Contact details saved');
       } else {
-        setMessage({ type: 'error', text: 'Failed to save settings' });
+        showToast('Failed to save', 'error');
       }
-    } catch (error) {
-      console.error('Failed to save settings:', error);
-      setMessage({ type: 'error', text: 'Error saving settings' });
+    } catch {
+      showToast('Error saving', 'error');
     } finally {
       setSaving(false);
     }
   };
 
+  const handleLogoToggle = async (version: number) => {
+    const prev = settings.logoVersion;
+    setSettings(s => ({ ...s, logoVersion: version }));
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ ...settings, logoVersion: version }),
+      });
+      if (res.ok) {
+        showToast(`Logo switched to ${version === 1 ? 'new' : 'old'}`);
+      } else {
+        setSettings(s => ({ ...s, logoVersion: prev }));
+        showToast('Failed to update logo', 'error');
+      }
+    } catch {
+      setSettings(s => ({ ...s, logoVersion: prev }));
+    }
+  };
+
+  const handleToggleAccreditation = (slug: string) => {
+    setAccreditations(prev =>
+      prev.map(a => a.slug === slug ? { ...a, enabled: !a.enabled } : a)
+    );
+  };
+
+  const handleSaveAccreditations = async () => {
+    setSavingAccreditations(true);
+    try {
+      const res = await fetch('/api/accreditations', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ updates: accreditations.map((a, i) => ({ slug: a.slug, enabled: a.enabled, order: i })) }),
+      });
+      if (res.ok) {
+        showToast('Accreditations saved');
+      } else {
+        showToast('Failed to save accreditations', 'error');
+      }
+    } catch {
+      showToast('Error saving accreditations', 'error');
+    } finally {
+      setSavingAccreditations(false);
+    }
+  };
+
+  const fieldStyle: React.CSSProperties = {
+    width: '100%', padding: '8px 12px', borderRadius: 'var(--radius-md)',
+    border: '1px solid var(--border)', fontFamily: 'var(--font-body)',
+    fontSize: '14px', color: 'var(--navy-800)', background: '#fff', boxSizing: 'border-box',
+  };
+  const labelStyle: React.CSSProperties = {
+    fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600,
+    textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--slate-600)',
+    display: 'block', marginBottom: '6px',
+  };
+  const cardStyle: React.CSSProperties = {
+    background: '#fff', borderRadius: 'var(--radius-lg)',
+    border: '1px solid var(--border)', padding: '24px', marginBottom: '24px',
+  };
+  const sectionHeading: React.CSSProperties = {
+    fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '16px',
+    color: 'var(--navy-800)', margin: '0 0 6px 0',
+  };
+  const sectionSub: React.CSSProperties = {
+    fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--slate-500)',
+    textTransform: 'uppercase', letterSpacing: '.04em', margin: '0 0 20px 0',
+  };
+
+  if (loading) {
+    return <div style={{ padding: '40px', color: 'var(--slate-400)', fontFamily: 'var(--font-body)' }}>Loading…</div>;
+  }
+
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="mepm-h2 text-navy-700">Settings</h1>
-        <p className="mepm-spec mt-1 text-slate-500">Site configuration and statistics</p>
+    <div style={{ maxWidth: '860px' }}>
+      {toast && <Toast message={toast.message} type={toast.type} />}
+
+      <div style={{ marginBottom: '28px' }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', color: 'var(--navy-800)', margin: '0 0 4px 0' }}>
+          Settings
+        </h1>
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '.04em', margin: 0 }}>
+          Site configuration
+        </p>
       </div>
 
-      {/* Message Alert */}
-      {message && (
-        <div style={{
-          marginBottom: '24px',
-          padding: '12px 16px',
-          borderRadius: 'var(--radius-md)',
-          display: 'flex',
-          gap: '10px',
-          alignItems: 'flex-start',
-          background: message.type === 'success' ? '#f0fdf4' : '#fef2f2',
-          border: `1px solid ${message.type === 'success' ? '#dcfce7' : '#fee2e2'}`,
-        }}>
-          <AlertCircle
-            size={16}
-            style={{
-              marginTop: '2px',
-              color: message.type === 'success' ? '#16a34a' : '#dc2626',
-              flexShrink: 0,
-            }}
-          />
-          <p style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '13px',
-            color: message.type === 'success' ? '#166534' : '#7f1d1d',
-            margin: 0,
-          }}>
-            {message.text}
-          </p>
-        </div>
-      )}
+      {/* ── LOGO VERSION ── */}
+      <div style={cardStyle}>
+        <h2 style={sectionHeading}>Logo Version</h2>
+        <p style={sectionSub}>Choose which logo is displayed on the public website</p>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-16">
-          <span className="font-mono text-slate-400">Loading…</span>
-        </div>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-          {/* Left Column: Content Stats */}
-          <div style={{
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid #e5e7eb',
-            padding: '24px',
-            background: '#fff',
-          }}>
-            <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: '16px',
-              fontWeight: 700,
-              color: 'var(--navy-800)',
-              margin: '0 0 18px 0',
-            }}>
-              Content Overview
-            </h2>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              {[
-                { label: 'Projects', value: stats.projects },
-                { label: 'Blog Posts', value: stats.posts },
-                { label: 'Enquiries', value: stats.enquiries },
-                { label: 'Team Members', value: stats.teamMembers },
-                { label: 'Testimonials', value: stats.testimonials },
-              ].map(({ label, value }) => (
-                <div
-                  key={label}
-                  style={{
-                    padding: '12px',
-                    borderRadius: 'var(--radius-md)',
-                    background: 'var(--navy-50)',
-                    border: '1px solid #e5e7eb',
-                  }}
-                >
-                  <p style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '11px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '.03em',
-                    color: 'var(--slate-500)',
-                    margin: '0 0 4px 0',
-                  }}>
-                    {label}
-                  </p>
-                  <p style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: '24px',
-                    fontWeight: 700,
-                    color: 'var(--navy-800)',
-                    margin: 0,
-                  }}>
-                    {value}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right Column: Edit Settings */}
-          <div style={{
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid #e5e7eb',
-            padding: '24px',
-            background: '#fff',
-          }}>
-            <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: '16px',
-              fontWeight: 700,
-              color: 'var(--navy-800)',
-              margin: '0 0 18px 0',
-            }}>
-              Contact Details
-            </h2>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
-              <div>
-                <label style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  textTransform: 'uppercase',
-                  letterSpacing: '.03em',
-                  color: 'var(--slate-600)',
-                  display: 'block',
-                  marginBottom: '6px',
-                }}>
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  value={settings.phone || ''}
-                  onChange={(e) =>
-                    setSettings({ ...settings, phone: e.target.value })
-                  }
-                  disabled={userRole !== 'administrator'}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    borderRadius: 'var(--radius-md)',
-                    border: '1px solid #e5e7eb',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '14px',
-                    opacity: userRole !== 'administrator' ? 0.6 : 1,
-                    cursor: userRole !== 'administrator' ? 'not-allowed' : 'text',
-                    boxSizing: 'border-box',
-                  }}
-                  placeholder="e.g., 01482 838080"
-                />
-              </div>
-
-              <div>
-                <label style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  textTransform: 'uppercase',
-                  letterSpacing: '.03em',
-                  color: 'var(--slate-600)',
-                  display: 'block',
-                  marginBottom: '6px',
-                }}>
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={settings.email || ''}
-                  onChange={(e) =>
-                    setSettings({ ...settings, email: e.target.value })
-                  }
-                  disabled={userRole !== 'administrator'}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    borderRadius: 'var(--radius-md)',
-                    border: '1px solid #e5e7eb',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '14px',
-                    opacity: userRole !== 'administrator' ? 0.6 : 1,
-                    cursor: userRole !== 'administrator' ? 'not-allowed' : 'text',
-                    boxSizing: 'border-box',
-                  }}
-                  placeholder="e.g., info@nts-services.com"
-                />
-              </div>
-
-              <div>
-                <label style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  textTransform: 'uppercase',
-                  letterSpacing: '.03em',
-                  color: 'var(--slate-600)',
-                  display: 'block',
-                  marginBottom: '6px',
-                }}>
-                  Address
-                </label>
-                <textarea
-                  value={settings.address || ''}
-                  onChange={(e) =>
-                    setSettings({ ...settings, address: e.target.value })
-                  }
-                  disabled={userRole !== 'administrator'}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    borderRadius: 'var(--radius-md)',
-                    border: '1px solid #e5e7eb',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '14px',
-                    minHeight: '64px',
-                    resize: 'vertical',
-                    opacity: userRole !== 'administrator' ? 0.6 : 1,
-                    cursor: userRole !== 'administrator' ? 'not-allowed' : 'text',
-                    boxSizing: 'border-box',
-                  }}
-                  placeholder="Full address"
-                />
-              </div>
-
+        <div style={{ display: 'flex', gap: '16px' }}>
+          {[
+            { version: 1, label: 'New Logo', src: '/images/ntsLogo.png' },
+            { version: 2, label: 'Old Logo', src: '/images/ntsLogo-old.png' },
+          ].map(({ version, label, src }) => {
+            const active = (settings.logoVersion ?? 1) === version;
+            return (
               <button
-                onClick={handleSave}
-                disabled={saving || userRole !== 'administrator'}
+                key={version}
+                onClick={() => handleLogoToggle(version)}
                 style={{
-                  marginTop: '8px',
-                  padding: '8px 16px',
-                  borderRadius: 'var(--radius-md)',
-                  border: 'none',
-                  background: userRole !== 'administrator' ? '#ccc' : 'var(--green-600)',
-                  color: '#fff',
-                  fontFamily: 'var(--font-display)',
-                  fontWeight: 600,
-                  fontSize: '13px',
-                  cursor: userRole !== 'administrator' || saving ? 'not-allowed' : 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  opacity: userRole !== 'administrator' ? 0.6 : 1,
+                  flex: 1, padding: '20px', borderRadius: 'var(--radius-md)',
+                  border: `2px solid ${active ? 'var(--green-600)' : 'var(--border)'}`,
+                  background: active ? 'var(--green-50)' : '#fff',
+                  cursor: 'pointer', textAlign: 'center',
+                  transition: 'border-color 0.15s, background 0.15s',
                 }}
               >
-                <Save size={16} /> {saving ? 'Saving…' : 'Save Changes'}
+                <div style={{
+                  height: '64px', display: 'flex', alignItems: 'center',
+                  justifyContent: 'center', marginBottom: '12px',
+                }}>
+                  <Image src={src} alt={label} width={160} height={60} style={{ objectFit: 'contain', maxHeight: '60px' }} />
+                </div>
+                <div style={{
+                  fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600,
+                  color: active ? 'var(--green-700)' : 'var(--slate-600)',
+                }}>
+                  {label}
+                </div>
+                {active && (
+                  <div style={{
+                    marginTop: '8px', display: 'inline-block',
+                    fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700,
+                    textTransform: 'uppercase', letterSpacing: '.04em',
+                    padding: '2px 8px', borderRadius: 'var(--radius-sm)',
+                    background: 'var(--green-100)', color: 'var(--green-700)',
+                  }}>
+                    Active
+                  </div>
+                )}
               </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── ACCREDITATIONS ── */}
+      <div style={cardStyle}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <div>
+            <h2 style={{ ...sectionHeading, marginBottom: '4px' }}>Accreditations</h2>
+            <p style={{ ...sectionSub, margin: 0 }}>Toggle which logos appear in the accreditations strip</p>
+          </div>
+          <button
+            onClick={handleSaveAccreditations}
+            disabled={savingAccreditations}
+            style={{
+              padding: '8px 16px', borderRadius: 'var(--radius-md)', border: 'none',
+              background: 'var(--green-600)', color: '#fff',
+              fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600,
+              cursor: savingAccreditations ? 'default' : 'pointer',
+              opacity: savingAccreditations ? 0.6 : 1,
+              flexShrink: 0,
+            }}
+          >
+            {savingAccreditations ? 'Saving…' : 'Save'}
+          </button>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '12px' }}>
+          {accreditations.map((a) => {
+            const ext = SLUG_TO_EXT[a.slug] ?? 'jpg';
+            const imgPath = `/images/accreditations/${a.slug}.${ext}`;
+            return (
+              <button
+                key={a.slug}
+                onClick={() => handleToggleAccreditation(a.slug)}
+                style={{
+                  padding: '16px 12px', borderRadius: 'var(--radius-md)',
+                  border: `2px solid ${a.enabled ? 'var(--green-600)' : 'var(--border)'}`,
+                  background: a.enabled ? 'var(--green-50)' : 'var(--slate-50)',
+                  cursor: 'pointer', textAlign: 'center',
+                  transition: 'border-color 0.15s, background 0.15s',
+                  opacity: a.enabled ? 1 : 0.5,
+                }}
+              >
+                <div style={{
+                  height: '48px', display: 'flex', alignItems: 'center',
+                  justifyContent: 'center', marginBottom: '8px',
+                }}>
+                  <Image
+                    src={imgPath}
+                    alt={a.name}
+                    width={80}
+                    height={48}
+                    style={{ objectFit: 'contain', maxHeight: '48px', filter: a.enabled ? 'none' : 'grayscale(1)' }}
+                  />
+                </div>
+                <div style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 600,
+                  textTransform: 'uppercase', letterSpacing: '.03em',
+                  color: a.enabled ? 'var(--green-700)' : 'var(--slate-500)',
+                }}>
+                  {a.name}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        <p style={{
+          marginTop: '14px', fontFamily: 'var(--font-body)', fontSize: '12px',
+          color: 'var(--slate-500)',
+        }}>
+          {accreditations.filter(a => a.enabled).length} of {accreditations.length} enabled
+        </p>
+      </div>
+
+      {/* ── CONTACT DETAILS ── */}
+      <div style={cardStyle}>
+        <h2 style={sectionHeading}>Contact Details</h2>
+        <p style={sectionSub}>Shown in the footer and contact page</p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div>
+            <label style={labelStyle}>Phone</label>
+            <input
+              type="tel"
+              value={settings.phone ?? ''}
+              onChange={e => setSettings(s => ({ ...s, phone: e.target.value }))}
+              style={fieldStyle}
+              placeholder="01482 838080"
+            />
+          </div>
+          <div>
+            <label style={labelStyle}>Email</label>
+            <input
+              type="email"
+              value={settings.email ?? ''}
+              onChange={e => setSettings(s => ({ ...s, email: e.target.value }))}
+              style={fieldStyle}
+              placeholder="info@nt.services"
+            />
+          </div>
+          <div>
+            <label style={labelStyle}>Address</label>
+            <input
+              type="text"
+              value={settings.address ?? ''}
+              onChange={e => setSettings(s => ({ ...s, address: e.target.value }))}
+              style={fieldStyle}
+              placeholder="Unit F2 Rotterdam Park"
+            />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div>
+              <label style={labelStyle}>City</label>
+              <input
+                type="text"
+                value={settings.city ?? ''}
+                onChange={e => setSettings(s => ({ ...s, city: e.target.value }))}
+                style={fieldStyle}
+                placeholder="Hull"
+              />
+            </div>
+            <div>
+              <label style={labelStyle}>Postcode</label>
+              <input
+                type="text"
+                value={settings.postalCode ?? ''}
+                onChange={e => setSettings(s => ({ ...s, postalCode: e.target.value }))}
+                style={fieldStyle}
+                placeholder="HU7 0AN"
+              />
             </div>
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Social Links Section - Below Main Grid */}
-      {!loading && userRole === 'administrator' && (
-        <div style={{
-          marginTop: '24px',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid #e5e7eb',
-          padding: '24px',
-          background: '#fff',
-        }}>
-          <h2 style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: '16px',
-            fontWeight: 700,
-            color: 'var(--navy-800)',
-            margin: '0 0 18px 0',
-          }}>
-            Social Links
-          </h2>
+      {/* ── SOCIAL LINKS ── */}
+      <div style={cardStyle}>
+        <h2 style={sectionHeading}>Social Links</h2>
+        <p style={sectionSub}>URLs for social media icons in the footer</p>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '16px',
-          }}>
-            {['facebook', 'twitter', 'instagram', 'linkedin'].map((social) => (
-              <div key={social}>
-                <label style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  textTransform: 'capitalize',
-                  letterSpacing: '.03em',
-                  color: 'var(--slate-600)',
-                  display: 'block',
-                  marginBottom: '6px',
-                }}>
-                  {social}
-                </label>
-                <input
-                  type="url"
-                  value={settings.socialLinks?.[social as keyof typeof settings.socialLinks] || ''}
-                  onChange={(e) =>
-                    setSettings({
-                      ...settings,
-                      socialLinks: {
-                        ...settings.socialLinks,
-                        [social]: e.target.value,
-                      },
-                    })
-                  }
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    borderRadius: 'var(--radius-md)',
-                    border: '1px solid #e5e7eb',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '14px',
-                    boxSizing: 'border-box',
-                  }}
-                  placeholder={`https://${social}.com/yourpage`}
-                />
-              </div>
-            ))}
-          </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          {[
+            { key: 'facebookUrl', label: 'Facebook', placeholder: 'https://facebook.com/…' },
+            { key: 'linkedinUrl', label: 'LinkedIn', placeholder: 'https://linkedin.com/company/…' },
+            { key: 'twitterUrl', label: 'X / Twitter', placeholder: 'https://x.com/…' },
+          ].map(({ key, label, placeholder }) => (
+            <div key={key}>
+              <label style={labelStyle}>{label}</label>
+              <input
+                type="url"
+                value={settings[key as keyof SiteSettings] as string ?? ''}
+                onChange={e => setSettings(s => ({ ...s, [key]: e.target.value }))}
+                style={fieldStyle}
+                placeholder={placeholder}
+              />
+            </div>
+          ))}
         </div>
-      )}
+      </div>
+
+      {/* Save contact + social button */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-8px' }}>
+        <button
+          onClick={handleSaveContact}
+          disabled={saving}
+          style={{
+            padding: '10px 24px', borderRadius: 'var(--radius-md)', border: 'none',
+            background: 'var(--green-600)', color: '#fff',
+            fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600,
+            cursor: saving ? 'default' : 'pointer', opacity: saving ? 0.6 : 1,
+          }}
+        >
+          {saving ? 'Saving…' : 'Save Changes'}
+        </button>
+      </div>
     </div>
   );
 }
