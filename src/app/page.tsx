@@ -8,7 +8,6 @@ import ServicesBento from "@/components/home/ServicesBento";
 import ServicesGrid from "@/components/home/ServicesGrid";
 import LatestProjects from "@/components/home/LatestProjects";
 import Testimonials from "@/components/home/Testimonials";
-import GoogleReviewsPromo from "@/components/home/GoogleReviewsPromo";
 import FeaturedNews from "@/components/home/FeaturedNews";
 
 export default function Home() {
@@ -39,7 +38,6 @@ export default function Home() {
         </div>
         <LatestProjects />
         <Testimonials />
-        <GoogleReviewsPromo />
         <FeaturedNews />
       </main>
       <Footer />

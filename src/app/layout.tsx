@@ -5,7 +5,6 @@ import "./globals.css";
 import "@/styles/admin/theme.css";
 import FaviconManager from "@/components/common/FaviconManager";
 import EngineeringBackground from "@/components/common/EngineeringBackground";
-import ConditionalRetell from "@/components/common/ConditionalRetell";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nevilletuckerservices.co.uk";
 
@@ -256,7 +255,6 @@ gtag('config', 'G-PEK7PKH64Z');`,
         {/* End Google Tag Manager (noscript) */}
         <EngineeringBackground />
         <FaviconManager />
-        <ConditionalRetell />
         {children}
       </body>
     </html>
