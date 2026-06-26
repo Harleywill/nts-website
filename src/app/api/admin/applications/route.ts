@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
 function isAdminAuthenticated(request: NextRequest): boolean {
-  return !!request.cookies.get("auth-token");
+  return !!request.cookies.get("admin-session");
 }
 
 export async function GET(request: NextRequest) {

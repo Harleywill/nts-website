@@ -5,7 +5,7 @@ import { sendApplicationStatusUpdate } from "@/lib/email";
 const EMAIL_TRIGGER_STATUSES = new Set(["INTERVIEW", "OFFER", "HIRED"]);
 
 function isAdminAuthenticated(request: NextRequest): boolean {
-  return !!request.cookies.get("auth-token");
+  return !!request.cookies.get("admin-session");
 }
 
 export async function PATCH(
