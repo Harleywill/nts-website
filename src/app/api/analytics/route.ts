@@ -22,7 +22,7 @@ function getAnalyticsClient() {
 export async function GET(request: NextRequest) {
   try {
     // Verify JWT token
-    const token = request.cookies.get("auth-token")?.value;
+    const token = request.cookies.get("admin-session")?.value;
     if (!token) {
       return NextResponse.json(
         { error: "Unauthorized" },

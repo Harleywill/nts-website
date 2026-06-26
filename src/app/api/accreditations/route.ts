@@ -38,7 +38,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const auth = request.cookies.get("auth-token");
+  const auth = request.cookies.get("admin-session");
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const auth = request.cookies.get("auth-token");
+  const auth = request.cookies.get("admin-session");
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
