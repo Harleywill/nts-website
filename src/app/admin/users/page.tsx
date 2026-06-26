@@ -24,6 +24,7 @@ export default function UsersPage() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<string>('viewer');
+  const [changingRole, setChangingRole] = useState(false);
 
   useEffect(() => {
     fetch('/api/auth/me', { credentials: 'include' })
@@ -42,6 +43,24 @@ export default function UsersPage() {
       .catch((err) => console.error('Failed to fetch users:', err))
       .finally(() => setLoading(false));
   }, []);
+
+  const handleRoleChange = async (id: number, newRole: string) => {
+    setChangingRole(true);
+    try {
+      const res = await fetch(`/api/users/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ role: newRole }),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setUsers((prev) => prev.map((u) => u.id === id ? { ...u, role: updated.role } : u));
+      }
+    } catch { /* ignore */ } finally {
+      setChangingRole(false);
+    }
+  };
 
   const handleDelete = async (id: number, username: string) => {
     if (!confirm(`Remove ${username} from admin panel?`)) return;
@@ -199,18 +218,42 @@ export default function UsersPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                 <div>
                   <div style={labelStyle}>Role</div>
-                  <span style={{
-                    display: 'inline-block',
-                    padding: '4px 10px',
-                    borderRadius: 'var(--radius-sm)',
-                    background: roleStyle(selected.role).bg,
-                    color: roleStyle(selected.role).color,
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '12px', fontWeight: 700,
-                    textTransform: 'uppercase', letterSpacing: '.03em',
-                  }}>
-                    {selected.role}
-                  </span>
+                  {showAdmin ? (
+                    <select
+                      value={selected.role}
+                      disabled={changingRole}
+                      onChange={(e) => handleRoleChange(selected.id, e.target.value)}
+                      style={{
+                        padding: '5px 10px',
+                        borderRadius: 'var(--radius-sm)',
+                        border: '1px solid var(--border)',
+                        background: roleStyle(selected.role).bg,
+                        color: roleStyle(selected.role).color,
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '12px', fontWeight: 700,
+                        textTransform: 'uppercase', letterSpacing: '.03em',
+                        cursor: changingRole ? 'wait' : 'pointer',
+                        opacity: changingRole ? 0.6 : 1,
+                      }}
+                    >
+                      {(['ADMIN', 'MANAGER', 'EDITOR', 'VIEWER'] as const).map((r) => (
+                        <option key={r} value={r}>{r}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <span style={{
+                      display: 'inline-block',
+                      padding: '4px 10px',
+                      borderRadius: 'var(--radius-sm)',
+                      background: roleStyle(selected.role).bg,
+                      color: roleStyle(selected.role).color,
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '12px', fontWeight: 700,
+                      textTransform: 'uppercase', letterSpacing: '.03em',
+                    }}>
+                      {selected.role}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <div style={labelStyle}>Joined</div>

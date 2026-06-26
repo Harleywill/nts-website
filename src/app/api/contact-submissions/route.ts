@@ -90,11 +90,22 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { read } = body;
+    const { read, status } = body;
+
+    const updateData: Record<string, unknown> = {};
+    if (read !== undefined) updateData.read = read;
+    if (status !== undefined) {
+      const validStatuses = ["UNREAD", "READ", "REPLIED"];
+      if (!validStatuses.includes(status)) {
+        return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+      }
+      updateData.status = status;
+      updateData.read = status !== "UNREAD";
+    }
 
     const submission = await prisma.contactSubmission.update({
       where: { id: submissionId },
-      data: read !== undefined ? { read } : {},
+      data: updateData,
     });
 
     return NextResponse.json(submission);
