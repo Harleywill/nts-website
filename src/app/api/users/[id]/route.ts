@@ -138,6 +138,46 @@ export async function PUT(
   }
 }
 
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const authResult = await verifyAuthWithUser(request);
+    if (!authResult.success || !authResult.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userRole = authResult.user.role as UserRole;
+    if (!isAdministrator(userRole)) {
+      return NextResponse.json(
+        { error: "Forbidden: Only administrators can change user roles" },
+        { status: 403 }
+      );
+    }
+
+    const { id } = await params;
+    const userId = parseInt(id);
+    const body = await request.json();
+    const { role } = body;
+
+    const validRoles = ['ADMIN', 'MANAGER', 'EDITOR', 'VIEWER'];
+    if (!role || !validRoles.includes(role)) {
+      return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+    }
+
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { role },
+      select: { id: true, username: true, role: true, createdAt: true },
+    });
+
+    return NextResponse.json(user);
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to update role" }, { status: 500 });
+  }
+}
+
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

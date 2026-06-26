@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { canDelete } from '@/lib/admin/permissions';
 
+type EnquiryStatus = 'UNREAD' | 'READ' | 'REPLIED';
+
 interface Enquiry {
   id: number;
   name: string;
@@ -11,14 +13,22 @@ interface Enquiry {
   service?: string;
   message: string;
   read: boolean;
+  status: EnquiryStatus;
   createdAt: string;
 }
+
+const STATUS_CONFIG: Record<EnquiryStatus, { label: string; bg: string; color: string; dot: string }> = {
+  UNREAD:  { label: 'Unread',  bg: 'var(--green-50)',   color: 'var(--green-700)', dot: 'var(--green-600)' },
+  READ:    { label: 'Read',    bg: 'var(--slate-100)',  color: 'var(--slate-600)', dot: 'transparent' },
+  REPLIED: { label: 'Replied', bg: '#eff6ff',           color: '#1d4ed8',          dot: 'transparent' },
+};
 
 export default function ContactSubmissionsPage() {
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<string>('viewer');
+  const [updatingStatus, setUpdatingStatus] = useState(false);
 
   useEffect(() => {
     fetch('/api/auth/me', { credentials: 'include' })
@@ -30,21 +40,27 @@ export default function ContactSubmissionsPage() {
       .then((res) => { if (!res.ok) throw new Error(`API error: ${res.status}`); return res.json(); })
       .then((data) => {
         const arr: Enquiry[] = Array.isArray(data) ? data : data.submissions || [];
-        setEnquiries(arr);
-        if (arr.length > 0) setSelectedId(arr[0].id);
+        const normalised = arr.map((e) => ({
+          ...e,
+          status: (e.status as EnquiryStatus) || (e.read ? 'READ' : 'UNREAD'),
+        }));
+        setEnquiries(normalised);
+        if (normalised.length > 0) setSelectedId(normalised[0].id);
       })
       .catch(() => setEnquiries([]))
       .finally(() => setLoading(false));
   }, []);
 
-  const markAsRead = async (id: number) => {
+  const updateStatus = async (id: number, status: EnquiryStatus) => {
+    setUpdatingStatus(true);
     await fetch(`/api/contact-submissions?id=${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ read: true }),
+      body: JSON.stringify({ status }),
       credentials: 'include',
     }).catch(() => {});
-    setEnquiries((prev) => prev.map((e) => (e.id === id ? { ...e, read: true } : e)));
+    setEnquiries((prev) => prev.map((e) => e.id === id ? { ...e, status, read: status !== 'UNREAD' } : e));
+    setUpdatingStatus(false);
   };
 
   const handleDelete = async (id: number, name: string) => {
@@ -60,12 +76,12 @@ export default function ContactSubmissionsPage() {
   const selectEnquiry = (id: number) => {
     setSelectedId(id);
     const enquiry = enquiries.find((e) => e.id === id);
-    if (enquiry && !enquiry.read) markAsRead(id);
+    if (enquiry && enquiry.status === 'UNREAD') updateStatus(id, 'READ');
   };
 
   const selected = enquiries.find((e) => e.id === selectedId);
   const showDelete = canDelete(userRole as any);
-  const unreadCount = enquiries.filter((e) => !e.read).length;
+  const unreadCount = enquiries.filter((e) => e.status === 'UNREAD').length;
 
   return (
     <div style={{ display: 'flex', height: 'calc(100vh - 100px)', background: '#fff' }}>
@@ -92,51 +108,61 @@ export default function ContactSubmissionsPage() {
             <div style={{ padding: '32px 24px', textAlign: 'center', color: 'var(--slate-400)', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>Loading…</div>
           ) : enquiries.length === 0 ? (
             <div style={{ padding: '32px 24px', textAlign: 'center', color: 'var(--slate-500)', fontFamily: 'var(--font-body)', fontSize: '14px' }}>No enquiries yet</div>
-          ) : enquiries.map((enquiry) => (
-            <button
-              key={enquiry.id}
-              onClick={() => selectEnquiry(enquiry.id)}
-              style={{
-                width: '100%',
-                padding: '14px 20px',
-                borderBottom: '1px solid var(--border)',
-                background: selectedId === enquiry.id ? 'var(--navy-50)' : '#fff',
-                border: 'none',
-                cursor: 'pointer',
-                textAlign: 'left',
-                transition: 'background 0.15s',
-                borderLeft: selectedId === enquiry.id ? '3px solid var(--green-600)' : '3px solid transparent',
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '10px',
-              }}
-              onMouseEnter={(e) => { if (selectedId !== enquiry.id) (e.currentTarget as HTMLElement).style.background = 'var(--slate-50)'; }}
-              onMouseLeave={(e) => { if (selectedId !== enquiry.id) (e.currentTarget as HTMLElement).style.background = '#fff'; }}
-            >
-              <div style={{ width: '8px', paddingTop: '5px', flexShrink: 0 }}>
-                {!enquiry.read && (
-                  <span style={{ display: 'block', width: '7px', height: '7px', borderRadius: '50%', background: 'var(--green-600)' }} />
-                )}
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: '13px', fontWeight: enquiry.read ? 600 : 700,
-                  color: 'var(--navy-800)',
-                  marginBottom: '3px',
-                  whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                }}>
-                  {enquiry.name}
+          ) : enquiries.map((enquiry) => {
+            const cfg = STATUS_CONFIG[enquiry.status] || STATUS_CONFIG.READ;
+            return (
+              <button
+                key={enquiry.id}
+                onClick={() => selectEnquiry(enquiry.id)}
+                style={{
+                  width: '100%',
+                  padding: '14px 20px',
+                  borderBottom: '1px solid var(--border)',
+                  background: selectedId === enquiry.id ? 'var(--navy-50)' : '#fff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'background 0.15s',
+                  borderLeft: selectedId === enquiry.id ? '3px solid var(--green-600)' : '3px solid transparent',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '10px',
+                }}
+                onMouseEnter={(e) => { if (selectedId !== enquiry.id) (e.currentTarget as HTMLElement).style.background = 'var(--slate-50)'; }}
+                onMouseLeave={(e) => { if (selectedId !== enquiry.id) (e.currentTarget as HTMLElement).style.background = '#fff'; }}
+              >
+                <div style={{ width: '8px', paddingTop: '5px', flexShrink: 0 }}>
+                  {enquiry.status === 'UNREAD' && (
+                    <span style={{ display: 'block', width: '7px', height: '7px', borderRadius: '50%', background: 'var(--green-600)' }} />
+                  )}
                 </div>
-                <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--slate-500)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {enquiry.email}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '13px', fontWeight: enquiry.status === 'UNREAD' ? 700 : 600,
+                    color: 'var(--navy-800)',
+                    marginBottom: '3px',
+                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                  }}>
+                    {enquiry.name}
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--slate-500)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {enquiry.email}
+                  </div>
                 </div>
-              </div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--slate-400)', flexShrink: 0, paddingTop: '2px' }}>
-                {new Date(enquiry.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
-              </div>
-            </button>
-          ))}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px', flexShrink: 0 }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--slate-400)' }}>
+                    {new Date(enquiry.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                  </div>
+                  {enquiry.status === 'REPLIED' && (
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', fontWeight: 600, padding: '1px 5px', borderRadius: '3px', background: '#eff6ff', color: '#1d4ed8', textTransform: 'uppercase' }}>
+                      Replied
+                    </span>
+                  )}
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -151,12 +177,35 @@ export default function ContactSubmissionsPage() {
                 </h2>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--slate-500)', textTransform: 'uppercase', letterSpacing: '.04em' }}>
                   {new Date(selected.createdAt).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                  {selected.read && <span style={{ marginLeft: '10px', color: 'var(--slate-400)' }}>· Read</span>}
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: '8px' }}>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                {/* Status buttons */}
+                {(['UNREAD', 'READ', 'REPLIED'] as EnquiryStatus[]).map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => updateStatus(selected.id, s)}
+                    disabled={updatingStatus || selected.status === s}
+                    style={{
+                      height: '30px', padding: '0 10px',
+                      borderRadius: 'var(--radius-sm)',
+                      border: `1px solid ${selected.status === s ? STATUS_CONFIG[s].color : 'var(--border)'}`,
+                      background: selected.status === s ? STATUS_CONFIG[s].bg : '#fff',
+                      color: selected.status === s ? STATUS_CONFIG[s].color : 'var(--slate-500)',
+                      fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 600,
+                      textTransform: 'uppercase', letterSpacing: '.04em',
+                      cursor: selected.status === s ? 'default' : 'pointer',
+                      opacity: updatingStatus ? 0.6 : 1,
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    {STATUS_CONFIG[s].label}
+                  </button>
+                ))}
+                <div style={{ width: '1px', height: '20px', background: 'var(--border)', margin: '0 4px' }} />
                 <a
                   href={`mailto:${selected.email}`}
+                  onClick={() => { if (selected.status !== 'REPLIED') updateStatus(selected.id, 'REPLIED'); }}
                   style={{
                     height: '32px', padding: '0 12px',
                     display: 'inline-flex', alignItems: 'center',
@@ -170,22 +219,6 @@ export default function ContactSubmissionsPage() {
                 >
                   Reply
                 </a>
-                {!selected.read && (
-                  <button
-                    onClick={() => markAsRead(selected.id)}
-                    style={{
-                      height: '32px', padding: '0 12px',
-                      borderRadius: 'var(--radius-sm)',
-                      border: '1px solid var(--border)',
-                      background: '#fff',
-                      color: 'var(--slate-600)',
-                      fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 600,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Mark Read
-                  </button>
-                )}
                 {showDelete && (
                   <button
                     onClick={() => handleDelete(selected.id, selected.name)}
@@ -228,6 +261,20 @@ export default function ContactSubmissionsPage() {
                     <div style={valueStyle}>{selected.service}</div>
                   </div>
                 )}
+                <div>
+                  <div style={labelStyle}>Status</div>
+                  <span style={{
+                    display: 'inline-block',
+                    padding: '3px 10px',
+                    borderRadius: 'var(--radius-sm)',
+                    background: STATUS_CONFIG[selected.status]?.bg || 'var(--slate-100)',
+                    color: STATUS_CONFIG[selected.status]?.color || 'var(--slate-600)',
+                    fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600,
+                    textTransform: 'uppercase', letterSpacing: '.04em',
+                  }}>
+                    {STATUS_CONFIG[selected.status]?.label || selected.status}
+                  </span>
+                </div>
               </div>
 
               <div>

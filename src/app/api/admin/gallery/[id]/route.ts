@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { verifyAuthWithUser } from "@/lib/auth-middleware";
-import { hasPermission, UserRole } from "@/lib/admin/permissions";
 
-async function checkAuth(request: NextRequest) {
-  const authResult = await verifyAuthWithUser(request);
-  if (!authResult.success || !authResult.user) return null;
-  return authResult.user;
+function isAuthenticated(request: NextRequest): boolean {
+  return !!request.cookies.get("admin-session");
 }
 
 export async function PUT(
@@ -14,10 +10,8 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await checkAuth(request);
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    if (!hasPermission(user.role as UserRole, "projects")) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (!isAuthenticated(request)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const { id } = await params;
     const body = await request.json() as { alt?: string; caption?: string; category?: string; published?: boolean; order?: number };
@@ -31,7 +25,7 @@ export async function PUT(
         ...(body.order !== undefined && { order: body.order }),
       },
     });
-    return NextResponse.json(image);
+    return NextResponse.json({ ...image, source: "gallery", sourceLabel: null, sourceId: null });
   } catch {
     return NextResponse.json({ error: "Failed to update gallery image" }, { status: 500 });
   }
@@ -42,10 +36,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await checkAuth(request);
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    if (!hasPermission(user.role as UserRole, "projects")) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (!isAuthenticated(request)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const { id } = await params;
     await prisma.galleryImage.delete({ where: { id: parseInt(id) } });

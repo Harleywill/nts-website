@@ -115,6 +115,7 @@ model ContactSubmission {
   service          String?
   message          String
   read             Boolean  @default(false)
+  status           String   @default("UNREAD")
   emailSentToAdmin Boolean  @default(false)
   emailSentToUser  Boolean  @default(false)
   adminEmails      String?
