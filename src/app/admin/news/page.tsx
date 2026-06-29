@@ -282,7 +282,7 @@ export default function NewsPage() {
                     {toggling ? 'Updating…' : selected.published ? 'Unpublish' : 'Publish'}
                   </button>
                   <button
-                    onClick={() => router.push(`/admin/news/${selected.id}`)}
+                    onClick={() => router.push(`/admin/news/${selected.id}/edit`)}
                     style={{
                       width: '36px', height: '36px', borderRadius: 'var(--radius-md)',
                       border: '1px solid var(--border)', background: '#fff', cursor: 'pointer',
