@@ -228,7 +228,7 @@ export default function TestimonialsPage() {
                     {toggling ? 'Updating…' : selected.published ? 'Unpublish' : 'Publish'}
                   </button>
                   <button
-                    onClick={() => router.push(`/admin/testimonials/${selected.id}`)}
+                    onClick={() => router.push(`/admin/testimonials/${selected.id}/edit`)}
                     style={{
                       width: '36px',
                       height: '36px',
