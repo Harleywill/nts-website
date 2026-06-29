@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AnimatedHeading from "@/components/common/AnimatedHeading";
+import { useCarousel } from "@/hooks/useCarousel";
 
 interface ProjectItem {
   id: number;
@@ -18,67 +19,19 @@ interface ProjectItem {
 export default function LatestProjects() {
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
-  const touchStartX = useRef(0);
-  const [itemsToShow, setItemsToShow] = useState(3);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const res = await fetch("/api/projects");
-        const data = await res.json();
-        setProjects(data);
-      } catch {
-        setProjects([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProjects();
+    fetch("/api/projects")
+      .then(r => r.json())
+      .then(setProjects)
+      .catch(() => setProjects([]))
+      .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    const checkScreenSize = () => {
-      if (window.innerWidth < 768) setItemsToShow(1);
-      else if (window.innerWidth < 1024) setItemsToShow(2);
-      else setItemsToShow(3);
-    };
-    checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
-    return () => window.removeEventListener("resize", checkScreenSize);
-  }, []);
-
-  const maxIndex = Math.max(0, projects.length - itemsToShow);
-
-  const goTo = (index: number, dir: number) => {
-    setDirection(dir);
-    setCurrentIndex(index);
-  };
-
-  const goToPrevious = () => {
-    const next = currentIndex === 0 ? maxIndex : currentIndex - 1;
-    goTo(next, -1);
-  };
-
-  const goToNext = () => {
-    const next = currentIndex === maxIndex ? 0 : currentIndex + 1;
-    goTo(next, 1);
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff > 50) goToNext();
-    else if (diff < -50) goToPrevious();
-  };
+  const { currentIndex, setCurrentIndex, itemsToShow, maxIndex, translateX,
+          goToPrevious, goToNext, handleTouchStart, handleTouchEnd } = useCarousel(projects.length);
 
   if (loading || projects.length === 0) return null;
-
-  const translateX = -(currentIndex * (100 / projects.length));
 
   return (
     <section className="py-16 sm:py-24 lg:py-32 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
@@ -101,12 +54,7 @@ export default function LatestProjects() {
         </motion.div>
 
         <div className="mt-8 sm:mt-10 border-t border-gray-700 pt-8 sm:pt-12">
-          {/* Sliding track */}
-          <div
-            className="overflow-hidden"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
+          <div className="overflow-hidden" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
             <motion.div
               className="flex"
               animate={{ x: `${translateX}%` }}
@@ -114,10 +62,7 @@ export default function LatestProjects() {
               style={{ width: `${(projects.length / itemsToShow) * 100}%` }}
             >
               {projects.map((project, idx) => (
-                <div
-                  key={project.id}
-                  style={{ width: `${100 / projects.length}%`, padding: "0 12px" }}
-                >
+                <div key={project.id} style={{ width: `${100 / projects.length}%`, padding: "0 12px" }}>
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -150,9 +95,7 @@ export default function LatestProjects() {
                         </span>
                       </div>
 
-                      <h3 className="mt-3 sm:mt-4 text-lg font-semibold text-gray-900">
-                        {project.title}
-                      </h3>
+                      <h3 className="mt-3 sm:mt-4 text-lg font-semibold text-gray-900">{project.title}</h3>
 
                       <p className="mt-2 text-sm text-gray-600 leading-relaxed line-clamp-2">
                         {project.description}
@@ -172,7 +115,6 @@ export default function LatestProjects() {
             </motion.div>
           </div>
 
-          {/* Navigation */}
           <div className="mt-8 flex items-center justify-center gap-4 sm:gap-6">
             <button
               onClick={goToPrevious}
@@ -187,7 +129,7 @@ export default function LatestProjects() {
               {Array.from({ length: maxIndex + 1 }).map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => goTo(index, index > currentIndex ? 1 : -1)}
+                  onClick={() => setCurrentIndex(index)}
                   className="rounded-full transition-all duration-300"
                   style={{
                     width: index === currentIndex ? "32px" : "8px",

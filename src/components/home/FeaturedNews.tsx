@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AnimatedHeading from "@/components/common/AnimatedHeading";
 import { getCropStyles, getCropContainerStyles } from "@/lib/image-crop";
+import { useCarousel } from "@/hooks/useCarousel";
 
 interface NewsItem {
   id: number;
@@ -23,57 +24,19 @@ interface NewsItem {
 export default function FeaturedNews() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [itemsToShow, setItemsToShow] = useState(3);
-  const touchStartX = useRef(0);
 
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const res = await fetch("/api/news");
-        const data = await res.json();
-        setNews(data.filter((item: NewsItem) => item.featured));
-      } catch {
-        setNews([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchNews();
+    fetch("/api/news")
+      .then(r => r.json())
+      .then(d => setNews(d.filter((item: NewsItem) => item.featured)))
+      .catch(() => setNews([]))
+      .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    const checkScreenSize = () => {
-      if (window.innerWidth < 768) setItemsToShow(1);
-      else if (window.innerWidth < 1024) setItemsToShow(2);
-      else setItemsToShow(3);
-    };
-    checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
-    return () => window.removeEventListener("resize", checkScreenSize);
-  }, []);
-
-  const maxIndex = Math.max(0, news.length - itemsToShow);
-
-  const goToPrevious = () =>
-    setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
-
-  const goToNext = () =>
-    setCurrentIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff > 50) goToNext();
-    else if (diff < -50) goToPrevious();
-  };
+  const { currentIndex, setCurrentIndex, itemsToShow, maxIndex, translateX,
+          goToPrevious, goToNext, handleTouchStart, handleTouchEnd } = useCarousel(news.length);
 
   if (loading || news.length === 0) return null;
-
-  const translateX = -(currentIndex * (100 / news.length));
 
   return (
     <section className="py-16 sm:py-24 lg:py-32 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
@@ -96,12 +59,7 @@ export default function FeaturedNews() {
         </motion.div>
 
         <div className="mt-8 sm:mt-10 border-t border-gray-700 pt-8 sm:pt-12">
-          {/* Sliding track */}
-          <div
-            className="overflow-hidden"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
+          <div className="overflow-hidden" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
             <motion.div
               className="flex"
               animate={{ x: `${translateX}%` }}
@@ -109,10 +67,7 @@ export default function FeaturedNews() {
               style={{ width: `${(news.length / itemsToShow) * 100}%` }}
             >
               {news.map((newsItem, idx) => (
-                <div
-                  key={newsItem.id}
-                  style={{ width: `${100 / news.length}%`, padding: "0 12px" }}
-                >
+                <div key={newsItem.id} style={{ width: `${100 / news.length}%`, padding: "0 12px" }}>
                   <motion.article
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -151,9 +106,7 @@ export default function FeaturedNews() {
                         </span>
                       </div>
 
-                      <h3 className="mt-3 sm:mt-4 text-lg font-semibold text-gray-900">
-                        {newsItem.title}
-                      </h3>
+                      <h3 className="mt-3 sm:mt-4 text-lg font-semibold text-gray-900">{newsItem.title}</h3>
 
                       <p className="mt-2 text-sm text-gray-600 leading-relaxed line-clamp-2">
                         {newsItem.content}
@@ -173,7 +126,6 @@ export default function FeaturedNews() {
             </motion.div>
           </div>
 
-          {/* Navigation */}
           <div className="mt-8 flex items-center justify-center gap-4 sm:gap-6">
             <button
               onClick={goToPrevious}
