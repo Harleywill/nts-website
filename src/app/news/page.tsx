@@ -12,6 +12,8 @@ interface NewsItem {
   title: string;
   content: string;
   imageUrl: string | null;
+  cropX?: number;
+  cropY?: number;
   featured: boolean;
   createdAt: string;
 }
@@ -98,6 +100,7 @@ export default function NewsPage() {
                           src={item.imageUrl}
                           alt={item.title}
                           className="aspect-video w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          style={{ objectPosition: `${(item.cropX ?? 0.5) * 100}% ${(item.cropY ?? 0.5) * 100}%` }}
                         />
                       </div>
                     )}

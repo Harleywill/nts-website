@@ -14,6 +14,8 @@ interface NewsItem {
   title: string;
   content: string;
   imageUrl: string | null;
+  cropX?: number;
+  cropY?: number;
   featured: boolean;
   createdAt: string;
   images?: Array<{ imageUrl: string }>;
@@ -127,6 +129,7 @@ export default function NewsDetailPage() {
                       src={news.imageUrl}
                       alt={news.title}
                       className="w-full h-56 sm:h-64 object-cover"
+                      style={{ objectPosition: `${(news.cropX ?? 0.5) * 100}% ${(news.cropY ?? 0.5) * 100}%` }}
                     />
                   </div>
                 )}
