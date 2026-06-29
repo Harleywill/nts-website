@@ -4,12 +4,17 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaTrash, FaPlus } from "react-icons/fa";
+import FocalPointPicker from "@/components/admin/FocalPointPicker";
 
 interface NewsItem {
   id: number;
   title: string;
   content: string;
   imageUrl: string | null;
+  cropX: number;
+  cropY: number;
+  cropWidth: number;
+  cropHeight: number;
   featured: boolean;
   published: boolean;
   images: { id: number; imageUrl: string }[];
@@ -24,6 +29,8 @@ export default function EditNewsPage({ params }: { params: Promise<{ id: string 
   const [newsId, setNewsId] = useState<string | null>(null);
   const [formData, setFormData] = useState<Omit<NewsItem, "images"> | null>(null);
   const [coverImage, setCoverImage] = useState<string>("");
+  const [cropX, setCropX] = useState(0.5);
+  const [cropY, setCropY] = useState(0.5);
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const coverInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
@@ -37,8 +44,14 @@ export default function EditNewsPage({ params }: { params: Promise<{ id: string 
     fetch(`/api/news/${newsId}`)
       .then((r) => r.json())
       .then((data: NewsItem) => {
-        setFormData({ id: data.id, title: data.title, content: data.content, imageUrl: data.imageUrl, featured: data.featured, published: data.published });
+        setFormData({
+          id: data.id, title: data.title, content: data.content,
+          imageUrl: data.imageUrl, featured: data.featured, published: data.published,
+          cropX: data.cropX, cropY: data.cropY, cropWidth: data.cropWidth, cropHeight: data.cropHeight,
+        });
         setCoverImage(data.imageUrl ?? "");
+        setCropX(data.cropX ?? 0.5);
+        setCropY(data.cropY ?? 0.5);
         setGalleryImages(data.images?.map((img) => img.imageUrl) ?? []);
       })
       .catch(() => setError("Failed to load news item"))
@@ -68,8 +81,13 @@ export default function EditNewsPage({ params }: { params: Promise<{ id: string 
     if (!file) return;
     setUploading(true);
     const url = await uploadFile(file);
-    if (url) setCoverImage(url);
-    else setError("Failed to upload cover image");
+    if (url) {
+      setCoverImage(url);
+      setCropX(0.5);
+      setCropY(0.5);
+    } else {
+      setError("Failed to upload cover image");
+    }
     setUploading(false);
     if (coverInputRef.current) coverInputRef.current.value = "";
   };
@@ -106,6 +124,10 @@ export default function EditNewsPage({ params }: { params: Promise<{ id: string 
           imageUrl: coverImage,
           featured: formData.featured,
           published: formData.published,
+          cropX,
+          cropY,
+          cropWidth: 1,
+          cropHeight: 1,
           gallery: galleryImages,
         }),
       });
@@ -182,6 +204,16 @@ export default function EditNewsPage({ params }: { params: Promise<{ id: string 
             <input ref={coverInputRef} type="file" accept="image/*" onChange={handleCoverUpload} className="hidden" />
           </div>
 
+          {/* Focal Point Picker — only shown when a cover image is set */}
+          {coverImage && (
+            <FocalPointPicker
+              imageUrl={coverImage}
+              cropX={cropX}
+              cropY={cropY}
+              onChange={(x, y) => { setCropX(x); setCropY(y); }}
+            />
+          )}
+
           <div className="flex items-center gap-8">
             <label className="flex items-center gap-2">
               <input
@@ -205,7 +237,6 @@ export default function EditNewsPage({ params }: { params: Promise<{ id: string 
           <h2 className="text-xl font-bold text-gray-900 mb-2">Photo Gallery</h2>
           <p className="text-sm text-gray-500 mb-6">
             Add multiple images — they'll display as a scrollable gallery on the article page.
-            Images are automatically sized and cropped to a consistent aspect ratio.
           </p>
 
           {galleryImages.length > 0 && (

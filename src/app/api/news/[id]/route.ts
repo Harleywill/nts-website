@@ -39,13 +39,17 @@ export async function PUT(
 
     const { id } = await params;
     const body = await request.json();
-    const { title, content, imageUrl, featured, published, gallery } = body as {
+    const { title, content, imageUrl, featured, published, gallery, cropX, cropY, cropWidth, cropHeight } = body as {
       title: string;
       content: string;
       imageUrl?: string;
       featured?: boolean;
       published?: boolean;
       gallery?: string[];
+      cropX?: number;
+      cropY?: number;
+      cropWidth?: number;
+      cropHeight?: number;
     };
 
     const newsItem = await prisma.newsItem.update({
@@ -56,7 +60,10 @@ export async function PUT(
         imageUrl: imageUrl ?? "",
         featured: featured ?? false,
         published: published ?? false,
-        // Replace all gallery images
+        cropX: cropX ?? 0.5,
+        cropY: cropY ?? 0.5,
+        cropWidth: cropWidth ?? 1,
+        cropHeight: cropHeight ?? 1,
         images: {
           deleteMany: {},
           create: (gallery ?? []).map((url, i) => ({ imageUrl: url, order: i })),

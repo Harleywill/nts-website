@@ -28,12 +28,16 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, content, featured, imageUrl, gallery } = body as {
+    const { title, content, featured, imageUrl, gallery, cropX, cropY, cropWidth, cropHeight } = body as {
       title: string;
       content: string;
       featured: boolean;
       imageUrl?: string;
       gallery?: string[];
+      cropX?: number;
+      cropY?: number;
+      cropWidth?: number;
+      cropHeight?: number;
     };
 
     if (!title || !content) {
@@ -46,6 +50,10 @@ export async function POST(request: NextRequest) {
         content,
         imageUrl: imageUrl || "",
         featured: featured ?? false,
+        cropX: cropX ?? 0.5,
+        cropY: cropY ?? 0.5,
+        cropWidth: cropWidth ?? 1,
+        cropHeight: cropHeight ?? 1,
         images: gallery && gallery.length > 0
           ? { create: gallery.map((url, i) => ({ imageUrl: url, order: i })) }
           : undefined,
