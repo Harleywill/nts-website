@@ -60,11 +60,13 @@ export default function FeaturedNews() {
 
         <div className="mt-8 sm:mt-10 border-t border-gray-700 pt-8 sm:pt-12">
           <div className="overflow-hidden" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-            <motion.div
+            <div
               className="flex"
-              animate={{ x: `${translateX}%` }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              style={{ width: `${(news.length / itemsToShow) * 100}%` }}
+              style={{
+                width: `${(news.length / itemsToShow) * 100}%`,
+                transform: `translateX(${translateX}%)`,
+                transition: "transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+              }}
             >
               {news.map((newsItem, idx) => (
                 <div key={newsItem.id} style={{ width: `${100 / news.length}%`, padding: "0 12px" }}>
@@ -123,7 +125,7 @@ export default function FeaturedNews() {
                   </motion.article>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
 
           <div className="mt-8 flex items-center justify-center gap-4 sm:gap-6">
