@@ -78,8 +78,7 @@ export default function LatestProjects() {
 
   if (loading || projects.length === 0) return null;
 
-  const cardWidthPct = 100 / itemsToShow;
-  const translateX = -(currentIndex * cardWidthPct);
+  const translateX = -(currentIndex * (100 / projects.length));
 
   return (
     <section className="py-16 sm:py-24 lg:py-32 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
