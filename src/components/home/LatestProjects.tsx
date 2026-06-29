@@ -124,17 +124,15 @@ export default function LatestProjects() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: (idx % itemsToShow) * 0.1 }}
                     viewport={{ once: true, amount: 0.2 }}
+                    whileHover={{ scale: 1.03, y: -4, boxShadow: "0 20px 25px -5px rgba(76, 175, 80, 0.2)", transition: { duration: 0.2 } }}
                     className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-md h-full bg-white"
-                    whileHover={{ scale: 1.03, y: -4, boxShadow: "0 20px 25px -5px rgba(76, 175, 80, 0.2)" }}
-                    transition={{ duration: 0.2 } as any}
                   >
                     <div className="relative w-full h-40 sm:h-56 overflow-hidden bg-gray-600 flex-shrink-0">
                       <motion.img
                         src={project.imageUrl || "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"}
                         alt={project.title}
                         className="w-full h-full object-cover"
-                        whileHover={{ scale: 1.08 }}
-                        transition={{ duration: 0.4 } as any}
+                        whileHover={{ scale: 1.08, transition: { duration: 0.4 } }}
                       />
                     </div>
 
