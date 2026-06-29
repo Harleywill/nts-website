@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AnimatedHeading from "@/components/common/AnimatedHeading";
 import Image from "next/image";
 import { useLogoVersion } from "@/hooks/useLogoVersion";
+import { useCarousel } from "@/hooks/useCarousel";
 
 interface Testimonial {
   id: number;
@@ -19,57 +20,19 @@ export default function Testimonials() {
   const logoVersion = useLogoVersion();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [itemsToShow, setItemsToShow] = useState(3);
-  const touchStartX = useRef(0);
 
   useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        const res = await fetch("/api/testimonials");
-        const data = await res.json();
-        setTestimonials(Array.isArray(data) ? data : []);
-      } catch {
-        setTestimonials([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTestimonials();
+    fetch("/api/testimonials")
+      .then(r => r.json())
+      .then(d => setTestimonials(Array.isArray(d) ? d : []))
+      .catch(() => setTestimonials([]))
+      .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    const checkScreenSize = () => {
-      if (window.innerWidth < 768) setItemsToShow(1);
-      else if (window.innerWidth < 1024) setItemsToShow(2);
-      else setItemsToShow(3);
-    };
-    checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
-    return () => window.removeEventListener("resize", checkScreenSize);
-  }, []);
-
-  const maxIndex = Math.max(0, testimonials.length - itemsToShow);
-
-  const goToPrevious = () =>
-    setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
-
-  const goToNext = () =>
-    setCurrentIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (diff > 50) goToNext();
-    else if (diff < -50) goToPrevious();
-  };
+  const { currentIndex, setCurrentIndex, itemsToShow, maxIndex, translateX,
+          goToPrevious, goToNext, handleTouchStart, handleTouchEnd } = useCarousel(testimonials.length);
 
   if (loading || testimonials.length === 0) return null;
-
-  const translateX = -(currentIndex * (100 / testimonials.length));
 
   return (
     <section className="py-16 sm:py-24 lg:py-32 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
@@ -108,12 +71,7 @@ export default function Testimonials() {
         </motion.div>
 
         <div className="mt-8 sm:mt-10 border-t border-gray-700 pt-8 sm:pt-12">
-          {/* Sliding track */}
-          <div
-            className="overflow-hidden"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
+          <div className="overflow-hidden" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
             <motion.div
               className="flex"
               animate={{ x: `${translateX}%` }}
@@ -121,10 +79,7 @@ export default function Testimonials() {
               style={{ width: `${(testimonials.length / itemsToShow) * 100}%` }}
             >
               {testimonials.map((testimonial, idx) => (
-                <div
-                  key={testimonial.id}
-                  style={{ width: `${100 / testimonials.length}%`, padding: "0 12px" }}
-                >
+                <div key={testimonial.id} style={{ width: `${100 / testimonials.length}%`, padding: "0 12px" }}>
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -134,7 +89,7 @@ export default function Testimonials() {
                     className="flex flex-col rounded-2xl overflow-hidden border border-gray-700 shadow-md h-full"
                     style={{ backgroundColor: "#1f2937" }}
                   >
-                    <div className="p-4 sm:p-6 lg:p-6 flex flex-col grow">
+                    <div className="p-4 sm:p-6 flex flex-col grow">
                       <div className="flex gap-1 mb-4 sm:mb-6 flex-shrink-0">
                         {[...Array(testimonial.rating || 5)].map((_, i) => (
                           <FaStar key={i} size={16} style={{ color: "#4caf50" }} />
@@ -146,12 +101,8 @@ export default function Testimonials() {
                       </p>
 
                       <div className="border-t border-gray-700 pt-4 sm:pt-6 flex-shrink-0">
-                        <p className="font-semibold text-white text-sm sm:text-base">
-                          {testimonial.name}
-                        </p>
-                        <p className="text-xs sm:text-sm text-gray-400 mt-1">
-                          {testimonial.company}
-                        </p>
+                        <p className="font-semibold text-white text-sm sm:text-base">{testimonial.name}</p>
+                        <p className="text-xs sm:text-sm text-gray-400 mt-1">{testimonial.company}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -160,7 +111,6 @@ export default function Testimonials() {
             </motion.div>
           </div>
 
-          {/* Navigation */}
           <div className="mt-8 flex items-center justify-center gap-4 sm:gap-6">
             <button
               onClick={goToPrevious}
