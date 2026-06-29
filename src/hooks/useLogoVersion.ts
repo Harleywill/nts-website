@@ -20,7 +20,7 @@ export function useLogoVersion() {
         if (res.ok) {
           const data = await res.json();
           const logoV = (data.settings ?? data).logoVersion;
-          const version: 'old' | 'new' = logoV === 1 ? 'old' : 'new';
+          const version: 'old' | 'new' = logoV === 2 ? 'old' : 'new';
           setLogoVersion(version);
           localStorage.setItem(CACHE_KEY, version);
         }
