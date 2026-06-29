@@ -15,6 +15,8 @@ interface Project {
   category: string;
   description: string;
   imageUrl: string | null;
+  cropX?: number;
+  cropY?: number;
   published: boolean;
   featured: boolean;
   clientName: string | null;
@@ -177,7 +179,7 @@ export default function ProjectsPage() {
                   border: '1px solid var(--border)',
                 }}>
                   {project.imageUrl ? (
-                    <img src={project.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={project.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: `${(project.cropX ?? 0.5) * 100}% ${(project.cropY ?? 0.5) * 100}%` }} />
                   ) : (
                     <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--navy-300)', fontSize: '18px' }}>🏗</div>
                   )}
@@ -308,6 +310,7 @@ export default function ProjectsPage() {
                           onClick={() => setLightbox(selected.imageUrl!)}
                           style={{
                             width: '100%', height: '260px', objectFit: 'cover',
+                            objectPosition: `${(selected.cropX ?? 0.5) * 100}% ${(selected.cropY ?? 0.5) * 100}%`,
                             borderRadius: 'var(--radius-md)',
                             border: '1px solid var(--border)',
                             cursor: 'zoom-in',

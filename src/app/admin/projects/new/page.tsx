@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaTrash, FaPlus } from "react-icons/fa";
+import FocalPointPicker from "@/components/admin/FocalPointPicker";
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -24,6 +25,10 @@ export default function NewProjectPage() {
     highlights: "",
     metrics: "",
     imageUrl: "",
+    cropX: 0.5,
+    cropY: 0.5,
+    cropWidth: 1,
+    cropHeight: 1,
   });
 
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
@@ -65,6 +70,8 @@ export default function NewProjectPage() {
       setFormData((prev) => ({
         ...prev,
         imageUrl: data.url,
+        cropX: 0.5,
+        cropY: 0.5,
       }));
       setUploading(false);
     } catch (err) {
@@ -359,6 +366,15 @@ export default function NewProjectPage() {
               />
             </div>
           </div>
+
+          {formData.imageUrl && (
+            <FocalPointPicker
+              imageUrl={formData.imageUrl}
+              cropX={formData.cropX}
+              cropY={formData.cropY}
+              onChange={(x, y) => setFormData((prev) => ({ ...prev, cropX: x, cropY: y }))}
+            />
+          )}
 
           <div className="flex items-center">
             <input

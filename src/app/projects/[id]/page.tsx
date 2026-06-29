@@ -14,6 +14,8 @@ interface Project {
   title: string;
   description: string;
   imageUrl: string | null;
+  cropX?: number;
+  cropY?: number;
   category: string;
   date: string;
   images?: Array<{ imageUrl: string }>;
@@ -125,6 +127,7 @@ export default function ProjectDetailPage() {
                       src={project.imageUrl}
                       alt={project.title}
                       className="w-full h-56 sm:h-64 object-cover"
+                      style={{ objectPosition: `${(project.cropX ?? 0.5) * 100}% ${(project.cropY ?? 0.5) * 100}%` }}
                     />
                   </div>
                 )}
