@@ -14,6 +14,8 @@ interface NewsItem {
   title: string;
   content: string;
   imageUrl?: string;
+  cropX?: number;
+  cropY?: number;
   published: boolean;
   createdAt: string;
   images?: NewsImage[];
@@ -203,7 +205,7 @@ export default function NewsPage() {
                   overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
                   {item.imageUrl
-                    ? <img src={item.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: item.published ? 1 : 0.5 }} />
+                    ? <img src={item.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: `${(item.cropX ?? 0.5) * 100}% ${(item.cropY ?? 0.5) * 100}%`, opacity: item.published ? 1 : 0.5 }} />
                     : <span style={{ fontSize: '18px', opacity: 0.4 }}>📰</span>
                   }
                 </div>
@@ -337,7 +339,7 @@ export default function NewsPage() {
                           border: '1px solid var(--border)',
                         }}
                       >
-                        <img src={selected.imageUrl} alt="Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={selected.imageUrl} alt="Cover" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: `${(selected.cropX ?? 0.5) * 100}% ${(selected.cropY ?? 0.5) * 100}%` }} />
                       </div>
                     </div>
                   )}
