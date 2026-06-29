@@ -2,8 +2,16 @@
 
 import { useState, useEffect } from 'react';
 
+const CACHE_KEY = 'nts_logo_version';
+
 export function useLogoVersion() {
-  const [logoVersion, setLogoVersion] = useState<'old' | 'new'>('new');
+  const [logoVersion, setLogoVersion] = useState<'old' | 'new'>(() => {
+    if (typeof window !== 'undefined') {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached === 'old' || cached === 'new') return cached;
+    }
+    return 'new';
+  });
 
   useEffect(() => {
     const fetchLogoVersion = async () => {
@@ -12,8 +20,9 @@ export function useLogoVersion() {
         if (res.ok) {
           const data = await res.json();
           const logoV = (data.settings ?? data).logoVersion;
-          const version = logoV === 1 ? 'old' : 'new';
+          const version: 'old' | 'new' = logoV === 1 ? 'old' : 'new';
           setLogoVersion(version);
+          localStorage.setItem(CACHE_KEY, version);
         }
       } catch (error) {
         console.error('Failed to fetch logo version:', error);
@@ -22,7 +31,6 @@ export function useLogoVersion() {
 
     fetchLogoVersion();
 
-    // Refetch when page becomes visible
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         fetchLogoVersion();
