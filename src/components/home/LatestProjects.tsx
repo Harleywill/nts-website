@@ -12,6 +12,8 @@ interface ProjectItem {
   title: string;
   description: string;
   imageUrl: string | null;
+  cropX?: number;
+  cropY?: number;
   category: string;
   date: string;
 }
@@ -78,6 +80,7 @@ export default function LatestProjects() {
                         src={project.imageUrl || "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"}
                         alt={project.title}
                         className="w-full h-full object-cover"
+                        style={{ objectPosition: `${(project.cropX ?? 0.5) * 100}% ${(project.cropY ?? 0.5) * 100}%` }}
                         whileHover={{ scale: 1.08, transition: { duration: 0.4 } }}
                       />
                     </div>

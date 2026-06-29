@@ -12,6 +12,8 @@ interface Project {
   title: string;
   description: string;
   imageUrl: string | null;
+  cropX?: number;
+  cropY?: number;
   category: string;
   date: string;
   featured: boolean;
@@ -99,6 +101,7 @@ export default function Projects() {
                               src={project.imageUrl}
                               alt={project.title}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              style={{ objectPosition: `${(project.cropX ?? 0.5) * 100}% ${(project.cropY ?? 0.5) * 100}%` }}
                             />
                           </div>
                         ) : (

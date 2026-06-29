@@ -45,6 +45,10 @@ model Project {
   category     String
   date         DateTime @default(now())
   imageUrl     String?
+  cropX        Float    @default(0.5)
+  cropY        Float    @default(0.5)
+  cropWidth    Float    @default(1)
+  cropHeight   Float    @default(1)
   featured     Boolean  @default(false)
   published    Boolean  @default(false)
   clientName   String?

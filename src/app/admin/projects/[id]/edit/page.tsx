@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaTrash, FaPlus } from "react-icons/fa";
+import FocalPointPicker from "@/components/admin/FocalPointPicker";
 
 interface Project {
   id: number;
@@ -17,6 +18,10 @@ interface Project {
   highlights: string | null;
   metrics: string | null;
   imageUrl: string | null;
+  cropX: number;
+  cropY: number;
+  cropWidth: number;
+  cropHeight: number;
   gallery?: string[];
 }
 
@@ -100,6 +105,8 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
         setFormData({
           ...formData,
           imageUrl: data.url,
+          cropX: 0.5,
+          cropY: 0.5,
         });
       }
       setUploading(false);
@@ -404,6 +411,15 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
               />
             </div>
           </div>
+
+          {formData.imageUrl && (
+            <FocalPointPicker
+              imageUrl={formData.imageUrl}
+              cropX={formData.cropX ?? 0.5}
+              cropY={formData.cropY ?? 0.5}
+              onChange={(x, y) => setFormData({ ...formData, cropX: x, cropY: y })}
+            />
+          )}
 
           <div className="flex items-center">
             <input
