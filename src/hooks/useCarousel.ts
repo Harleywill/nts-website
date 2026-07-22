@@ -71,6 +71,16 @@ export function useCarousel(count: number) {
     }
   };
 
+  // Direct jump (dot navigation): cancel any pending wrap snap so it can't
+  // override the user's chosen position a moment later.
+  const jumpTo = (index: number) => {
+    if (snapTimer.current) {
+      clearTimeout(snapTimer.current);
+      snapTimer.current = null;
+    }
+    setCurrentIndex(index);
+  };
+
   const goToPrevious = () => {
     if (!looping) return;
     if (currentIndex >= count) return;
@@ -110,7 +120,7 @@ export function useCarousel(count: number) {
     ? (((currentIndex % count) + itemsToShow - 1) % count) + 1
     : Math.min(itemsToShow, count);
 
-  return { currentIndex, setCurrentIndex, itemsToShow, maxIndex, translateX,
+  return { currentIndex, setCurrentIndex: jumpTo, itemsToShow, maxIndex, translateX,
            transition, totalSlots, extendSlides, dotCount, activeDot,
            rangeStart, rangeEnd,
            goToPrevious, goToNext, handleTouchStart, handleTouchEnd };
