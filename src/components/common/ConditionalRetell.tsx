@@ -7,6 +7,12 @@ export default function ConditionalRetell() {
   const pathname = usePathname();
   
   useEffect(() => {
+    // Chat widget is hidden unless explicitly enabled. To bring it back,
+    // set NEXT_PUBLIC_ENABLE_CHAT_WIDGET=true in the environment and rebuild.
+    if (process.env.NEXT_PUBLIC_ENABLE_CHAT_WIDGET !== 'true') {
+      return;
+    }
+
     // Don't load Retell on admin pages
     if (pathname?.startsWith('/admin')) {
       return;
