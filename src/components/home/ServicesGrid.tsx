@@ -80,7 +80,7 @@ export default function ServicesGrid() {
 
   return (
     <section
-      className="py-16 sm:py-20 lg:py-28"
+      className="py-14 sm:py-20 lg:py-24"
       style={{ backgroundColor: "#101828" }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

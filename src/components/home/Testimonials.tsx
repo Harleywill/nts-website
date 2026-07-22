@@ -35,7 +35,9 @@ export default function Testimonials() {
   if (loading || testimonials.length === 0) return null;
 
   return (
-    <section className="py-16 sm:py-24 lg:py-32 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
+    // Light section: lets the engineering-drawing watermark show through and
+    // breaks up the run of dark sections on the homepage.
+    <section className="py-14 sm:py-20 lg:py-24 px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -63,14 +65,14 @@ export default function Testimonials() {
           <AnimatedHeading
             text="What Our Clients Say"
             level="h2"
-            className="text-3xl sm:text-4xl font-semibold tracking-tight text-white lg:text-5xl"
+            className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 lg:text-5xl"
           />
-          <p className="mt-2 text-base sm:text-lg text-gray-300">
+          <p className="mt-2 text-base sm:text-lg text-gray-600">
             Real feedback from satisfied customers across the UK
           </p>
         </motion.div>
 
-        <div className="mt-8 sm:mt-10 border-t border-gray-700 pt-8 sm:pt-12">
+        <div className="mt-8 sm:mt-10 border-t border-gray-200 pt-8 sm:pt-12">
           <div className="overflow-hidden" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
             <div
               className="flex"
@@ -88,8 +90,8 @@ export default function Testimonials() {
                     transition={{ duration: 0.5, delay: (idx % itemsToShow) * 0.1 }}
                     viewport={{ once: true, amount: 0.2 }}
                     whileHover={{ scale: 1.03, y: -4, boxShadow: "0 20px 25px -5px rgba(76, 175, 80, 0.2)", transition: { duration: 0.2 } }}
-                    className="flex flex-col rounded-2xl overflow-hidden border border-gray-700 shadow-md h-full"
-                    style={{ backgroundColor: "#1f2937" }}
+                    className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-md h-full"
+                    style={{ backgroundColor: "#ffffff" }}
                   >
                     <div className="p-4 sm:p-6 flex flex-col grow">
                       <div className="flex gap-1 mb-4 sm:mb-6 flex-shrink-0">
@@ -98,13 +100,13 @@ export default function Testimonials() {
                         ))}
                       </div>
 
-                      <p className="text-sm sm:text-base text-gray-300 leading-relaxed line-clamp-4 mb-4 sm:mb-6 flex-grow">
+                      <p className="text-sm sm:text-base text-gray-600 leading-relaxed line-clamp-4 mb-4 sm:mb-6 flex-grow">
                         "{testimonial.text}"
                       </p>
 
-                      <div className="border-t border-gray-700 pt-4 sm:pt-6 flex-shrink-0">
-                        <p className="font-semibold text-white text-sm sm:text-base">{testimonial.name}</p>
-                        <p className="text-xs sm:text-sm text-gray-400 mt-1">{testimonial.company}</p>
+                      <div className="border-t border-gray-100 pt-4 sm:pt-6 flex-shrink-0">
+                        <p className="font-semibold text-gray-900 text-sm sm:text-base">{testimonial.name}</p>
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1">{testimonial.company}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -132,7 +134,7 @@ export default function Testimonials() {
                   style={{
                     width: index === currentIndex ? "32px" : "8px",
                     height: "8px",
-                    backgroundColor: index === currentIndex ? "#4caf50" : "rgba(255,255,255,0.2)",
+                    backgroundColor: index === currentIndex ? "#4caf50" : "rgba(26,47,110,0.15)",
                   }}
                   aria-label={`Go to testimonial set ${index + 1}`}
                 />
@@ -149,7 +151,7 @@ export default function Testimonials() {
             </button>
           </div>
 
-          <div className="mt-4 text-center text-xs sm:text-sm text-gray-400">
+          <div className="mt-4 text-center text-xs sm:text-sm text-gray-500">
             {currentIndex + 1}–{Math.min(currentIndex + itemsToShow, testimonials.length)} of {testimonials.length}
           </div>
         </div>
