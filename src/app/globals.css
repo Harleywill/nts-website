@@ -104,3 +104,27 @@ body.no-grid {
     display: block !important;
   }
 }
+
+/* Accreditations marquee — CSS-driven so it runs on the compositor with no
+   per-frame JavaScript. Track contains the logo list twice; sliding by -50%
+   is exactly one full cycle, so the loop is seamless. */
+@keyframes accred-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.accred-marquee {
+  animation: accred-marquee var(--marquee-duration, 30s) linear infinite;
+  animation-direction: var(--marquee-direction, normal);
+  will-change: transform;
+}
+
+.accred-pausable:hover .accred-marquee {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accred-marquee {
+    animation: none;
+  }
+}
