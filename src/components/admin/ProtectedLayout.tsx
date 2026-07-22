@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
 export default function ProtectedLayout({
@@ -11,7 +11,6 @@ export default function ProtectedLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [isReady, setIsReady] = useState(false);
-  const hasCheckedAuth = useRef(false);
 
   const isLoginPage = pathname === '/admin/login';
 
@@ -21,27 +20,29 @@ export default function ProtectedLayout({
       return;
     }
 
-    if (hasCheckedAuth.current) return;
-    hasCheckedAuth.current = true;
+    let cancelled = false;
+    setIsReady(false);
 
-    const timer = setTimeout(() => {
-      try {
-        const cookies = document.cookie;
-        const hasAuthStatus = cookies.includes('auth-status=');
-
-        if (!hasAuthStatus) {
-          router.push('/admin/login');
-          return;
+    // Verify the actual session with the server rather than trusting a
+    // client-readable cookie. /api/auth/me validates the real token, so a
+    // stale, forged, or absent session all correctly send the user to login.
+    fetch('/api/auth/me', { credentials: 'include', cache: 'no-store' })
+      .then((res) => {
+        if (cancelled) return;
+        if (res.ok) {
+          setIsReady(true);
+        } else {
+          router.replace('/admin/login');
         }
+      })
+      .catch(() => {
+        if (!cancelled) router.replace('/admin/login');
+      });
 
-        setIsReady(true);
-      } catch (error) {
-        router.push('/admin/login');
-      }
-    }, 0);
-
-    return () => clearTimeout(timer);
-  }, [router, isLoginPage]);
+    return () => {
+      cancelled = true;
+    };
+  }, [router, isLoginPage, pathname]);
 
   if (!isReady) {
     return (

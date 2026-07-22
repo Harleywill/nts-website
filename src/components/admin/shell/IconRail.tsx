@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MdDashboard, MdWork, MdArticle, MdFolder, MdMailOutline, MdPeople, MdSettings, MdLogout, MdRateReview, MdLock, MdPhotoLibrary } from 'react-icons/md';
 
 const mainNavItems = [
@@ -55,6 +55,23 @@ const NavLink = ({ item, isActive }: { item: any; isActive: boolean }) => (
 export function IconRail() {
   const pathname = usePathname();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [user, setUser] = useState<{ username?: string; role?: string } | null>(null);
+
+  // Show the actual logged-in user rather than a hardcoded name.
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/auth/me', { credentials: 'include', cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => { if (!cancelled && data) setUser(data); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+
+  const displayName = user?.username || 'Account';
+  const displayRole = user?.role
+    ? user.role.charAt(0) + user.role.slice(1).toLowerCase()
+    : '';
+  const avatarInitial = (user?.username?.charAt(0) || '?').toUpperCase();
 
   return (
     <nav
@@ -127,7 +144,7 @@ export function IconRail() {
               flex: 'none',
             }}
           >
-            A
+            {avatarInitial}
           </div>
           <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
             <div
@@ -137,9 +154,12 @@ export function IconRail() {
                 fontWeight: 600,
                 color: '#ffffff',
                 margin: 0,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
               }}
             >
-              Admin
+              {displayName}
             </div>
             <div
               style={{
@@ -149,7 +169,7 @@ export function IconRail() {
                 margin: '2px 0 0 0',
               }}
             >
-              Manager
+              {displayRole}
             </div>
           </div>
         </button>
