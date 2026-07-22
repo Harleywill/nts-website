@@ -79,10 +79,7 @@ export default function ServicesGrid() {
   const selectedService = selectedId ? SERVICES.find((s) => s.id === selectedId) : null;
 
   return (
-    <section
-      className="py-14 sm:py-20 lg:py-24"
-      style={{ backgroundColor: "#101828" }}
-    >
+    <section className="py-14 sm:py-20 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -93,11 +90,11 @@ export default function ServicesGrid() {
         >
           <h2
             className="text-3xl sm:text-4xl font-bold mb-4"
-            style={{ color: "#ffffff" }}
+            style={{ color: "#1a2f6e" }}
           >
             Our Services
           </h2>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Comprehensive mechanical and electrical services tailored to your needs
           </p>
         </motion.div>
@@ -111,7 +108,7 @@ export default function ServicesGrid() {
           className="mb-12 p-6 rounded-lg text-center border border-brand-green-500/30"
           style={{ backgroundColor: "rgba(76, 175, 80, 0.08)" }}
         >
-          <p className="text-lg font-semibold text-white flex items-center justify-center gap-2">
+          <p className="text-lg font-semibold flex items-center justify-center gap-2" style={{ color: "#1a2f6e" }}>
             <span style={{ color: "#4caf50" }}>✓</span>
             We respond within 24 hours
             <span style={{ color: "#4caf50" }}>•</span>
@@ -140,8 +137,8 @@ export default function ServicesGrid() {
               onClick={() => handleCardClick(service.id)}
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
               whileTap={{ scale: 0.98 }}
-              className="group rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-700 hover:border-brand-green-500 cursor-pointer flex flex-col h-full w-full text-left bg-transparent"
-              style={{ backgroundColor: "#1f2937", pointerEvents: "auto" }}
+              className="group rounded-2xl shadow-md p-8 transition-all duration-300 border border-gray-200 hover:border-brand-green-500 cursor-pointer flex flex-col h-full w-full text-left"
+              style={{ backgroundColor: "#ffffff", pointerEvents: "auto" }}
             >
               <div
                 className="mb-4 inline-flex items-center justify-center w-14 h-14 rounded-lg transition-all duration-300 group-hover:bg-brand-green-500/20"
@@ -152,11 +149,11 @@ export default function ServicesGrid() {
                 </div>
               </div>
 
-              <h3 className="text-xl font-semibold mb-3 text-white">
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">
                 {service.title}
               </h3>
 
-              <p className="text-gray-300 mb-6 text-sm leading-relaxed flex-grow">
+              <p className="text-gray-600 mb-6 text-sm leading-relaxed flex-grow">
                 {service.description}
               </p>
 
@@ -201,12 +198,12 @@ export default function ServicesGrid() {
               exit="exit"
               transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 30 }}
               className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full mx-4 sm:mx-0 sm:w-auto max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl p-8"
-              style={{ backgroundColor: "#1f2937", maxWidth: "650px" }}
+              style={{ backgroundColor: "#ffffff", maxWidth: "650px" }}
             >
               {/* Close Button */}
               <motion.button
                 onClick={handleCloseExpanded}
-                className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -231,7 +228,7 @@ export default function ServicesGrid() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.15 }}
-                className="text-3xl font-bold text-white mb-2"
+                className="text-3xl font-bold text-gray-900 mb-2"
               >
                 {selectedService.title}
               </motion.h3>
@@ -241,7 +238,7 @@ export default function ServicesGrid() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="text-gray-300 mb-8 leading-relaxed"
+                className="text-gray-600 mb-8 leading-relaxed"
               >
                 {selectedService.description}
               </motion.p>
@@ -253,7 +250,7 @@ export default function ServicesGrid() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.25 }}
                 >
-                  <h4 className="text-lg font-semibold text-white mb-4">What's Included:</h4>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4">What's Included:</h4>
                   <motion.div
                     className="space-y-3"
                     initial={{ opacity: 0 }}
@@ -270,7 +267,7 @@ export default function ServicesGrid() {
                         <span style={{ color: "#4caf50" }} className="text-lg flex-shrink-0 mt-0.5">
                           ✓
                         </span>
-                        <span className="text-gray-300">{detail}</span>
+                        <span className="text-gray-700">{detail}</span>
                       </motion.div>
                     ))}
                   </motion.div>

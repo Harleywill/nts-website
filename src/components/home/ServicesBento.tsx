@@ -111,7 +111,7 @@ export default function ServicesBento() {
   };
 
   return (
-    <div className="relative py-24 sm:py-32 overflow-hidden bg-gray-900">
+    <div className="relative py-20 sm:py-24 overflow-hidden">
       {/* Gradient Blob Background */}
       <div
         aria-hidden="true"
@@ -131,7 +131,7 @@ export default function ServicesBento() {
           <h2 className="text-base/7 font-semibold" style={{ color: "#4caf50" }}>
             Our Services
           </h2>
-          <p className="mt-2 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+          <p className="mt-2 text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
             Complete HVAC & Mechanical Solutions
           </p>
         </div>
@@ -158,15 +158,15 @@ export default function ServicesBento() {
                 onClick={() => setSelectedId(service.id)}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 whileTap={{ scale: 0.98 }}
-                className="h-full rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm p-8 border border-gray-700/50 hover:border-brand-green-500/50 transition-all duration-300 flex flex-col justify-between group text-left"
+                className="h-full rounded-2xl bg-white shadow-md p-8 border border-gray-200 hover:border-brand-green-500 transition-all duration-300 flex flex-col justify-between group text-left"
                 style={{ pointerEvents: "auto" }}
               >
                 <div>
                   <div className="inline-flex items-center justify-center w-14 h-14 rounded-lg bg-brand-green-500/10 mb-6 group-hover:bg-brand-green-500/20 transition-colors">
                     <Icon size={32} style={{ color: "#4caf50" }} />
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-4">{service.title}</h3>
-                  <p className="text-gray-300 leading-relaxed">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">{service.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">
                     {service.description}
                   </p>
                 </div>
@@ -203,14 +203,14 @@ export default function ServicesBento() {
               animate="visible"
               exit="exit"
               transition={{ duration: 0.4, type: "tween" }}
-              className="fixed right-0 top-0 h-full w-full bg-gray-900 shadow-2xl overflow-y-auto z-50"
-              style={{ backgroundColor: "#1a1f2e", pointerEvents: "auto" }}
+              className="fixed right-0 top-0 h-full w-full shadow-2xl overflow-y-auto z-50"
+              style={{ backgroundColor: "#ffffff", pointerEvents: "auto" }}
             >
               <div className="p-8">
                 {/* Close Button */}
                 <motion.button
                   onClick={() => setSelectedId(null)}
-                  className="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors"
+                  className="absolute top-6 right-6 text-gray-400 hover:text-gray-700 transition-colors"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -233,7 +233,7 @@ export default function ServicesBento() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.15 }}
-                  className="text-3xl font-bold text-white mb-2"
+                  className="text-3xl font-bold text-gray-900 mb-2"
                 >
                   {selectedService.title}
                 </motion.h3>
@@ -243,7 +243,7 @@ export default function ServicesBento() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="text-gray-300 mb-8 leading-relaxed"
+                  className="text-gray-600 mb-8 leading-relaxed"
                 >
                   {selectedService.description}
                 </motion.p>
@@ -255,7 +255,7 @@ export default function ServicesBento() {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.25 }}
                   >
-                    <h4 className="text-lg font-semibold text-white mb-4">What's Included:</h4>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">What's Included:</h4>
                     <motion.div
                       className="space-y-3"
                       initial={{ opacity: 0 }}
@@ -272,7 +272,7 @@ export default function ServicesBento() {
                           <span style={{ color: "#4caf50" }} className="text-lg flex-shrink-0 mt-0.5">
                             ✓
                           </span>
-                          <span className="text-gray-300">{detail}</span>
+                          <span className="text-gray-700">{detail}</span>
                         </motion.div>
                       ))}
                     </motion.div>

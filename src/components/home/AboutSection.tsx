@@ -24,7 +24,10 @@ export default function AboutSection() {
   ];
 
   return (
-    <section className="relative isolate overflow-hidden bg-gray-900 px-6 py-20 sm:py-24 lg:overflow-visible lg:px-0">
+    <section
+      className="relative isolate overflow-hidden px-6 py-20 sm:py-24 lg:overflow-visible lg:px-0"
+      style={{ background: "linear-gradient(135deg, #1a2f6e 0%, #0f1f4d 100%)" }}
+    >
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <svg aria-hidden="true" className="absolute top-0 left-[max(50%,25rem)] h-256 w-512 -translate-x-1/2 mask-[radial-gradient(64rem_64rem_at_top,white,transparent)] stroke-gray-700">
           <defs>

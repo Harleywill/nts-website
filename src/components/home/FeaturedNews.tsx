@@ -40,7 +40,7 @@ export default function FeaturedNews() {
   if (loading || news.length === 0) return null;
 
   return (
-    <section className="py-14 sm:py-20 lg:py-24 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
+    <section className="py-14 sm:py-20 lg:py-24 px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <motion.div
           className="mx-auto max-w-2xl text-center"
@@ -52,14 +52,14 @@ export default function FeaturedNews() {
           <AnimatedHeading
             text="Latest News"
             level="h2"
-            className="text-3xl sm:text-4xl font-semibold tracking-tight text-white lg:text-5xl"
+            className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 lg:text-5xl"
           />
-          <p className="mt-2 text-base sm:text-lg text-gray-300">
+          <p className="mt-2 text-base sm:text-lg text-gray-600">
             Stay updated with our latest news and announcements.
           </p>
         </motion.div>
 
-        <div className="mt-8 sm:mt-10 border-t border-gray-700 pt-8 sm:pt-12">
+        <div className="mt-8 sm:mt-10 border-t border-gray-200 pt-8 sm:pt-12">
           <div className="overflow-hidden" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
             <div
               className="flex"
@@ -148,7 +148,7 @@ export default function FeaturedNews() {
                   style={{
                     width: index === activeDot ? "32px" : "8px",
                     height: "8px",
-                    backgroundColor: index === activeDot ? "#4caf50" : "rgba(255,255,255,0.2)",
+                    backgroundColor: index === activeDot ? "#4caf50" : "rgba(26,47,110,0.15)",
                   }}
                   aria-label={`Go to news set ${index + 1}`}
                 />
@@ -165,7 +165,7 @@ export default function FeaturedNews() {
             </button>
           </div>
 
-          <div className="mt-4 text-center text-xs sm:text-sm text-gray-400">
+          <div className="mt-4 text-center text-xs sm:text-sm text-gray-500">
             {rangeStart}–{rangeEnd} of {news.length}
           </div>
         </div>
