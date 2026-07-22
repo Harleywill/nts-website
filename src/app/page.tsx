@@ -3,6 +3,7 @@ import Footer from "@/components/layout/Footer";
 import HeroMobile from "@/components/home/HeroMobile";
 import HeroDesktop from "@/components/home/HeroDesktop";
 import FeaturedNewsCard from "@/components/home/FeaturedNewsCard";
+import AccreditationsSection from "@/components/home/AccreditationsSection";
 import AboutSection from "@/components/home/AboutSection";
 import ServicesBento from "@/components/home/ServicesBento";
 import ServicesGrid from "@/components/home/ServicesGrid";
@@ -28,6 +29,7 @@ export default function Home() {
         {/* Featured News Card - Below Hero */}
         <FeaturedNewsCard />
 
+        <AccreditationsSection />
         <AboutSection />
         {/* Services: Bento layout on mobile, Grid on desktop */}
         <div className="block md:hidden">
