@@ -10,7 +10,7 @@ import { heroCrossfadeVariants } from "@/lib/animations";
 const heroImages = [
   "/images/hero-electrical.webp", // Electrical panel installation
   "/images/hero-rooftop-hvac.webp", // HVAC rooftop units
-  "/images/services/rpz-testing.jpg", // HVAC cooling equipment
+  "/images/work-in-progress.webp", // NTS engineer welding on site
   "/images/hero-electrical-testing.webp", // Electrical testing with multimeter
   "/images/hero-circuit-board.avif", // Circuit board and electronics
 ];
@@ -36,7 +36,8 @@ export default function HeroCarousel({ className = "" }: HeroCarouselProps) {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  // Auto-advance carousel every 6 seconds
+  // Auto-advance carousel every 9 seconds (2s crossfade; longer dwell keeps
+  // the hero feeling calm rather than constantly mid-transition)
   useEffect(() => {
     // If user prefers reduced motion, don't cycle (static image)
     if (prefersReducedMotion) {
@@ -45,7 +46,7 @@ export default function HeroCarousel({ className = "" }: HeroCarouselProps) {
 
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
-    }, 6000);
+    }, 9000);
 
     return () => clearInterval(interval);
   }, [prefersReducedMotion]);

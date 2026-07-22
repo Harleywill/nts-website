@@ -36,7 +36,7 @@ export default function LatestProjects() {
   if (loading || projects.length === 0) return null;
 
   return (
-    <section className="py-16 sm:py-24 lg:py-32 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
+    <section className="py-14 sm:py-20 lg:py-24 px-6 lg:px-8" style={{ backgroundColor: "#101828" }}>
       <div className="mx-auto max-w-7xl">
         <motion.div
           className="mx-auto max-w-2xl text-center"
