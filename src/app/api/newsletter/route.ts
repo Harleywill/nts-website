@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
 
     // Send welcome email via Resend
     await resend.emails.send({
-      from: process.env.EMAIL_FROM_ADDRESS ?? "noreply@nevilletuckerservices.co.uk",
+      from: process.env.EMAIL_FROM_ADDRESS ?? "noreply@ntslimited.org",
       to: email,
       subject: "Welcome to NTS Ltd Newsletter",
       html: `

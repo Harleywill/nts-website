@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaDownload, FaCheckCircle } from "react-icons/fa";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { trackLead } from "@/lib/tracking";
 
 export default function HeatingChecklistLeadMagnet() {
   const [email, setEmail] = useState("");
@@ -26,6 +27,7 @@ export default function HeatingChecklistLeadMagnet() {
       });
 
       if (response.ok) {
+        trackLead("lead_magnet", "heating-checklist");
         setSubmitted(true);
         setEmail("");
         // In production, trigger download here

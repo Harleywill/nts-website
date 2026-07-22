@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaMapMarkerAlt, FaPhone, FaEnvelope } from "react-icons/fa";
+import { trackLead } from "@/lib/tracking";
 
 export default function ContactPageContent() {
   const [formData, setFormData] = useState({
@@ -86,6 +87,7 @@ export default function ContactPageContent() {
         return;
       }
 
+      trackLead("contact_page_form", formData.services.join(", ") || undefined);
       setSubmitted(true);
       setFormData({
         firstName: "",

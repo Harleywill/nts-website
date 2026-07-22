@@ -1,7 +1,7 @@
 // AI Optimization Schemas
 // These help AI crawlers (Claude, ChatGPT, Perplexity) understand your business
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nevilletuckerservices.co.uk";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ntslimited.org";
 
 export const faqSchema = {
   "@context": "https://schema.org",

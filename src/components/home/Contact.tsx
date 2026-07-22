@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { staggerContainerVariants, staggerItemVariants, slideUpVariants } from "@/lib/animations";
 import AnimatedHeading from "@/components/common/AnimatedHeading";
+import { trackLead } from "@/lib/tracking";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -66,6 +67,7 @@ export default function Contact() {
         return;
       }
 
+      trackLead("contact_form", formData.company || undefined);
       setSubmitted(true);
       setFormData({
         firstName: "",
