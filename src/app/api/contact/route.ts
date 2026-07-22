@@ -3,13 +3,16 @@ import { prisma } from "@/lib/db";
 import { sendContactNotification } from "@/lib/email";
 import { getRateLimitKey, checkRateLimit } from "@/lib/rate-limit";
 
-const FAKE_SUCCESS = NextResponse.json(
-  {
-    success: true,
-    message: "Your enquiry has been sent successfully. We'll get back to you soon!",
-  },
-  { status: 200 }
-);
+// A response body can only be streamed once, so build a fresh response per request.
+function fakeSuccess() {
+  return NextResponse.json(
+    {
+      success: true,
+      message: "Your enquiry has been sent successfully. We'll get back to you soon!",
+    },
+    { status: 200 }
+  );
+}
 
 // Bot-generated field values tend to be random alphanumeric strings with
 // case switching scattered throughout (e.g. "IOWOvYqIMTZKOGHyD"), unlike
@@ -46,7 +49,7 @@ export async function POST(request: NextRequest) {
     // Honeypot: real users never see or fill this field. Bots that fill
     // every input blindly will trip it. Pretend success so they move on.
     if (typeof website === "string" && website.trim().length > 0) {
-      return FAKE_SUCCESS;
+      return fakeSuccess();
     }
 
     // Validation
@@ -60,7 +63,7 @@ export async function POST(request: NextRequest) {
     // Bots that skip the honeypot still tend to fill fields with random
     // generated strings rather than real text.
     if (looksLikeRandomString(name) || looksLikeRandomString(service)) {
-      return FAKE_SUCCESS;
+      return fakeSuccess();
     }
 
     // Validate email or phone
