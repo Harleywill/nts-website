@@ -33,7 +33,8 @@ export default function FeaturedNews() {
       .finally(() => setLoading(false));
   }, []);
 
-  const { currentIndex, setCurrentIndex, itemsToShow, maxIndex, translateX,
+  const { setCurrentIndex, itemsToShow, translateX, transition, totalSlots,
+          extendSlides, dotCount, activeDot, rangeStart, rangeEnd,
           goToPrevious, goToNext, handleTouchStart, handleTouchEnd } = useCarousel(news.length);
 
   if (loading || news.length === 0) return null;
@@ -63,13 +64,13 @@ export default function FeaturedNews() {
             <div
               className="flex"
               style={{
-                width: `${(news.length / itemsToShow) * 100}%`,
+                width: `${(totalSlots / itemsToShow) * 100}%`,
                 transform: `translateX(${translateX}%)`,
-                transition: "transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                transition,
               }}
             >
-              {news.map((newsItem, idx) => (
-                <div key={newsItem.id} style={{ width: `${100 / news.length}%`, padding: "0 12px" }}>
+              {extendSlides(news).map((newsItem, idx) => (
+                <div key={`${newsItem.id}-${idx}`} style={{ width: `${100 / totalSlots}%`, padding: "0 12px" }}>
                   <motion.article
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -139,15 +140,15 @@ export default function FeaturedNews() {
             </button>
 
             <div className="flex gap-2 flex-wrap justify-center">
-              {Array.from({ length: maxIndex + 1 }).map((_, index) => (
+              {Array.from({ length: dotCount }).map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
                   className="rounded-full transition-all duration-300"
                   style={{
-                    width: index === currentIndex ? "32px" : "8px",
+                    width: index === activeDot ? "32px" : "8px",
                     height: "8px",
-                    backgroundColor: index === currentIndex ? "#4caf50" : "rgba(255,255,255,0.2)",
+                    backgroundColor: index === activeDot ? "#4caf50" : "rgba(255,255,255,0.2)",
                   }}
                   aria-label={`Go to news set ${index + 1}`}
                 />
@@ -165,7 +166,7 @@ export default function FeaturedNews() {
           </div>
 
           <div className="mt-4 text-center text-xs sm:text-sm text-gray-400">
-            {currentIndex + 1}–{Math.min(currentIndex + itemsToShow, news.length)} of {news.length}
+            {rangeStart}–{rangeEnd} of {news.length}
           </div>
         </div>
       </div>

@@ -30,7 +30,8 @@ export default function LatestProjects() {
       .finally(() => setLoading(false));
   }, []);
 
-  const { currentIndex, setCurrentIndex, itemsToShow, maxIndex, translateX,
+  const { setCurrentIndex, itemsToShow, translateX, transition, totalSlots,
+          extendSlides, dotCount, activeDot, rangeStart, rangeEnd,
           goToPrevious, goToNext, handleTouchStart, handleTouchEnd } = useCarousel(projects.length);
 
   if (loading || projects.length === 0) return null;
@@ -60,13 +61,13 @@ export default function LatestProjects() {
             <div
               className="flex"
               style={{
-                width: `${(projects.length / itemsToShow) * 100}%`,
+                width: `${(totalSlots / itemsToShow) * 100}%`,
                 transform: `translateX(${translateX}%)`,
-                transition: "transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                transition,
               }}
             >
-              {projects.map((project, idx) => (
-                <div key={project.id} style={{ width: `${100 / projects.length}%`, padding: "0 12px" }}>
+              {extendSlides(projects).map((project, idx) => (
+                <div key={`${project.id}-${idx}`} style={{ width: `${100 / totalSlots}%`, padding: "0 12px" }}>
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -131,15 +132,15 @@ export default function LatestProjects() {
             </button>
 
             <div className="flex gap-2 flex-wrap justify-center">
-              {Array.from({ length: maxIndex + 1 }).map((_, index) => (
+              {Array.from({ length: dotCount }).map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
                   className="rounded-full transition-all duration-300"
                   style={{
-                    width: index === currentIndex ? "32px" : "8px",
+                    width: index === activeDot ? "32px" : "8px",
                     height: "8px",
-                    backgroundColor: index === currentIndex ? "#4caf50" : "rgba(255,255,255,0.2)",
+                    backgroundColor: index === activeDot ? "#4caf50" : "rgba(255,255,255,0.2)",
                   }}
                   aria-label={`Go to project set ${index + 1}`}
                 />
@@ -157,7 +158,7 @@ export default function LatestProjects() {
           </div>
 
           <div className="mt-4 text-center text-xs sm:text-sm text-gray-400">
-            {currentIndex + 1}–{Math.min(currentIndex + itemsToShow, projects.length)} of {projects.length}
+            {rangeStart}–{rangeEnd} of {projects.length}
           </div>
         </div>
 

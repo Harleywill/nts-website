@@ -29,7 +29,8 @@ export default function Testimonials() {
       .finally(() => setLoading(false));
   }, []);
 
-  const { currentIndex, setCurrentIndex, itemsToShow, maxIndex, translateX,
+  const { setCurrentIndex, itemsToShow, translateX, transition, totalSlots,
+          extendSlides, dotCount, activeDot, rangeStart, rangeEnd,
           goToPrevious, goToNext, handleTouchStart, handleTouchEnd } = useCarousel(testimonials.length);
 
   if (loading || testimonials.length === 0) return null;
@@ -77,13 +78,13 @@ export default function Testimonials() {
             <div
               className="flex"
               style={{
-                width: `${(testimonials.length / itemsToShow) * 100}%`,
+                width: `${(totalSlots / itemsToShow) * 100}%`,
                 transform: `translateX(${translateX}%)`,
-                transition: "transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                transition,
               }}
             >
-              {testimonials.map((testimonial, idx) => (
-                <div key={testimonial.id} style={{ width: `${100 / testimonials.length}%`, padding: "0 12px" }}>
+              {extendSlides(testimonials).map((testimonial, idx) => (
+                <div key={`${testimonial.id}-${idx}`} style={{ width: `${100 / totalSlots}%`, padding: "0 12px" }}>
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -126,15 +127,15 @@ export default function Testimonials() {
             </button>
 
             <div className="flex gap-2 flex-wrap justify-center">
-              {Array.from({ length: maxIndex + 1 }).map((_, index) => (
+              {Array.from({ length: dotCount }).map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
                   className="rounded-full transition-all duration-300"
                   style={{
-                    width: index === currentIndex ? "32px" : "8px",
+                    width: index === activeDot ? "32px" : "8px",
                     height: "8px",
-                    backgroundColor: index === currentIndex ? "#4caf50" : "rgba(26,47,110,0.15)",
+                    backgroundColor: index === activeDot ? "#4caf50" : "rgba(26,47,110,0.15)",
                   }}
                   aria-label={`Go to testimonial set ${index + 1}`}
                 />
@@ -152,7 +153,7 @@ export default function Testimonials() {
           </div>
 
           <div className="mt-4 text-center text-xs sm:text-sm text-gray-500">
-            {currentIndex + 1}–{Math.min(currentIndex + itemsToShow, testimonials.length)} of {testimonials.length}
+            {rangeStart}–{rangeEnd} of {testimonials.length}
           </div>
         </div>
       </div>
