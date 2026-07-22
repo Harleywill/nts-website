@@ -53,6 +53,7 @@ export default function AccreditationsSection() {
             <AccreditationsCarousel
               title="Safety Qualifications"
               accreditations={safetyQualifications}
+              direction="left"
             />
           </div>
 
@@ -61,6 +62,7 @@ export default function AccreditationsSection() {
             <AccreditationsCarousel
               title="Company Accreditations"
               accreditations={companyAccreditations}
+              direction="right"
             />
           </div>
         </div>
