@@ -223,17 +223,30 @@ export default function ContactSubmissionsPage() {
                   <button
                     onClick={() => handleDelete(selected.id, selected.name)}
                     style={{
-                      width: '32px', height: '32px',
+                      height: '32px', padding: '0 12px',
+                      display: 'inline-flex', alignItems: 'center', gap: '6px',
                       borderRadius: 'var(--radius-sm)',
-                      border: '1px solid var(--border)',
-                      background: '#fff',
-                      color: 'var(--slate-400)',
-                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                      cursor: 'pointer', fontSize: '14px',
+                      border: '1px solid #fecaca',
+                      background: '#fef2f2',
+                      color: '#dc2626',
+                      fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.15s',
                     }}
-                    title="Delete"
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.background = '#dc2626';
+                      (e.currentTarget as HTMLElement).style.color = '#fff';
+                      (e.currentTarget as HTMLElement).style.borderColor = '#dc2626';
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.background = '#fef2f2';
+                      (e.currentTarget as HTMLElement).style.color = '#dc2626';
+                      (e.currentTarget as HTMLElement).style.borderColor = '#fecaca';
+                    }}
+                    title="Delete this enquiry"
                   >
-                    ✕
+                    <span style={{ fontSize: '14px', lineHeight: 1 }}>🗑</span>
+                    Delete
                   </button>
                 )}
               </div>
