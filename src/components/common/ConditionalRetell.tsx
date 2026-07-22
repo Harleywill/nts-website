@@ -1,24 +1,39 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ConditionalRetell() {
   const pathname = usePathname();
-  
+  const [enabled, setEnabled] = useState(false);
+
+  // Read the on/off state from site settings (toggled in the admin panel).
   useEffect(() => {
-    // Chat widget is hidden unless explicitly enabled. To bring it back,
-    // set NEXT_PUBLIC_ENABLE_CHAT_WIDGET=true in the environment and rebuild.
-    if (process.env.NEXT_PUBLIC_ENABLE_CHAT_WIDGET !== 'true') {
+    let cancelled = false;
+    fetch(`/api/settings?t=${Date.now()}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return;
+        const settings = data.settings ?? data;
+        setEnabled(settings.chatWidgetEnabled === true);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    // Don't load the widget when disabled or on admin pages.
+    if (!enabled || pathname?.startsWith('/admin')) {
       return;
     }
 
-    // Don't load Retell on admin pages
-    if (pathname?.startsWith('/admin')) {
+    // Avoid injecting twice.
+    if (document.getElementById('retell-widget')) {
       return;
     }
 
-    // Load Retell script
     const script = document.createElement('script');
     script.id = 'retell-widget';
     script.src = 'https://dashboard.retellai.com/retell-widget-v2.js';
@@ -30,7 +45,7 @@ export default function ConditionalRetell() {
     script.setAttribute('data-color', '#4caf50');
     script.setAttribute('data-fab-text', 'Need help?');
     script.setAttribute('data-bot-name', 'Natasha');
-    
+
     document.head.appendChild(script);
 
     return () => {
@@ -39,7 +54,7 @@ export default function ConditionalRetell() {
         existingScript.remove();
       }
     };
-  }, [pathname]);
+  }, [enabled, pathname]);
 
   return null;
 }

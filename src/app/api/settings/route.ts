@@ -98,7 +98,8 @@ export async function PUT(request: NextRequest) {
       facebookUrl,
       linkedinUrl,
       twitterUrl,
-      logoVersion
+      logoVersion,
+      chatWidgetEnabled
     } = body;
 
     let settings = await prisma.siteSettings.findFirst();
@@ -116,6 +117,7 @@ export async function PUT(request: NextRequest) {
           linkedinUrl: linkedinUrl || null,
           twitterUrl: twitterUrl || null,
           logoVersion: logoVersion || 1,
+          chatWidgetEnabled: chatWidgetEnabled ?? false,
         },
       });
     } else {
@@ -132,6 +134,7 @@ export async function PUT(request: NextRequest) {
           linkedinUrl: linkedinUrl !== undefined ? linkedinUrl : settings.linkedinUrl,
           twitterUrl: twitterUrl !== undefined ? twitterUrl : settings.twitterUrl,
           logoVersion: logoVersion !== undefined ? logoVersion : settings.logoVersion,
+          chatWidgetEnabled: chatWidgetEnabled !== undefined ? chatWidgetEnabled : settings.chatWidgetEnabled,
         },
       });
     }

@@ -15,6 +15,7 @@ interface SiteSettings {
   linkedinUrl?: string;
   twitterUrl?: string;
   logoVersion?: number;
+  chatWidgetEnabled?: boolean;
 }
 
 interface Accreditation {
@@ -114,6 +115,29 @@ export default function SettingsPage() {
       }
     } catch {
       setSettings(s => ({ ...s, logoVersion: prev }));
+    }
+  };
+
+  const handleChatWidgetToggle = async () => {
+    const prev = settings.chatWidgetEnabled ?? false;
+    const next = !prev;
+    setSettings(s => ({ ...s, chatWidgetEnabled: next }));
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ ...settings, chatWidgetEnabled: next }),
+      });
+      if (res.ok) {
+        showToast(`Chat widget ${next ? 'enabled' : 'disabled'}`);
+      } else {
+        setSettings(s => ({ ...s, chatWidgetEnabled: prev }));
+        showToast('Failed to update chat widget', 'error');
+      }
+    } catch {
+      setSettings(s => ({ ...s, chatWidgetEnabled: prev }));
+      showToast('Error updating chat widget', 'error');
     }
   };
 
@@ -301,6 +325,49 @@ export default function SettingsPage() {
               </button>
             );
           })}
+        </div>
+      </div>
+
+      {/* ── CHAT WIDGET ── */}
+      <div style={cardStyle}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px' }}>
+          <div>
+            <h2 style={{ ...sectionHeading, marginBottom: '4px' }}>Chat Widget</h2>
+            <p style={{ ...sectionSub, margin: 0 }}>
+              Show the “Need help?” chat bot on the public website
+            </p>
+          </div>
+          <button
+            role="switch"
+            aria-checked={settings.chatWidgetEnabled ?? false}
+            onClick={handleChatWidgetToggle}
+            title={settings.chatWidgetEnabled ? 'Disable chat widget' : 'Enable chat widget'}
+            style={{
+              position: 'relative',
+              width: '52px', height: '30px', flexShrink: 0,
+              borderRadius: '999px', border: 'none', cursor: 'pointer',
+              background: settings.chatWidgetEnabled ? 'var(--green-600)' : 'var(--slate-300, #cbd5e1)',
+              transition: 'background 0.2s',
+            }}
+          >
+            <span style={{
+              position: 'absolute', top: '3px',
+              left: settings.chatWidgetEnabled ? '25px' : '3px',
+              width: '24px', height: '24px', borderRadius: '50%',
+              background: '#fff', boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
+              transition: 'left 0.2s',
+            }} />
+          </button>
+        </div>
+        <div style={{
+          marginTop: '14px', display: 'inline-block',
+          fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700,
+          textTransform: 'uppercase', letterSpacing: '.04em',
+          padding: '2px 8px', borderRadius: 'var(--radius-sm)',
+          background: settings.chatWidgetEnabled ? 'var(--green-100)' : 'var(--slate-100)',
+          color: settings.chatWidgetEnabled ? 'var(--green-700)' : 'var(--slate-600)',
+        }}>
+          {settings.chatWidgetEnabled ? 'Enabled' : 'Disabled'}
         </div>
       </div>
 
