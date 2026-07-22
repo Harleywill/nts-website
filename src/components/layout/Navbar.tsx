@@ -171,8 +171,10 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Center navigation - Only visible on XL screens and up (~1280px) */}
-          <div className="hidden xl:flex absolute left-1/2 transform -translate-x-1/2 items-center justify-center">
+          {/* Center navigation - Only visible on XL screens and up (~1280px).
+              In-flow (flex-1) at xl so it can't overlap the logo; absolutely
+              centered only at 2xl where there's room. */}
+          <div className="hidden xl:flex items-center justify-center xl:flex-1 xl:px-4 2xl:absolute 2xl:left-1/2 2xl:-translate-x-1/2 2xl:px-0">
             {/* Desktop Navigation - Center */}
             <div
               ref={navContainerRef}
