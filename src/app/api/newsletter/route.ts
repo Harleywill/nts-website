@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
 
     // Send welcome email via Resend
     await resend.emails.send({
-      from: "noreply@nevilletuckerservices.co.uk",
+      from: process.env.EMAIL_FROM_ADDRESS ?? "noreply@nevilletuckerservices.co.uk",
       to: email,
       subject: "Welcome to NTS Ltd Newsletter",
       html: `
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
                       </p>
 
                       <div style="text-align: center; margin: 30px 0;">
-                        <a href="https://nevilletuckerservices.co.uk/contact" style="display: inline-block; background-color: #4caf50; color: white; padding: 14px 32px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 15px;">Contact Us</a>
+                        <a href="https://ntslimited.org/contact" style="display: inline-block; background-color: #4caf50; color: white; padding: 14px 32px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 15px;">Contact Us</a>
                       </div>
 
                       <p style="color: #888888; font-size: 13px; margin: 25px 0 0 0; padding-top: 20px; border-top: 1px solid #e0e0e0;">

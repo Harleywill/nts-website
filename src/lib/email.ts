@@ -33,11 +33,11 @@ console.log("- Careers Admin Emails:", CAREERS_ADMIN_EMAILS);
 // Shared branding + layout
 // ---------------------------------------------------------------------------
 
-const SITE_URL = "https://nevilletuckerservices.co.uk";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ntslimited.org";
 const LOGO_URL = `${SITE_URL}/images/ntsLogo-old.png`;
 const NAVY = "#1a2f6e";
 const GREEN = "#4caf50";
-const FROM_ADDRESS = "NTS Ltd <noreply@nevilletuckerservices.co.uk>";
+const FROM_ADDRESS = process.env.EMAIL_FROM_ADDRESS ?? "NTS Ltd <noreply@nevilletuckerservices.co.uk>";
 
 /**
  * Wraps email body content in the shared NTS branded shell:
@@ -404,7 +404,7 @@ export async function sendApplicationStatusUpdate(
         ${ctaButton(trackUrl, 'Track Your Application')}
         ${para(`If you have any questions, please contact us at <a href="mailto:info@nt.services" style="color:${GREEN};text-decoration:none;font-weight:bold;">info@nt.services</a> or call <a href="tel:01482838080" style="color:${GREEN};text-decoration:none;font-weight:bold;">01482 838080</a>.`)}
         ${signOff}
-        ${smallPrint(`You can check your application status at any time at <a href="${trackUrl}" style="color:${GREEN};">nevilletuckerservices.co.uk/careers/track</a>.`)}
+        ${smallPrint(`You can check your application status at any time at <a href="${trackUrl}" style="color:${GREEN};">ntslimited.org/careers/track</a>.`)}
       `),
     });
     return { success: true };
