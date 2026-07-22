@@ -22,6 +22,7 @@ export default function QuickEnquiry() {
     name: "",
     contact: "",
     message: "",
+    website: "", // honeypot — real users never see this field
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -88,7 +89,7 @@ export default function QuickEnquiry() {
 
       // Success
       setSubmitted(true);
-      setFormData({ service: "", propertyType: "", name: "", contact: "", message: "" });
+      setFormData({ service: "", propertyType: "", name: "", contact: "", message: "", website: "" });
       setStep(1);
       setTimeout(() => {
         setSubmitted(false);
@@ -181,6 +182,20 @@ export default function QuickEnquiry() {
             initial="hidden"
             animate="visible"
           >
+            {/* Honeypot field — hidden from real users, bots tend to fill every input */}
+            <div style={{ position: "absolute", left: "-9999px", top: "-9999px", height: 0, width: 0, overflow: "hidden" }} aria-hidden="true">
+              <label htmlFor="website">Website</label>
+              <input
+                id="website"
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={formData.website}
+                onChange={handleChange}
+              />
+            </div>
+
             {/* Error Message */}
             <AnimatePresence>
               {error && (
