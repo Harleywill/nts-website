@@ -3,6 +3,27 @@ import { prisma } from "@/lib/db";
 import { sendContactNotification } from "@/lib/email";
 import { getRateLimitKey, checkRateLimit } from "@/lib/rate-limit";
 
+const FAKE_SUCCESS = NextResponse.json(
+  {
+    success: true,
+    message: "Your enquiry has been sent successfully. We'll get back to you soon!",
+  },
+  { status: 200 }
+);
+
+// Bot-generated field values tend to be random alphanumeric strings with
+// case switching scattered throughout (e.g. "IOWOvYqIMTZKOGHyD"), unlike
+// real names/words which are capitalised only at the start.
+function looksLikeRandomString(text: string): boolean {
+  const words = text.trim().split(/\s+/).filter(Boolean);
+  return words.some((word) => {
+    if (word.length < 6) return false;
+    const rest = word.slice(1);
+    const upperCount = (rest.match(/[A-Z]/g) || []).length;
+    return upperCount / rest.length > 0.3;
+  });
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting: 3 contact submissions per day per IP
@@ -20,7 +41,13 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { name, service, contact, message } = body;
+    const { name, service, contact, message, website } = body;
+
+    // Honeypot: real users never see or fill this field. Bots that fill
+    // every input blindly will trip it. Pretend success so they move on.
+    if (typeof website === "string" && website.trim().length > 0) {
+      return FAKE_SUCCESS;
+    }
 
     // Validation
     if (!name || !service || !contact || !message) {
@@ -28,6 +55,12 @@ export async function POST(request: NextRequest) {
         { error: "Missing required fields" },
         { status: 400 }
       );
+    }
+
+    // Bots that skip the honeypot still tend to fill fields with random
+    // generated strings rather than real text.
+    if (looksLikeRandomString(name) || looksLikeRandomString(service)) {
+      return FAKE_SUCCESS;
     }
 
     // Validate email or phone

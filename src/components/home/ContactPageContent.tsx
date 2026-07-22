@@ -14,6 +14,7 @@ export default function ContactPageContent() {
     services: [] as string[],
     message: "",
     agreed: false,
+    website: "", // honeypot — real users never see this field
   });
 
   const [loading, setLoading] = useState(false);
@@ -73,6 +74,7 @@ export default function ContactPageContent() {
           service: formData.services.join(", ") || "General Inquiry",
           company: formData.company,
           message: formData.message,
+          website: formData.website,
         }),
       });
 
@@ -94,6 +96,7 @@ export default function ContactPageContent() {
         services: [],
         message: "",
         agreed: false,
+        website: "",
       });
 
       setTimeout(() => {
@@ -219,6 +222,20 @@ export default function ContactPageContent() {
               </AnimatePresence>
 
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Honeypot field — hidden from real users, bots tend to fill every input */}
+                <div style={{ position: "absolute", left: "-9999px", top: "-9999px", height: 0, width: 0, overflow: "hidden" }} aria-hidden="true">
+                  <label htmlFor="website">Website</label>
+                  <input
+                    id="website"
+                    name="website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={formData.website}
+                    onChange={handleChange}
+                  />
+                </div>
+
                 {/* Name Fields */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
