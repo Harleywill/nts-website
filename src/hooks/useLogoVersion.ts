@@ -10,7 +10,10 @@ export function useLogoVersion() {
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached === 'old' || cached === 'new') return cached;
     }
-    return 'new';
+    // Default matches the live setting (logoVersion 2 = old) so the server
+    // renders the correct logo, avoiding a first-paint flash and the stale
+    // preload warning. The effect below still syncs to whatever the DB says.
+    return 'old';
   });
 
   useEffect(() => {

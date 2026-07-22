@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
           address: "Unit F2 Rotterdam Park",
           city: "Hull",
           postalCode: "HU7 0AN",
-          logoVersion: 1,
+          logoVersion: 2,
         },
       });
     }

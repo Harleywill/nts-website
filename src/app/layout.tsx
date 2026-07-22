@@ -146,7 +146,7 @@ export default function RootLayout({
               "@type": "Organization",
               "name": "NTS Ltd",
               "url": siteUrl,
-              "logo": `${siteUrl}/images/ntsLogo.png`,
+              "logo": `${siteUrl}/images/ntsLogo-old.png`,
               "description": "Professional HVAC and mechanical solutions for domestic and commercial clients",
               "foundingDate": "1981",
               "contactPoint": {
