@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { heroCrossfadeVariants } from "@/lib/animations";
 
-// HVAC-themed images - Professional equipment and technical work photos
+// HVAC-themed images - Professional equipment and technical work photos.
+// Keep these small (~1920px WebP/AVIF): they're CSS backgrounds, so Next.js
+// image optimization does not apply and full files are decoded on swap.
 const heroImages = [
-  "/images/hero-electrical.jpg", // Electrical panel installation
-  "/images/hero-rooftop-hvac.jpg", // HVAC rooftop units
+  "/images/hero-electrical.webp", // Electrical panel installation
+  "/images/hero-rooftop-hvac.webp", // HVAC rooftop units
   "/images/services/rpz-testing.jpg", // HVAC cooling equipment
-  "/images/hero-electrical-testing.jpg", // Electrical testing with multimeter
+  "/images/hero-electrical-testing.webp", // Electrical testing with multimeter
   "/images/hero-circuit-board.avif", // Circuit board and electronics
 ];
 
@@ -47,6 +49,13 @@ export default function HeroCarousel({ className = "" }: HeroCarouselProps) {
 
     return () => clearInterval(interval);
   }, [prefersReducedMotion]);
+
+  // Pre-decode the upcoming image so the crossfade never decodes mid-swap
+  useEffect(() => {
+    const next = new Image();
+    next.src = heroImages[(currentImageIndex + 1) % heroImages.length];
+    next.decode?.().catch(() => {});
+  }, [currentImageIndex]);
 
   return (
     <AnimatePresence mode="sync">
