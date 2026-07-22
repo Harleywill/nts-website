@@ -6,6 +6,7 @@ import { FaPaperPlane, FaPhone, FaClock } from "react-icons/fa";
 import { SERVICES } from "@/lib/constants";
 import { useInView } from "react-intersection-observer";
 import { staggerContainerVariants, staggerItemVariants } from "@/lib/animations";
+import { trackLead } from "@/lib/tracking";
 
 type FormStep = 1 | 2 | 3;
 
@@ -88,6 +89,7 @@ export default function QuickEnquiry() {
       }
 
       // Success
+      trackLead("quick_enquiry", formData.service || undefined);
       setSubmitted(true);
       setFormData({ service: "", propertyType: "", name: "", contact: "", message: "", website: "" });
       setStep(1);

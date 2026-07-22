@@ -37,7 +37,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ntslimited.org";
 const LOGO_URL = `${SITE_URL}/images/ntsLogo-old.png`;
 const NAVY = "#1a2f6e";
 const GREEN = "#4caf50";
-const FROM_ADDRESS = process.env.EMAIL_FROM_ADDRESS ?? "NTS Ltd <noreply@nevilletuckerservices.co.uk>";
+const FROM_ADDRESS = process.env.EMAIL_FROM_ADDRESS ?? "NTS Ltd <noreply@ntslimited.org>";
 
 /**
  * Wraps email body content in the shared NTS branded shell:
@@ -88,7 +88,7 @@ function renderEmail(content: string): string {
                     <span style="color: #5a6788;">&nbsp;|&nbsp;</span>
                     <a href="mailto:info@nt.services" style="color: ${GREEN}; text-decoration: none;">info@nt.services</a>
                     <span style="color: #5a6788;">&nbsp;|&nbsp;</span>
-                    <a href="${SITE_URL}" style="color: ${GREEN}; text-decoration: none;">nevilletuckerservices.co.uk</a>
+                    <a href="${SITE_URL}" style="color: ${GREEN}; text-decoration: none;">ntslimited.org</a>
                   </p>
                   <p style="color: #7a86a8; margin: 0; font-size: 11px; font-family: Arial, sans-serif;">
                     &copy; ${new Date().getFullYear()} NTS Ltd. All rights reserved.
@@ -386,7 +386,7 @@ export async function sendApplicationStatusUpdate(
   const config = STATUS_EMAIL_CONFIG[newStatus];
   if (!config) return { success: false, reason: 'no_email_for_status' };
 
-  const trackUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nevilletuckerservices.co.uk'}/careers/track?ref=${encodeURIComponent(applicationReference)}`;
+  const trackUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ntslimited.org'}/careers/track?ref=${encodeURIComponent(applicationReference)}`;
 
   try {
     await resend.emails.send({

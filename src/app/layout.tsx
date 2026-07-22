@@ -4,10 +4,11 @@ import Script from "next/script";
 import "./globals.css";
 import "@/styles/admin/theme.css";
 import FaviconManager from "@/components/common/FaviconManager";
+import MetaPixel from "@/components/common/MetaPixel";
 import ConditionalRetell from "@/components/common/ConditionalRetell";
 import EngineeringBackground from "@/components/common/EngineeringBackground";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nevilletuckerservices.co.uk";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ntslimited.org";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -242,6 +243,9 @@ gtag('config', 'G-PEK7PKH64Z');`,
           }}
         />
         {/* End Google Analytics 4 */}
+
+        {/* Meta Pixel (no-op until NEXT_PUBLIC_META_PIXEL_ID is set) */}
+        <MetaPixel />
       </head>
       <body className="min-h-screen flex flex-col text-gray-900">
         {/* Google Tag Manager (noscript) */}
