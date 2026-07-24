@@ -38,8 +38,8 @@ async function getOrCreateGeneralJob() {
 export async function POST(request: NextRequest) {
   try {
     const ip = getRateLimitKey(request);
-    const isAllowed = checkRateLimit(ip, {
-      limit: 3,
+    const isAllowed = checkRateLimit(`apply-general:${ip}`, {
+      limit: 10,
       window: 24 * 60 * 60 * 1000,
     });
     if (!isAllowed) {

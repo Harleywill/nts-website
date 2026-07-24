@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
   try {
     // Rate limiting: 10 signups per hour per IP
     const ip = getRateLimitKey(request);
-    const isAllowed = checkRateLimit(ip, {
+    const isAllowed = checkRateLimit(`newsletter:${ip}`, {
       limit: 10,
       window: 60 * 60 * 1000, // 1 hour
     });

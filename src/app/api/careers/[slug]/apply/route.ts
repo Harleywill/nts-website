@@ -12,8 +12,8 @@ export async function POST(
     const { slug } = await params;
 
     const ip = getRateLimitKey(request);
-    const isAllowed = checkRateLimit(ip, {
-      limit: 3,
+    const isAllowed = checkRateLimit(`apply-job:${ip}`, {
+      limit: 10,
       window: 24 * 60 * 60 * 1000,
     });
     if (!isAllowed) {

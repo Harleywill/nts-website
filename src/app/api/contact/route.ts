@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
   try {
     // Rate limiting: 3 contact submissions per day per IP
     const ip = getRateLimitKey(request);
-    const isAllowed = checkRateLimit(ip, {
+    const isAllowed = checkRateLimit(`contact:${ip}`, {
       limit: 3,
       window: 24 * 60 * 60 * 1000, // 24 hours
     });

@@ -272,10 +272,10 @@ export default function GeneralApplicationPage() {
                   <input
                     type="file"
                     id="cv"
+                    name="cv"
                     onChange={handleFileChange}
                     accept=".pdf,.doc,.docx"
                     className="hidden"
-                    required
                   />
                   <label htmlFor="cv" className="cursor-pointer">
                     {cvFile ? (
