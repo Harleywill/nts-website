@@ -29,15 +29,6 @@ export async function GET(
       );
     }
 
-    // Validate that cvUrl is a safe relative path (prevent path traversal)
-    if (application.cvUrl.includes('..') || application.cvUrl.startsWith('/')) {
-      console.error(`Invalid CV URL format for application ${id}:`, application.cvUrl);
-      return NextResponse.json(
-        { error: "Invalid CV file reference" },
-        { status: 400 }
-      );
-    }
-
     if (!application.cvUrl || !application.cvFilename) {
       return NextResponse.json(
         { error: "No CV file associated with this application" },
@@ -45,11 +36,14 @@ export async function GET(
       );
     }
 
-    // Extract filename using path.basename
+    // Real cvUrl values look like "/uploads/cvs/<file>" - they're expected to
+    // start with "/". path.basename() strips any directory component
+    // (including ".." segments), so this is safe against path traversal
+    // regardless of what the stored value contains.
     const fileName = path.basename(application.cvUrl);
 
-    // Build the file path
-    const filePath = path.join(process.cwd(), "public", "uploads", "cv", fileName);
+    // Build the file path (upload route saves into "uploads/cvs", plural)
+    const filePath = path.join(process.cwd(), "public", "uploads", "cvs", fileName);
 
     // Read the file
     const fileBuffer = await readFile(filePath);

@@ -226,7 +226,7 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--navy-900)' }}>{application.cvFilename}</div>
               <a
-                href={application.cvUrl}
+                href={`/api/applications/${application.id}/cv`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{

@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // Deploy runs `next start` directly (never `node .next/standalone/server.js`),
+  // so standalone output isn't used - and it caused a real bug: the production
+  // server snapshots the public/ directory at boot, so any file uploaded
+  // after that (CVs, project/news images, etc.) 404s until the next restart.
   images: {
     remotePatterns: [
       {
@@ -10,7 +13,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "nevilletuckerservices.co.uk",
+        hostname: "ntslimited.org",
         pathname: "/uploads/**",
       },
     ],
