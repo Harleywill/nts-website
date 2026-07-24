@@ -361,7 +361,7 @@ export default function ApplyPage() {
                         accept=".pdf,.doc,.docx"
                         className="hidden"
                         id="cv-input"
-                        required
+                        name="cv"
                       />
                       <label htmlFor="cv-input" className="cursor-pointer block">
                         {cvFile ? (
