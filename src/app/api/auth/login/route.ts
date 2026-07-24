@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import { prisma } from "@/lib/db";
 import { signToken } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
@@ -13,19 +15,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Simple environment-based auth for admin
-    const adminUsername = process.env.ADMIN_USERNAME || "admin";
-    const adminPassword = process.env.ADMIN_PASSWORD || "NTSAdmin2026!";
+    const user = await prisma.user.findUnique({ where: { username } });
 
-    if (username !== adminUsername || password !== adminPassword) {
+    // Compare against a dummy hash when the user doesn't exist so lookups
+    // for valid vs invalid usernames take the same time (avoids leaking
+    // which usernames exist via response timing).
+    const passwordHash = user?.password ?? "$2a$10$invalidsaltinvalidsaltinvalidsaOK";
+    const passwordMatches = await bcrypt.compare(password, passwordHash);
+
+    if (!user || !passwordMatches) {
       return NextResponse.json(
         { error: "Invalid credentials" },
         { status: 401 }
       );
     }
 
-    // Generate token
-    const token = await signToken({ userId: 1, username: "admin" });
+    // Generate token for the actual authenticated user
+    const token = await signToken({ userId: user.id, username: user.username });
 
     const response = NextResponse.json({ success: true });
 
@@ -47,6 +53,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
+    console.error("Login error:", error);
     return NextResponse.json(
       { error: "Failed to login" },
       { status: 500 }
