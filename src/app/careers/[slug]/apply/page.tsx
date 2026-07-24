@@ -110,9 +110,6 @@ export default function ApplyPage() {
     setLoading(true);
 
     try {
-      const cvUrl = `/uploads/cvs/${cvFile.name}`;
-      const cvFilename = cvFile.name;
-
       // Validate email format
       if (!formData.email.includes('@')) {
         setError('Email address must contain an @ symbol');
@@ -126,6 +123,23 @@ export default function ApplyPage() {
         setLoading(false);
         return;
       }
+
+      const cvFormData = new FormData();
+      cvFormData.append('file', cvFile);
+
+      const uploadResponse = await fetch('/api/upload/cv', {
+        method: 'POST',
+        body: cvFormData,
+      });
+
+      if (!uploadResponse.ok) {
+        const uploadError = await uploadResponse.json();
+        throw new Error(uploadError.error || 'Failed to upload CV');
+      }
+
+      const uploadData = await uploadResponse.json();
+      const cvUrl = uploadData.url;
+      const cvFilename = cvFile.name;
 
       const response = await fetch(`/api/careers/${slug}/apply`, {
         method: "POST",
@@ -149,7 +163,7 @@ export default function ApplyPage() {
 
       router.push(`/careers/${slug}/apply/success?ref=${data.reference}`);
     } catch (err) {
-      setError("An error occurred. Please try again.");
+      setError(err instanceof Error ? err.message : "An error occurred. Please try again.");
       setLoading(false);
     }
   };
