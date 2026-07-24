@@ -1,5 +1,14 @@
 import Link from "next/link";
 
+// Without this, Next.js statically prerenders this page at build time and
+// reuses that cached response for every unmatched path - including files
+// uploaded to public/uploads/* after the build (CVs, project/news/gallery
+// images). The very first request for a brand-new upload's URL gets cached
+// as a 404 and keeps 404ing until the cache expires or the server restarts,
+// even though the file exists on disk. Forcing dynamic rendering makes
+// Next re-check the filesystem for a matching static file on every miss.
+export const dynamic = "force-dynamic";
+
 export default function NotFound() {
   return (
     <main className="grid min-h-screen place-items-center bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
