@@ -53,8 +53,11 @@ export async function POST(request: NextRequest) {
     const filepath = join(uploadsDir, filename);
     await writeFile(filepath, buffer);
 
-    // Return the public URL
-    const url = `/uploads/cvs/${filename}`;
+    // Serve via the API route rather than the raw public/ path - see
+    // src/app/api/uploads/[...path]/route.ts for why. (path.basename() in
+    // the CV-serving route strips this prefix regardless, so this is also
+    // compatible with the existing /api/applications/[id]/cv download link.)
+    const url = `/api/uploads/cvs/${filename}`;
     return NextResponse.json({ url, filename });
   } catch (error) {
     console.error("CV upload error:", error);
