@@ -49,8 +49,9 @@ export async function POST(request: NextRequest) {
     const filepath = join(uploadsDir, filename);
     await writeFile(filepath, buffer);
 
-    // Return the public URL
-    const url = `/uploads/${filename}`;
+    // Serve via the API route rather than the raw public/ path - see
+    // src/app/api/uploads/[...path]/route.ts for why.
+    const url = `/api/uploads/${filename}`;
     return NextResponse.json({ url });
   } catch (error) {
     console.error("Upload error:", error);
