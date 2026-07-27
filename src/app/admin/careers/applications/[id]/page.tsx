@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { canDelete } from '@/lib/admin/permissions';
 
 interface Application {
   id: string;
@@ -64,10 +65,19 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState('');
+  const [userRole, setUserRole] = useState<string>('viewer');
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     params.then(({ id }) => setAppId(id));
   }, [params]);
+
+  useEffect(() => {
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => { if (data.role) setUserRole(data.role); })
+      .catch(() => setUserRole('viewer'));
+  }, []);
 
   useEffect(() => {
     if (!appId) return;
@@ -109,6 +119,27 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
     }
   };
 
+  const handleDelete = async () => {
+    if (!appId || !application) return;
+    if (!confirm(`Delete the application from ${application.fullName}? This cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/admin/applications/${appId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (res.ok) {
+        router.push('/admin/careers/applications');
+      } else {
+        setSaveMsg('Failed to delete');
+        setDeleting(false);
+      }
+    } catch {
+      setSaveMsg('Error deleting');
+      setDeleting(false);
+    }
+  };
+
   if (loading) return <div style={{ padding: '24px', color: 'var(--slate-400)' }}>Loading…</div>;
   if (error || !application) return <div style={{ padding: '24px', color: '#dc2626', fontFamily: 'var(--font-body)' }}>{error || 'Application not found'}</div>;
 
@@ -131,20 +162,55 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
               Ref: {application.reference}
             </div>
           </div>
-          <div
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '12px',
-              fontWeight: 600,
-              padding: '6px 12px',
-              borderRadius: 'var(--radius-md)',
-              background: STATUS_COLORS[application.status]?.bg || 'var(--slate-100)',
-              color: STATUS_COLORS[application.status]?.color || 'var(--slate-600)',
-              textTransform: 'uppercase',
-              letterSpacing: '.03em',
-            }}
-          >
-            {application.status}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '12px',
+                fontWeight: 600,
+                padding: '6px 12px',
+                borderRadius: 'var(--radius-md)',
+                background: STATUS_COLORS[application.status]?.bg || 'var(--slate-100)',
+                color: STATUS_COLORS[application.status]?.color || 'var(--slate-600)',
+                textTransform: 'uppercase',
+                letterSpacing: '.03em',
+              }}
+            >
+              {application.status}
+            </div>
+            {canDelete(userRole as any) && (
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                style={{
+                  height: '32px', padding: '0 12px',
+                  display: 'inline-flex', alignItems: 'center', gap: '6px',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid #fecaca',
+                  background: '#fef2f2',
+                  color: '#dc2626',
+                  fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 600,
+                  cursor: deleting ? 'default' : 'pointer',
+                  opacity: deleting ? 0.6 : 1,
+                  transition: 'all 0.15s',
+                }}
+                onMouseEnter={(e) => {
+                  if (deleting) return;
+                  (e.currentTarget as HTMLElement).style.background = '#dc2626';
+                  (e.currentTarget as HTMLElement).style.color = '#fff';
+                  (e.currentTarget as HTMLElement).style.borderColor = '#dc2626';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = '#fef2f2';
+                  (e.currentTarget as HTMLElement).style.color = '#dc2626';
+                  (e.currentTarget as HTMLElement).style.borderColor = '#fecaca';
+                }}
+                title="Delete this application"
+              >
+                <span style={{ fontSize: '14px', lineHeight: 1 }}>🗑</span>
+                {deleting ? 'Deleting…' : 'Delete'}
+              </button>
+            )}
           </div>
         </div>
       </div>

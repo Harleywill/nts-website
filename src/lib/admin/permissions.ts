@@ -13,6 +13,7 @@ const RESOURCE_PERMISSIONS: Record<string, Set<UserRole>> = {
   testimonials: new Set(['ADMIN', 'EDITOR']),
   users: new Set(['ADMIN']),
   'contact-submissions': new Set(['ADMIN', 'EDITOR']),
+  applications: new Set(['ADMIN', 'EDITOR']),
 };
 
 export function can(role: UserRole, action: string): boolean {

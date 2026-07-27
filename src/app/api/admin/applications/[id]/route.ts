@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { unlink } from "fs/promises";
+import path from "path";
 import { prisma } from "@/lib/db";
 import { sendApplicationStatusUpdate } from "@/lib/email";
+import { verifyAuthWithUser } from "@/lib/auth-middleware";
+import { hasPermission, UserRole } from "@/lib/admin/permissions";
 
 const EMAIL_TRIGGER_STATUSES = new Set(["INTERVIEW", "OFFER", "HIRED"]);
 
@@ -106,6 +110,57 @@ export async function GET(
     console.error("Error fetching application:", error);
     return NextResponse.json(
       { error: "Failed to fetch application" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  try {
+    const authResult = await verifyAuthWithUser(request);
+    if (!authResult.success || !authResult.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userRole = authResult.user.role as UserRole;
+    if (!hasPermission(userRole, "applications")) {
+      return NextResponse.json(
+        { error: "Forbidden: You do not have permission to delete applications" },
+        { status: 403 }
+      );
+    }
+
+    const existing = await prisma.application.findUnique({
+      where: { id },
+      select: { cvUrl: true },
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: "Application not found" }, { status: 404 });
+    }
+
+    await prisma.application.delete({ where: { id } });
+
+    // Best-effort cleanup of the uploaded CV file - the DB row is the
+    // source of truth, so a leftover/missing file here isn't fatal.
+    if (existing.cvUrl) {
+      const fileName = path.basename(existing.cvUrl);
+      const filePath = path.join(process.cwd(), "public", "uploads", "cvs", fileName);
+      unlink(filePath).catch(() => {});
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting application:", error);
+    if ((error as any)?.code === "P2025") {
+      return NextResponse.json({ error: "Application not found" }, { status: 404 });
+    }
+    return NextResponse.json(
+      { error: "Failed to delete application" },
       { status: 500 }
     );
   }
