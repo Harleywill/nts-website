@@ -167,7 +167,11 @@ export default function GalleryAdminPage() {
   };
 
   return (
-    <div style={{ display: 'flex', height: '100%', minHeight: 0 }}>
+    // Fixed height (not 100%, which collapses against the padded page wrapper
+    // and lets the whole page scroll as one unit) so the two panels scroll
+    // independently: the grid on the left, while the detail preview on the
+    // right stays in view. Mirrors the contact-submissions admin layout.
+    <div style={{ display: 'flex', height: 'calc(100vh - 100px)', minHeight: 0 }}>
       {toast && <Toast message={toast.message} type={toast.type} />}
 
       {/* Left panel — image grid */}
