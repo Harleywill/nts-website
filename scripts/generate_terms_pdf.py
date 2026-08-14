@@ -4,7 +4,7 @@
 Single source of truth: src/data/terms.json (shared with the /terms web page).
 Regenerate after editing the terms:
 
-    pip install fpdf2
+    pip install fpdf2 pillow
     python3 scripts/generate_terms_pdf.py
 
 Output: public/documents/nts-terms-of-service.pdf
@@ -13,6 +13,7 @@ Output: public/documents/nts-terms-of-service.pdf
 import json
 import os
 from fpdf import FPDF
+from PIL import Image
 
 NAVY = (26, 47, 110)     # #1a2f6e
 GREEN = (76, 175, 80)    # #4caf50
@@ -38,6 +39,23 @@ def clean(text: str) -> str:
     for a, b in REPLACEMENTS.items():
         text = text.replace(a, b)
     return text.encode("latin-1", "replace").decode("latin-1")
+
+
+def logo_for_navy_background(path: str, wordmark_x_start: int = 240) -> Image.Image:
+    """Recolour the logo's navy 'NTS' wordmark to white so it reads on a
+    navy background. The multicoloured globe icon (left of x=240 in the
+    source image) shares that same navy in its top stripe, so the swap is
+    done geometrically (only right of wordmark_x_start) rather than by
+    colour alone - the globe is untouched either way."""
+    img = Image.open(path).convert("RGBA")
+    px = img.load()
+    w, h = img.size
+    for y in range(h):
+        for x in range(wordmark_x_start, w):
+            r, g, b, a = px[x, y]
+            if a > 0 and b > r + 20 and b > g + 20 and r < 110:
+                px[x, y] = (255, 255, 255, a)
+    return img
 
 
 class TermsPDF(FPDF):
@@ -73,24 +91,36 @@ def main():
     pdf.set_margins(18, 18, 18)
     pdf.add_page()
 
-    # Cover band
+    # Cover band - shorter than the original design (38mm vs 52mm), logo
+    # sits inside it top-right with its wordmark recoloured white so it
+    # reads against the navy fill (the source file's "NTS" text is navy
+    # and would otherwise disappear).
+    band_h = 38
     pdf.set_fill_color(*NAVY)
-    pdf.rect(0, 0, pdf.w, 52, "F")
+    pdf.rect(0, 0, pdf.w, band_h, "F")
     pdf.set_fill_color(*GREEN)
-    pdf.rect(0, 52, pdf.w, 2, "F")
-    pdf.set_xy(18, 16)
-    pdf.set_font("Helvetica", "B", 22)
-    pdf.set_text_color(255, 255, 255)
-    pdf.cell(0, 10, "NTS Ltd")
-    pdf.set_xy(18, 28)
-    pdf.set_font("Helvetica", "", 13)
-    pdf.set_text_color(200, 208, 224)
-    pdf.cell(0, 8, "Terms of Service")
-    pdf.set_xy(18, 38)
-    pdf.set_font("Helvetica", "", 9)
-    pdf.cell(0, 6, clean(f"Last updated: {data['lastUpdated']}"))
+    pdf.rect(0, band_h, pdf.w, 2, "F")
 
-    pdf.ln(48)
+    logo_path = os.path.join(ROOT, "public", "images", "ntsLogo-old.png")
+    if os.path.exists(logo_path):
+        logo_h = 13
+        logo_w = logo_h * (789 / 237)  # source image aspect ratio
+        logo_img = logo_for_navy_background(logo_path)
+        pdf.image(logo_img, x=pdf.w - 18 - logo_w, y=(band_h - logo_h) / 2, h=logo_h)
+
+    pdf.set_xy(18, 8)
+    pdf.set_font("Helvetica", "B", 17)
+    pdf.set_text_color(255, 255, 255)
+    pdf.cell(0, 8, "NTS Ltd")
+    pdf.set_xy(18, 18)
+    pdf.set_font("Helvetica", "", 10.5)
+    pdf.set_text_color(200, 208, 224)
+    pdf.cell(0, 6, "Terms of Service")
+    pdf.set_xy(18, 27)
+    pdf.set_font("Helvetica", "", 8)
+    pdf.cell(0, 5, clean(f"Last updated: {data['lastUpdated']}"))
+
+    pdf.set_y(band_h + 2 + 12)
 
     # Intro
     pdf.set_font("Helvetica", "", 10)
