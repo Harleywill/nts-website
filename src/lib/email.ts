@@ -1,6 +1,31 @@
 import { Resend } from "resend";
+import { readFileSync } from "fs";
+import path from "path";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Terms of Service PDF, attached to applicant/enquiry confirmation emails.
+// Read once and cached; if it can't be read, emails still send without it.
+let termsAttachmentCache: { filename: string; content: string } | null | undefined;
+
+function getTermsAttachment(): { filename: string; content: string } | null {
+  if (termsAttachmentCache !== undefined) return termsAttachmentCache;
+  try {
+    const filePath = path.join(process.cwd(), "public", "documents", "nts-terms-of-service.pdf");
+    const content = readFileSync(filePath).toString("base64");
+    termsAttachmentCache = { filename: "NTS-Terms-of-Service.pdf", content };
+  } catch (err) {
+    console.error("Could not load Terms of Service PDF for email attachment:", err);
+    termsAttachmentCache = null;
+  }
+  return termsAttachmentCache;
+}
+
+// Attachments array to spread into a send() call - empty if the PDF is missing.
+function termsAttachments() {
+  const att = getTermsAttachment();
+  return att ? [att] : [];
+}
 
 // Admin email addresses for contact form notifications
 // Configure via CONTACT_ADMIN_EMAILS environment variable (comma-separated)
@@ -89,6 +114,11 @@ function renderEmail(content: string): string {
                     <a href="mailto:info@nt.services" style="color: ${GREEN}; text-decoration: none;">info@nt.services</a>
                     <span style="color: #5a6788;">&nbsp;|&nbsp;</span>
                     <a href="${SITE_URL}" style="color: ${GREEN}; text-decoration: none;">ntslimited.org</a>
+                  </p>
+                  <p style="margin: 0 0 12px 0; font-size: 12px; font-family: Arial, sans-serif;">
+                    <a href="${SITE_URL}/terms" style="color: #b8c0d8; text-decoration: underline;">Terms of Service</a>
+                    <span style="color: #5a6788;">&nbsp;&middot;&nbsp;</span>
+                    <a href="${SITE_URL}/privacy" style="color: #b8c0d8; text-decoration: underline;">Privacy Policy</a>
                   </p>
                   <p style="color: #7a86a8; margin: 0; font-size: 11px; font-family: Arial, sans-serif;">
                     &copy; ${new Date().getFullYear()} NTS Ltd. All rights reserved.
@@ -200,6 +230,7 @@ export async function sendApplicationNotification(
         from: FROM_ADDRESS,
         to: applicantEmail,
         subject: "Application Received - NTS Ltd",
+        attachments: termsAttachments(),
         html: renderEmail(`
           ${heading("Thank You for Applying", "We've received your application")}
           ${para(`Dear ${applicantName},`)}
@@ -240,6 +271,7 @@ export async function sendApplicationConfirmationEmail(
       from: FROM_ADDRESS,
       to: applicantEmail,
       subject: `Application Received - ${jobTitle}`,
+      attachments: termsAttachments(),
       html: renderEmail(`
         ${heading("Application Received")}
         ${para(`Hi ${applicantName},`)}
@@ -292,6 +324,7 @@ export async function sendContactNotification(
             from: FROM_ADDRESS,
             to: contact,
             subject: "Thank you for your enquiry - NTS Ltd",
+            attachments: termsAttachments(),
             html: renderEmail(`
               ${heading("Thank You for Contacting Us", "We've received your enquiry")}
               ${para(`Hi ${name},`)}
@@ -425,6 +458,7 @@ export async function sendGeneralApplicationConfirmationEmail(
       from: FROM_ADDRESS,
       to: applicantEmail,
       subject: "Application Received - NTS Ltd",
+      attachments: termsAttachments(),
       html: renderEmail(`
         ${heading("Thank You for Your Application", "We've received your CV and skills submission")}
         ${para(`Dear ${applicantName},`)}

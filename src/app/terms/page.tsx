@@ -2,104 +2,138 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import DuctWaves from "@/components/common/DuctWaves";
+import { TERMS_SECTIONS, TERMS_INTRO, TERMS_LAST_UPDATED } from "@/lib/terms-content";
 
 export const metadata = {
   title: "Terms of Service - NTS Ltd",
   description: "Our terms of service and conditions of use.",
 };
 
+const PDF_URL = "/documents/nts-terms-of-service.pdf";
+
 export default function Terms() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <Navbar />
       <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 px-6 pt-24 pb-24 sm:py-32 lg:px-8 lg:pt-24 min-h-[550px] flex items-center">
+        {/* Hero */}
+        <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 px-6 pt-28 pb-20 lg:px-8">
           <div className="absolute inset-0 -z-10 overflow-hidden">
             <DuctWaves opacity={0.5} showPulses={false} />
           </div>
-          <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <span
+              className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white"
+              style={{ backgroundColor: "#4caf50" }}
+            >
+              Legal
+            </span>
+            <h1 className="mt-5 text-4xl font-bold tracking-tight text-white sm:text-6xl">
               Terms of Service
             </h1>
+            <p className="mt-5 text-lg text-gray-300 leading-relaxed">
+              {TERMS_INTRO}
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <span className="inline-flex items-center gap-2 text-sm text-gray-400">
+                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#4caf50" }} />
+                Last updated: {TERMS_LAST_UPDATED}
+              </span>
+              <a
+                href={PDF_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-105"
+                style={{ backgroundColor: "#4caf50" }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v6.638l1.96-2.158a.75.75 0 1 1 1.11 1.01l-3.25 3.575a.75.75 0 0 1-1.11 0L6.22 9.24a.75.75 0 1 1 1.11-1.01l1.96 2.158V3.75A.75.75 0 0 1 10 3Z" clipRule="evenodd" />
+                  <path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" />
+                </svg>
+                Download PDF
+              </a>
+            </div>
           </div>
         </section>
 
-        {/* Content Section */}
-        <section className="relative isolate overflow-hidden px-6 py-24 sm:py-32 lg:px-8">
-          <div className="mx-auto max-w-3xl">
-            <div className="prose prose-lg prose-gray max-w-none">
-              <p>
-                Last updated: {new Date().getFullYear()}
-              </p>
+        {/* Body */}
+        <section className="px-6 py-16 sm:py-20 lg:px-8">
+          <div className="mx-auto max-w-6xl lg:grid lg:grid-cols-[240px_1fr] lg:gap-14">
+            {/* Sticky table of contents */}
+            <aside className="hidden lg:block">
+              <nav className="sticky top-24">
+                <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
+                  On this page
+                </p>
+                <ol className="space-y-2.5 border-l border-gray-200">
+                  {TERMS_SECTIONS.map((section, i) => (
+                    <li key={section.id}>
+                      <a
+                        href={`#${section.id}`}
+                        className="block -ml-px border-l-2 border-transparent pl-4 text-sm text-gray-500 transition-colors hover:border-brand-green-500 hover:text-brand-green-600"
+                      >
+                        {i + 1}. {section.heading}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            </aside>
 
-              <h2>Introduction</h2>
-              <p>
-                These Terms of Service ("Terms") constitute a legally binding agreement made between you, whether personally or on behalf of an entity ("you") and NTS Ltd ("we," "us," or "our"), concerning your access to and use of the website as well as any other media form, media channel, mobile website, or mobile application relating, linked, or otherwise connected thereto (collectively, the "Service").
-              </p>
+            {/* Content */}
+            <div className="mt-12 lg:mt-0 max-w-3xl">
+              {TERMS_SECTIONS.map((section, i) => (
+                <section
+                  key={section.id}
+                  id={section.id}
+                  className="scroll-mt-24 border-b border-gray-100 pb-10 mb-10 last:border-b-0"
+                >
+                  <div className="flex items-center gap-4 mb-5">
+                    <span
+                      className="flex h-9 w-9 flex-none items-center justify-center rounded-lg text-sm font-bold text-white"
+                      style={{ backgroundColor: "#1a2f6e" }}
+                    >
+                      {i + 1}
+                    </span>
+                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+                      {section.heading}
+                    </h2>
+                  </div>
 
-              <h2>Agreement to Terms</h2>
-              <p>
-                You agree that by accessing the Service, you have read, understood, and agree to be bound by all of these Terms of Service. If you do not agree with our Terms of Service, then you may not access and use the Service.
-              </p>
+                  {section.paragraphs?.map((para, j) => (
+                    <p key={j} className="text-gray-600 leading-relaxed mb-4">
+                      {para}
+                    </p>
+                  ))}
 
-              <h2>Intellectual Property Rights</h2>
-              <p>
-                Unless otherwise indicated, the Service is our proprietary property and all source code, databases, functionality, software, website designs, audio, video, text, photographs, and graphics on the Service (collectively, the "Content") and the trademarks, service marks, and logos contained therein (the "Marks") are owned or controlled by us or licensed to us, and are protected by copyright and trademark laws.
-              </p>
+                  {section.list && (
+                    <ul className="mt-2 space-y-2.5">
+                      {section.list.map((item, j) => (
+                        <li key={j} className="flex items-start gap-3 text-gray-600 leading-relaxed">
+                          <span
+                            className="mt-2 h-1.5 w-1.5 flex-none rounded-full"
+                            style={{ backgroundColor: "#4caf50" }}
+                          />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </section>
+              ))}
 
-              <h2>User Representations</h2>
-              <p>
-                By using the Service, you represent and warrant that:
-              </p>
-              <ul>
-                <li>You have the legal capacity and you agree to comply with these Terms of Service</li>
-                <li>You are not a minor in the jurisdiction in which you reside</li>
-                <li>You will not access the Service through automated or non-human means</li>
-                <li>You will not use the Service for any illegal or unauthorized purpose</li>
-              </ul>
-
-              <h2>User Content</h2>
-              <p>
-                You retain all rights to any content you submit, post or display on or through the Service. By submitting, posting or displaying content on or through the Service, you grant us a worldwide, non-exclusive, royalty-free license to use, reproduce, adapt, publish, translate, and distribute it in any media.
-              </p>
-
-              <h2>Prohibited Activities</h2>
-              <p>
-                You may not access or use the Service for any purpose other than that for which we make the Service available. The Service may not be used in connection with any commercial endeavors except those specifically endorsed or approved by us.
-              </p>
-
-              <h2>Limitation of Liability</h2>
-              <p>
-                In no event shall NTS Ltd, nor its directors, employees, or agents, be liable to you or any third party for any direct, indirect, consequential, exemplary, incidental, special, or punitive damages, including lost profit, lost revenue, loss of data, or other damages arising from your use of or inability to use the materials on the Service.
-              </p>
-
-              <h2>Indemnification</h2>
-              <p>
-                You agree to defend, indemnify, and hold harmless NTS Ltd and its licensee and licensors, and their employees, contractors, agents, officers and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses.
-              </p>
-
-              <h2>Modifications and Interruptions</h2>
-              <p>
-                We reserve the right to modify or discontinue, temporarily or permanently, the Service or any service to which it connects, with or without notice and without liability to you.
-              </p>
-
-              <h2>Governing Law</h2>
-              <p>
-                These Terms and Conditions are governed by and construed in accordance with the laws of the United Kingdom, and you irrevocably submit to the exclusive jurisdiction of the courts in that State or location.
-              </p>
-
-              <h2>Contact Information</h2>
-              <p>
-                If you have any questions about these Terms of Service, please contact us at:
-              </p>
-              <ul>
-                <li>Email: info@nt.services</li>
-                <li>Phone: 01482 838080</li>
-              </ul>
-
-              <div className="mt-8 pt-8 border-t border-gray-200">
-                <Link href="/privacy" className="text-brand-green-600 hover:text-green-700 font-semibold">
+              {/* Privacy link */}
+              <div className="rounded-xl border border-gray-200 bg-gray-50 p-6 flex items-center justify-between flex-wrap gap-4">
+                <div>
+                  <p className="font-semibold text-gray-900">Looking for our Privacy Policy?</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Learn how we collect, use, and protect your information.
+                  </p>
+                </div>
+                <Link
+                  href="/privacy"
+                  className="inline-flex items-center gap-2 text-brand-green-600 hover:text-green-700 font-semibold whitespace-nowrap"
+                >
                   View Privacy Policy →
                 </Link>
               </div>
