@@ -2,98 +2,127 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import DuctWaves from "@/components/common/DuctWaves";
+import LegalList from "@/components/common/LegalList";
+import { PRIVACY_SECTIONS, PRIVACY_INTRO, PRIVACY_LAST_UPDATED } from "@/lib/privacy-content";
 
 export const metadata = {
   title: "Privacy Policy - NTS Ltd",
   description: "Our privacy policy and data protection information.",
 };
 
+const PDF_URL = "/documents/nts-privacy-policy.pdf";
+
 export default function Privacy() {
   return (
-    <div className="flex flex-col min-h-screen ">
+    <div className="flex flex-col min-h-screen bg-white">
       <Navbar />
       <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 px-6 pt-24 pb-24 sm:py-32 lg:px-8 lg:pt-24 min-h-[550px] flex items-center">
+        {/* Hero */}
+        <section className="relative isolate overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 px-6 pt-28 pb-20 lg:px-8">
           <div className="absolute inset-0 -z-10 overflow-hidden">
             <DuctWaves opacity={0.5} showPulses={false} />
           </div>
-          <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <span
+              className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white"
+              style={{ backgroundColor: "#4caf50" }}
+            >
+              Legal
+            </span>
+            <h1 className="mt-5 text-4xl font-bold tracking-tight text-white sm:text-6xl">
               Privacy Policy
             </h1>
+            <p className="mt-5 text-lg text-gray-300 leading-relaxed">
+              {PRIVACY_INTRO}
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <span className="inline-flex items-center gap-2 text-sm text-gray-400">
+                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "#4caf50" }} />
+                Last updated: {PRIVACY_LAST_UPDATED}
+              </span>
+              <a
+                href={PDF_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-105"
+                style={{ backgroundColor: "#4caf50" }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v6.638l1.96-2.158a.75.75 0 1 1 1.11 1.01l-3.25 3.575a.75.75 0 0 1-1.11 0L6.22 9.24a.75.75 0 1 1 1.11-1.01l1.96 2.158V3.75A.75.75 0 0 1 10 3Z" clipRule="evenodd" />
+                  <path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" />
+                </svg>
+                Download PDF
+              </a>
+            </div>
           </div>
         </section>
 
-        {/* Content Section */}
-        <section className="relative isolate overflow-hidden  px-6 py-24 sm:py-32 lg:px-8"
-          
-        >
-          <div className="mx-auto max-w-3xl">
-            <div className="prose prose-lg prose-gray max-w-none">
-              <p>
-                Last updated: {new Date().getFullYear()}
-              </p>
+        {/* Body */}
+        <section className="px-6 py-16 sm:py-20 lg:px-8">
+          <div className="mx-auto max-w-6xl lg:grid lg:grid-cols-[240px_1fr] lg:gap-14">
+            {/* Sticky table of contents */}
+            <aside className="hidden lg:block">
+              <nav className="sticky top-24">
+                <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
+                  On this page
+                </p>
+                <ol className="space-y-2.5 border-l border-gray-200">
+                  {PRIVACY_SECTIONS.map((section, i) => (
+                    <li key={section.id}>
+                      <a
+                        href={`#${section.id}`}
+                        className="block -ml-px border-l-2 border-transparent pl-4 text-sm text-gray-500 transition-colors hover:border-brand-green-500 hover:text-brand-green-600"
+                      >
+                        {i + 1}. {section.heading}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            </aside>
 
-              <h2>Introduction</h2>
-              <p>
-                NTS Ltd ("we," "us," or "our") operates this website. This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our service and the choices you have associated with that data.
-              </p>
+            {/* Content */}
+            <div className="mt-12 lg:mt-0 max-w-3xl">
+              {PRIVACY_SECTIONS.map((section, i) => (
+                <section
+                  key={section.id}
+                  id={section.id}
+                  className="scroll-mt-24 border-b border-gray-100 pb-10 mb-10 last:border-b-0"
+                >
+                  <div className="flex items-center gap-4 mb-5">
+                    <span
+                      className="flex h-9 w-9 flex-none items-center justify-center rounded-lg text-sm font-bold text-white"
+                      style={{ backgroundColor: "#1a2f6e" }}
+                    >
+                      {i + 1}
+                    </span>
+                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+                      {section.heading}
+                    </h2>
+                  </div>
 
-              <h2>Information Collection and Use</h2>
-              <p>
-                We collect several different types of information for various purposes to provide and improve our service to you.
-              </p>
+                  {section.paragraphs?.map((para, j) => (
+                    <p key={j} className="text-gray-600 leading-relaxed mb-4">
+                      {para}
+                    </p>
+                  ))}
 
-              <h3>Types of Data Collected:</h3>
-              <ul>
-                <li><strong>Personal Data:</strong> While using our service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you ("Personal Data"). This may include:
-                  <ul>
-                    <li>Name</li>
-                    <li>Email address</li>
-                    <li>Phone number</li>
-                    <li>Address</li>
-                    <li>Cookies and Usage Data</li>
-                  </ul>
-                </li>
-                <li><strong>Usage Data:</strong> We may also collect information about how the service is accessed and used ("Usage Data"). This may include information such as your computer's IP address, browser type, browser version, the pages you visit, and other diagnostic data.</li>
-              </ul>
+                  {section.list && <LegalList items={section.list} />}
+                </section>
+              ))}
 
-              <h2>Use of Data</h2>
-              <p>
-                NTS Ltd uses the collected data for various purposes:
-              </p>
-              <ul>
-                <li>To provide and maintain our service</li>
-                <li>To notify you about changes to our service</li>
-                <li>To allow you to participate in interactive features of our service when you choose to do so</li>
-                <li>To provide customer support</li>
-                <li>To gather analysis or valuable information so that we can improve our service</li>
-                <li>To monitor the usage of our service</li>
-                <li>To detect, prevent and address technical issues</li>
-              </ul>
-
-              <h2>Security of Data</h2>
-              <p>
-                The security of your data is important to us but remember that no method of transmission over the Internet or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your Personal Data, we cannot guarantee its absolute security.
-              </p>
-
-              <h2>Changes to This Privacy Policy</h2>
-              <p>
-                We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date at the top of this Privacy Policy.
-              </p>
-
-              <h2>Contact Us</h2>
-              <p>
-                If you have any questions about this Privacy Policy, please contact us at:
-              </p>
-              <ul>
-                <li>Email: info@nt.services</li>
-                <li>Phone: 01482 838080</li>
-              </ul>
-
-              <div className="mt-8 pt-8 border-t border-gray-200">
-                <Link href="/terms" className="text-brand-green-600 hover:text-green-700 font-semibold">
+              {/* Terms link */}
+              <div className="rounded-xl border border-gray-200 bg-gray-50 p-6 flex items-center justify-between flex-wrap gap-4">
+                <div>
+                  <p className="font-semibold text-gray-900">Looking for our Terms of Service?</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Read the terms and conditions for using our website.
+                  </p>
+                </div>
+                <Link
+                  href="/terms"
+                  className="inline-flex items-center gap-2 text-brand-green-600 hover:text-green-700 font-semibold whitespace-nowrap"
+                >
                   View Terms of Service →
                 </Link>
               </div>

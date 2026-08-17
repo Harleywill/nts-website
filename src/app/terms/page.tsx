@@ -2,6 +2,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import DuctWaves from "@/components/common/DuctWaves";
+import LegalList from "@/components/common/LegalList";
 import { TERMS_SECTIONS, TERMS_INTRO, TERMS_LAST_UPDATED } from "@/lib/terms-content";
 
 export const metadata = {
@@ -106,19 +107,7 @@ export default function Terms() {
                     </p>
                   ))}
 
-                  {section.list && (
-                    <ul className="mt-2 space-y-2.5">
-                      {section.list.map((item, j) => (
-                        <li key={j} className="flex items-start gap-3 text-gray-600 leading-relaxed">
-                          <span
-                            className="mt-2 h-1.5 w-1.5 flex-none rounded-full"
-                            style={{ backgroundColor: "#4caf50" }}
-                          />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  {section.list && <LegalList items={section.list} />}
                 </section>
               ))}
 
