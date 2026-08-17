@@ -48,3 +48,4 @@ yarn-error.log*
 prisma/dev.db
 prisma/*.db
 .worktrees/
+__pycache__/

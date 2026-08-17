@@ -5,14 +5,10 @@
 // the JSON, regenerate the PDF: `python3 scripts/generate_terms_pdf.py`.
 
 import termsData from "@/data/terms.json";
+import type { LegalSection } from "./legalTypes";
 
-export interface TermsSection {
-  id: string;
-  heading: string;
-  paragraphs?: string[];
-  list?: string[];
-}
+export type TermsSection = LegalSection;
 
 export const TERMS_LAST_UPDATED: string = termsData.lastUpdated;
 export const TERMS_INTRO: string = termsData.intro;
-export const TERMS_SECTIONS: TermsSection[] = termsData.sections;
+export const TERMS_SECTIONS: LegalSection[] = termsData.sections;
