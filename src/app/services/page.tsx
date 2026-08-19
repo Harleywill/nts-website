@@ -1,77 +1,102 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Image from "next/image";
 import Link from "next/link";
-import { FaFire, FaWind, FaSnowflake, FaTools, FaCheckCircle, FaTint } from "react-icons/fa";
 import DuctWaves from "@/components/common/DuctWaves";
+import styles from "./services.module.css";
 
 export const metadata = {
   title: "Services - NTS Ltd",
   description: "Explore our comprehensive HVAC and mechanical services for residential and commercial clients.",
 };
 
-const services = [
+const bentoCards = [
   {
-    id: "plumbing-heating",
+    area: styles.areaA,
+    idx: "01 / SPEC",
     title: "Plumbing & Heating",
-    icon: FaFire,
+    description:
+      "Complete plumbing and heating solutions for residential and commercial properties — from new boiler installations and radiator systems to emergency repairs and ongoing maintenance.",
+    badge: "Gas Safe Registered",
+    image: "/images/services/plumbing-heating.jpg",
+    slug: "plumbing-heating",
   },
   {
-    id: "ventilation",
+    area: styles.areaB,
+    idx: "02 / SPEC",
     title: "Ventilation",
-    icon: FaWind,
+    description:
+      "System design, installation, and maintenance ensuring optimal airflow and air quality while maximizing energy efficiency.",
+    image: "/images/services/ventilation.jpg",
+    slug: "ventilation",
   },
   {
-    id: "domestic-commercial-servicing",
+    area: styles.areaC,
+    idx: "03 / SPEC",
     title: "Domestic & Commercial Servicing",
-    icon: FaTools,
+    description:
+      "Regular maintenance and preventative care across boilers, heating, and air conditioning to avoid costly breakdowns.",
+    tags: ["Boilers", "Heating", "A/C", "Electrical"],
+    image: "/images/services/domestic-commercial-servicing.jpg",
+    slug: "domestic-commercial-servicing",
   },
   {
-    id: "air-conditioning",
+    area: styles.areaD,
+    idx: "04 / SPEC",
     title: "Air Conditioning",
-    icon: FaSnowflake,
+    description:
+      "System design, professional installation, and routine maintenance for safe, efficient cooling.",
+    badge: "F-Gas Registered",
+    image: "/images/services/airconditioning.jpg",
+    slug: "air-conditioning",
   },
   {
-    id: "commissioning",
+    area: styles.areaE,
+    idx: "05 / SPEC",
     title: "Commissioning",
-    icon: FaCheckCircle,
+    description:
+      "Testing, verification, and optimization so systems perform at peak efficiency before handover.",
+    tags: ["Test", "Verify", "Optimize", "Handover"],
+    image: "/images/services/commissioning.jpg",
+    slug: "commissioning",
   },
   {
-    id: "rpz-testing",
+    area: styles.areaF,
+    idx: "06 / SPEC",
     title: "RPZ Testing",
-    icon: FaTint,
+    description:
+      "Testing and certification of backflow prevention devices to protect water quality and stay compliant.",
+    image: "/images/services/rpz-testing.jpg",
+    slug: "rpz-testing",
   },
 ];
 
-const serviceInfo = [
+const processSteps = [
   {
-    title: "Plumbing & Heating",
-    description: "Complete plumbing and heating solutions for residential and commercial properties. From new boiler installations and radiator systems to emergency repairs and ongoing maintenance. All work carried out by Gas Safe registered engineers.",
+    title: "Enquiry",
+    description: "Call, message, or request a quote online. We scope the job the same day.",
   },
   {
-    title: "Ventilation",
-    description: "Professional ventilation system design, installation, and maintenance. We ensure optimal airflow and air quality while maximizing energy efficiency. Suitable for homes, offices, and industrial facilities.",
+    title: "Site Survey",
+    description: "An engineer assesses the property and specifies the right system for it.",
   },
   {
-    title: "Domestic & Commercial Servicing",
-    description: "Regular maintenance and servicing for all mechanical and electrical building systems. Preventative care to avoid costly breakdowns, covering boilers, heating systems, air conditioning, and more across residential and commercial properties.",
+    title: "Install",
+    description: "Certified engineers carry out the work to Gas Safe / F-Gas standard.",
   },
   {
-    title: "Air Conditioning",
-    description: "Complete air conditioning solutions from system design and professional installation to routine maintenance and emergency repairs. F-Gas registered engineers ensure safe, efficient cooling for homes and businesses.",
+    title: "Commission",
+    description: "Full system testing, verification, and handover documentation.",
   },
   {
-    title: "Commissioning",
-    description: "Thorough system testing, verification, and optimization of HVAC and mechanical systems. We ensure your systems operate at peak performance and energy efficiency before handover and throughout their lifespan.",
-  },
-  {
-    title: "RPZ Testing",
-    description: "Professional testing and certification of Reduced Pressure Zone (RPZ) devices to protect water quality and comply with regulations. We ensure your backflow prevention devices are functioning correctly and safely protecting your water supply.",
+    title: "Aftercare",
+    description: "Ongoing servicing, warranty support, and emergency call-out.",
   },
 ];
 
 export default function Services() {
   return (
-    <div className="flex flex-col min-h-screen ">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
       <main className="flex-grow">
         {/* Hero Section */}
@@ -80,70 +105,94 @@ export default function Services() {
             <DuctWaves bands={5} speed={0.7} />
           </div>
           <div className="mx-auto max-w-2xl text-center">
+            <span className={styles.heroTag}>HVAC · Mechanical · Hull &amp; Yorkshire</span>
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
               Our Services
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-300">
-              Complete HVAC & Mechanical Solutions for Every Need
+              Complete HVAC &amp; mechanical solutions for every need.
             </p>
           </div>
         </section>
 
-        {/* Services Information Section */}
-        <section className="relative py-24 sm:py-32 overflow-hidden px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl">
-            <div className=" rounded-2xl p-8 shadow-lg mb-16 bg-white">
-              <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center">
-                What We Offer
+        {/* Our Process */}
+        <section className="py-24 sm:py-32 px-6 lg:px-8 bg-white">
+          <div className="mx-auto max-w-7xl">
+            <div className="text-center max-w-xl mx-auto mb-16">
+              <span className={styles.eyebrow}>Our Process</span>
+              <h2
+                className="mt-4 font-extrabold tracking-tight text-navy"
+                style={{ fontSize: "clamp(28px, 3.6vw, 40px)", letterSpacing: "-0.025em", lineHeight: 1.15 }}
+              >
+                From first call to full handover
               </h2>
+              <p className="mt-4 text-gray-500" style={{ fontSize: "16.5px", lineHeight: 1.65 }}>
+                Every job follows the same five stages, whatever the specialism, so you always know what happens next.
+              </p>
             </div>
-            <div className="space-y-12">
-              {serviceInfo.map((service, index) => (
-                <div key={index} className=" rounded-2xl p-8 shadow-lg bg-white">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                    {service.title}
-                  </h3>
-                  <p className="text-lg text-gray-600 leading-relaxed">
-                    {service.description}
-                  </p>
+
+            <div className={styles.timeline}>
+              {processSteps.map((step, i) => (
+                <div key={step.title} className={styles.step}>
+                  <div className={styles.stepNum}>{String(i + 1).padStart(2, "0")}</div>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Services Grid */}
-        <section className="relative py-24 sm:py-32 overflow-hidden px-6 lg:px-8">
+        {/* What We Offer — bento grid */}
+        <section className="py-24 sm:py-32 pb-28 px-6 lg:px-8" style={{ background: "#f6f7fa" }}>
           <div className="mx-auto max-w-7xl">
-            <div className=" rounded-2xl p-8 shadow-lg mb-16 bg-white">
-              <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center">
-                Explore Our Services
+            <div className="text-center max-w-xl mx-auto mb-16">
+              <span className={styles.eyebrow}>What We Offer</span>
+              <h2
+                className="mt-4 font-extrabold tracking-tight text-navy"
+                style={{ fontSize: "clamp(28px, 3.6vw, 40px)", letterSpacing: "-0.025em", lineHeight: 1.15 }}
+              >
+                Six specialisms, one accountable team
               </h2>
+              <p className="mt-4 text-gray-500" style={{ fontSize: "16.5px", lineHeight: 1.65 }}>
+                From first fix to final commissioning, our engineers cover the full mechanical scope under one roof.
+              </p>
             </div>
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {services.map((service) => {
-                const Icon = service.icon;
-                return (
-                  <Link
-                    key={service.id}
-                    href={`/services/${service.id}`}
-                    className="group h-full rounded-2xl  p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-brand-green-500 flex flex-col items-center justify-center text-center bg-white"
-                  >
-                    <div className="inline-block p-3 rounded-lg bg-brand-green-500/10 mb-6 group-hover:bg-brand-green-500/20 transition-colors">
-                      <Icon size={40} style={{ color: "#4caf50" }} />
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900">
-                      {service.title}
-                    </h3>
-                    <div className="mt-6 inline-flex items-center gap-2 font-semibold transition-colors hover:text-brand-green-600" style={{ color: "#4caf50" }}>
-                      Learn More <span aria-hidden="true">→</span>
-                    </div>
-                  </Link>
-                );
-              })}
+
+            <div className={styles.bento}>
+              {bentoCards.map((card) => (
+                <Link
+                  key={card.slug}
+                  href={`/services/${card.slug}`}
+                  className={`${styles.card} ${styles.cardPhoto} ${card.area}`}
+                >
+                  <Image
+                    src={card.image}
+                    alt={card.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 980px) 50vw, 33vw"
+                    className={styles.image}
+                  />
+                  <div className={styles.scrim} />
+                  <div className={styles.cardIdx}>{card.idx}</div>
+                  <div className={styles.cardBody}>
+                    <h3>{card.title}</h3>
+                    <p>{card.description}</p>
+                    {card.badge && <span className={styles.badge}>{card.badge}</span>}
+                    {card.tags && (
+                      <div className={styles.tags}>
+                        {card.tags.map((tag) => (
+                          <span key={tag}>{tag}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         </section>
+
       </main>
       <Footer />
     </div>
