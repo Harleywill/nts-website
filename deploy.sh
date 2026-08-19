@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # NTS Website Deployment Script
-# Deploys to Hostinger VPS with proper handling of Next.js standalone mode
+# Deploys to Hostinger VPS. Runs `next start` directly (not standalone —
+# see the PM2 step below for why) and verifies the app is actually up
+# before reporting success.
 
 set -e  # Exit on error
 
@@ -38,60 +40,50 @@ npx prisma migrate deploy || echo "Migrations already applied"
 # Seed the database with initial data
 npx prisma db seed || echo "Database already seeded"
 
-echo "📦 Copying public assets to standalone build..."
-mkdir -p .next/standalone/public
-cp -r public/* .next/standalone/public/
-
-echo "📦 Copying static CSS/JS to standalone build..."
-mkdir -p .next/standalone/.next/static
-cp -r .next/static/* .next/standalone/.next/static/ || true
-
-echo "📦 Copying prisma folder to standalone build..."
-mkdir -p .next/standalone/prisma
-cp -r prisma/* .next/standalone/prisma/ || true
-
-echo "📦 Copying .env to standalone build..."
-cp .env .next/standalone/.env
-
-echo "🗄️  Running Prisma migrations in standalone build..."
-cd /root/nts-website/.next/standalone
-npx prisma migrate deploy || echo "Migrations already applied"
-
-echo "🌱 Seeding database with initial data..."
-npx prisma db seed || echo "Database already seeded"
-
 echo "🔧 Generating Prisma client..."
 npx prisma generate || echo "Prisma client already generated"
 
 echo "🔄 Setting up PM2 process..."
-cd /root/nts-website
+# Runs `next start` directly (NOT the standalone server) — the production
+# server needs the real public/ directory on disk so files uploaded after
+# boot (CVs, project/news images) are served without a restart. Standalone
+# mode snapshots public/ at boot and breaks that; do not switch back.
 pm2 delete nts-website 2>/dev/null || true
-PORT=3000 NODE_ENV=production pm2 start "node .next/standalone/server.js" --name nts-website --cwd /root/nts-website
+PORT=3000 NODE_ENV=production pm2 start npm --name nts-website --cwd /root/nts-website -- start
+pm2 save
 
 echo "⏳ Waiting for app to start..."
-sleep 3
+sleep 5
 
+# Verify against localhost, not the public domain — the public hostname's
+# DNS/CDN routing is a separate concern from whether this deploy actually
+# booted, and checking through it can mask (or fake) a real app failure.
 echo "✅ Verifying deployment..."
-images=$(curl -s -o /dev/null -w "%{http_code}" "https://nevilletuckerservices.co.uk/images/ntsLogo.png")
-css=$(curl -s -o /dev/null -w "%{http_code}" "https://nevilletuckerservices.co.uk/_next/static/chunks/0-qgiswpibda~.css" || echo "404")
+pm2_state=$(pm2 jlist | node -e "
+  let d='';
+  process.stdin.on('data', c => d += c);
+  process.stdin.on('end', () => {
+    const p = JSON.parse(d).find(p => p.name === 'nts-website');
+    console.log(p ? p.pm2_env.status : 'missing');
+  });
+")
+home=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "http://localhost:3000/")
+services=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "http://localhost:3000/services")
 
-if [ "$images" = "200" ]; then
-    echo "✅ Images loading correctly (HTTP 200)"
-else
-    echo "⚠️  Warning: Images not loading (HTTP $images)"
-fi
-
-if [ "$css" = "200" ]; then
-    echo "✅ CSS loading correctly (HTTP 200)"
-else
-    echo "⚠️  Warning: CSS not loading (HTTP $css)"
-fi
-
+echo "PM2 status: $pm2_state"
+echo "Home page:  HTTP $home"
+echo "Services:   HTTP $services"
 echo ""
-echo "📋 PM2 Status:"
+echo "📋 PM2 process list:"
 pm2 status | grep nts-website
 echo ""
-echo "✅ Deployment complete!"
+
+if [ "$pm2_state" = "online" ] && [ "$home" = "200" ] && [ "$services" = "200" ]; then
+    echo "✅ App is healthy."
+else
+    echo "❌ App did NOT come up healthy — check 'pm2 logs nts-website' on the VPS."
+    exit 1
+fi
 
 DEPLOY_SCRIPT
 
