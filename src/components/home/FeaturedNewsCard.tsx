@@ -69,7 +69,7 @@ export default function FeaturedNewsCard() {
           {/* Image */}
           {featured.imageUrl && (
             <div
-              className="relative h-64 sm:h-80 lg:h-full lg:min-h-[22rem] w-full overflow-hidden bg-gray-200"
+              className="relative h-44 sm:h-64 lg:h-full lg:min-h-[22rem] w-full overflow-hidden bg-gray-200"
               style={getCropContainerStyles(featured.cropWidth, featured.cropHeight)}
             >
               <Image
