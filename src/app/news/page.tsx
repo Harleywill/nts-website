@@ -80,7 +80,7 @@ export default function NewsPage() {
               </div>
             ) : (
               <motion.div
-                className="grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3"
+                className="grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:max-w-none sm:grid-cols-2 lg:grid-cols-3"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
