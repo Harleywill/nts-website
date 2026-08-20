@@ -133,7 +133,7 @@
   color: #a7e3ab;
   background: rgba(13, 21, 48, 0.4);
   border: 1px solid rgba(167, 227, 171, 0.55);
-  padding: 5px 10px;
+  padding: 7px 12px;
   border-radius: 5px;
   width: fit-content;
   white-space: nowrap;
@@ -151,7 +151,7 @@
   font-weight: 500;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  padding: 4px 9px;
+  padding: 7px 12px;
   border-radius: 5px;
 }
 
