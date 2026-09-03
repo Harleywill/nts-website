@@ -37,6 +37,7 @@ export default function ProjectsPage() {
   const [toggling, setToggling] = useState(false);
   const [detailTab, setDetailTab] = useState<DetailTab>('details');
   const [lightbox, setLightbox] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     fetch('/api/projects', { credentials: 'include' })
@@ -72,6 +73,30 @@ export default function ProjectsPage() {
       console.error('Failed to toggle status:', err);
     } finally {
       setToggling(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selected || deleting) return;
+    if (!confirm(`Delete "${selected.title}"? This cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/projects/${selected.id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (res.ok) {
+        const remaining = projects.filter((p) => p.id !== selected.id);
+        setProjects(remaining);
+        setSelectedId(remaining.length > 0 ? remaining[0].id : null);
+      } else {
+        alert('Failed to delete project.');
+      }
+    } catch (err) {
+      console.error('Failed to delete project:', err);
+      alert('Failed to delete project.');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -264,6 +289,23 @@ export default function ProjectsPage() {
                     title="Edit"
                   >
                     ✏️
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    style={{
+                      width: '32px', height: '32px',
+                      borderRadius: 'var(--radius-sm)',
+                      border: '1px solid #fca5a5',
+                      background: '#fff',
+                      cursor: deleting ? 'default' : 'pointer',
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                      color: '#dc2626', fontSize: '15px',
+                      opacity: deleting ? 0.6 : 1,
+                    }}
+                    title="Delete"
+                  >
+                    🗑️
                   </button>
                 </div>
               </div>
