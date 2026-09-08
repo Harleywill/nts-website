@@ -13,6 +13,7 @@ export default function ProtectedLayout({
   const [isReady, setIsReady] = useState(false);
 
   const isLoginPage = pathname === '/admin/login';
+  const isChangePasswordPage = pathname === '/admin/change-password';
 
   useEffect(() => {
     if (isLoginPage) {
@@ -27,13 +28,21 @@ export default function ProtectedLayout({
     // client-readable cookie. /api/auth/me validates the real token, so a
     // stale, forged, or absent session all correctly send the user to login.
     fetch('/api/auth/me', { credentials: 'include', cache: 'no-store' })
-      .then((res) => {
+      .then(async (res) => {
         if (cancelled) return;
-        if (res.ok) {
-          setIsReady(true);
-        } else {
+        if (!res.ok) {
           router.replace('/admin/login');
+          return;
         }
+        const data = await res.json();
+        // New/reset accounts start with passwordChanged: false — force them
+        // through the change-password page before anything else in the
+        // admin is reachable, until they set their own password.
+        if (!data.passwordChanged && !isChangePasswordPage) {
+          router.replace('/admin/change-password');
+          return;
+        }
+        setIsReady(true);
       })
       .catch(() => {
         if (!cancelled) router.replace('/admin/login');
@@ -42,7 +51,7 @@ export default function ProtectedLayout({
     return () => {
       cancelled = true;
     };
-  }, [router, isLoginPage, pathname]);
+  }, [router, isLoginPage, isChangePasswordPage, pathname]);
 
   if (!isReady) {
     return (

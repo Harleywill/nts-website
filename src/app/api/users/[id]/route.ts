@@ -113,6 +113,14 @@ export async function PUT(
       password: hashedPassword,
     };
 
+    // An admin resetting someone else's password is handing them a password
+    // they didn't choose — same situation as a brand-new account, so force
+    // them through the change-password flow again next time they log in.
+    // A user changing their own password already knows it; don't re-flag.
+    if (authResult.user.userId !== userId && isAdministrator(userRole)) {
+      updateData.passwordChanged = false;
+    }
+
     // Only admins can update role
     if (role !== undefined && isAdministrator(userRole)) {
       updateData.role = role;

@@ -8,6 +8,7 @@ export interface AuthResult {
     userId: number;
     username: string;
     role: string;
+    passwordChanged: boolean;
   };
   error?: string;
 }
@@ -51,7 +52,7 @@ export async function verifyAuthWithUser(
     // Get user from database to retrieve role
     const user = await prisma.user.findUnique({
       where: { id: payload.userId as number },
-      select: { id: true, username: true, role: true },
+      select: { id: true, username: true, role: true, passwordChanged: true },
     });
 
     if (!user) {
@@ -64,6 +65,7 @@ export async function verifyAuthWithUser(
         userId: user.id,
         username: user.username,
         role: user.role,
+        passwordChanged: user.passwordChanged,
       },
     };
   } catch (error) {

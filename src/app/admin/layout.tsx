@@ -18,6 +18,13 @@ export default function AdminLayout({
     return <>{children}</>;
   }
 
+  // Change-password also renders bare (but still behind ProtectedLayout's
+  // auth check) — new/reset accounts get forced here before anything else,
+  // and there should be no sidebar nav to click away through in the meantime.
+  if (pathname === "/admin/change-password") {
+    return <ProtectedLayout>{children}</ProtectedLayout>;
+  }
+
   return (
     <ProtectedLayout>
       <AdminShell>
