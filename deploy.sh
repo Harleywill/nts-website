@@ -1,15 +1,19 @@
 #!/bin/bash
 
 # NTS Website Deployment Script
-# Deploys to Hostinger VPS. Runs `next start` directly (not standalone —
-# see the PM2 step below for why) and verifies the app is actually up
-# before reporting success.
+# Deploys to /opt/nts-website on the Hostinger VPS, where the app runs as
+# the unprivileged `ntsweb` user (not root — see the PM2 step below).
+# Runs `next start` directly, not standalone mode (the production server
+# needs the real public/ directory on disk so files uploaded after boot —
+# CVs, project/news images — are served without a restart; standalone mode
+# snapshots public/ at boot and breaks that). Verifies the app is actually
+# up before reporting success.
 
 set -e  # Exit on error
 
 REMOTE_USER="root"
 REMOTE_HOST="72.62.6.180"
-REMOTE_PATH="/root/nts-website"
+REMOTE_PATH="/opt/nts-website"
 SSH_KEY="$HOME/.ssh/hostinger_key"
 BRANCH="${1:-main}"
 
@@ -23,7 +27,7 @@ ssh -i "$SSH_KEY" "$REMOTE_USER@$REMOTE_HOST" <<'DEPLOY_SCRIPT'
 set -e
 
 echo "📂 Navigating to project directory..."
-cd /root/nts-website
+cd /opt/nts-website
 
 echo "📥 Pulling latest code from git..."
 # Clean up any local database files that might block the pull
@@ -43,13 +47,15 @@ npx prisma db seed || echo "Database already seeded"
 echo "🔧 Generating Prisma client..."
 npx prisma generate || echo "Prisma client already generated"
 
-echo "🔄 Setting up PM2 process..."
-# Runs `next start` directly (NOT the standalone server) — the production
-# server needs the real public/ directory on disk so files uploaded after
-# boot (CVs, project/news images) are served without a restart. Standalone
-# mode snapshots public/ at boot and breaks that; do not switch back.
-pm2 delete nts-website 2>/dev/null || true
-PORT=3000 NODE_ENV=production pm2 start npm --name nts-website --cwd /root/nts-website -- start
+echo "🔄 Restarting PM2 process..."
+# Since the September 2026 security hardening, nts-website runs as the
+# unprivileged `ntsweb` system user, not root — and that uid/gid lives only
+# in PM2's own per-process metadata (there's no ecosystem.config.js here).
+# `pm2 delete` + a fresh raw `pm2 start` would drop that and silently bring
+# the process back up as root, undoing the hardening. Always use `pm2
+# restart` on the existing process instead — it preserves uid/gid, cwd, env,
+# and the exec command as already configured.
+pm2 restart nts-website
 pm2 save
 
 echo "⏳ Waiting for app to start..."
@@ -90,7 +96,7 @@ DEPLOY_SCRIPT
 if [ $? -eq 0 ]; then
     echo ""
     echo "✅ ✅ ✅  DEPLOYMENT SUCCESSFUL!"
-    echo "Visit: https://nevilletuckerservices.co.uk"
+    echo "Visit: https://ntslimited.org"
 else
     echo ""
     echo "❌ Deployment failed!"
