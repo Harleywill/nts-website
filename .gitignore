@@ -44,8 +44,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Prisma
-prisma/dev.db
-prisma/*.db
+# Prisma — recursive globs so a nested prisma/prisma/dev.db (a known
+# DATABASE_URL resolution quirk — see .env) is excluded too, not just
+# the top-level path.
+prisma/**/*.db
+prisma/**/*.db.old
+prisma/**/*.db-journal
+prisma/**/*.sqlite
+prisma/**/*.sqlite3
 .worktrees/
 __pycache__/
