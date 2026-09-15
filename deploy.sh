@@ -47,6 +47,14 @@ npx prisma db seed || echo "Database already seeded"
 echo "🔧 Generating Prisma client..."
 npx prisma generate || echo "Prisma client already generated"
 
+echo "🔐 Fixing file ownership..."
+# The build/migrate/generate steps above run as root (this script connects
+# as root), which leaves everything they touch — .next, prisma/, the
+# regenerated Prisma client — root-owned. The app itself runs as ntsweb, so
+# without this it can't write to its own build output (hit this for real:
+# EACCES on the sitemap.xml prerender cache, Sep 2026).
+chown -R ntsweb:ntsweb /opt/nts-website
+
 echo "🔄 Restarting PM2 process..."
 # Since the September 2026 security hardening, nts-website runs as the
 # unprivileged `ntsweb` system user, not root — and that uid/gid lives only
