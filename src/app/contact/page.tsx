@@ -100,7 +100,7 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* RIGHT: Trust message, call button, and ContactForm */}
+            {/* RIGHT: Trust message and ContactForm */}
             <div className="space-y-6">
               {/* Trust Message */}
               <div className="rounded-lg border-l-4 border-[#4caf50] bg-[#f0f9ff] p-4">
@@ -108,16 +108,6 @@ export default function Contact() {
                   <span className="text-[#4caf50] text-xl">✓</span>
                   We respond within 24 hours
                 </p>
-              </div>
-
-              {/* Large Call Button */}
-              <div className="text-center">
-                <a
-                  href="tel:01482838080"
-                  className="inline-block rounded-lg bg-[#4caf50] px-8 py-4 font-bold text-lg text-white transition-colors hover:bg-green-700"
-                >
-                  📞 Call Now: 01482 838080
-                </a>
               </div>
 
               {/* Contact Form */}

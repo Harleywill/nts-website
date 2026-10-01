@@ -13,6 +13,7 @@ interface SiteSettings {
   postalCode?: string;
   facebookUrl?: string;
   linkedinUrl?: string;
+  instagramUrl?: string;
   twitterUrl?: string;
   logoVersion?: number;
   chatWidgetEnabled?: boolean;
@@ -597,6 +598,7 @@ export default function SettingsPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
           {[
             { key: 'facebookUrl', label: 'Facebook', placeholder: 'https://facebook.com/…' },
+            { key: 'instagramUrl', label: 'Instagram', placeholder: 'https://instagram.com/…' },
             { key: 'linkedinUrl', label: 'LinkedIn', placeholder: 'https://linkedin.com/company/…' },
             { key: 'twitterUrl', label: 'X / Twitter', placeholder: 'https://x.com/…' },
           ].map(({ key, label, placeholder }) => (

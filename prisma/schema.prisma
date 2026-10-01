@@ -139,6 +139,7 @@ model SiteSettings {
   postalCode  String?
   facebookUrl String?
   linkedinUrl String?
+  instagramUrl String?
   twitterUrl  String?
   logoVersion Int      @default(1)
   chatWidgetEnabled Boolean @default(false)

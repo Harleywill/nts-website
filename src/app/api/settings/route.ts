@@ -87,6 +87,18 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    // Same rule as POST: only administrators can modify settings
+    const authResult = await verifyAuthWithUser(request);
+    if (!authResult.success || !authResult.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (!isAdministrator(authResult.user.role as UserRole)) {
+      return NextResponse.json(
+        { error: "Forbidden: Only administrators can modify settings" },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const {
       companyName,
@@ -97,6 +109,7 @@ export async function PUT(request: NextRequest) {
       postalCode,
       facebookUrl,
       linkedinUrl,
+      instagramUrl,
       twitterUrl,
       logoVersion,
       chatWidgetEnabled
@@ -115,6 +128,7 @@ export async function PUT(request: NextRequest) {
           postalCode: postalCode || null,
           facebookUrl: facebookUrl || null,
           linkedinUrl: linkedinUrl || null,
+          instagramUrl: instagramUrl || null,
           twitterUrl: twitterUrl || null,
           logoVersion: logoVersion || 1,
           chatWidgetEnabled: chatWidgetEnabled ?? false,
@@ -132,6 +146,7 @@ export async function PUT(request: NextRequest) {
           postalCode: postalCode !== undefined ? postalCode : settings.postalCode,
           facebookUrl: facebookUrl !== undefined ? facebookUrl : settings.facebookUrl,
           linkedinUrl: linkedinUrl !== undefined ? linkedinUrl : settings.linkedinUrl,
+          instagramUrl: instagramUrl !== undefined ? instagramUrl : settings.instagramUrl,
           twitterUrl: twitterUrl !== undefined ? twitterUrl : settings.twitterUrl,
           logoVersion: logoVersion !== undefined ? logoVersion : settings.logoVersion,
           chatWidgetEnabled: chatWidgetEnabled !== undefined ? chatWidgetEnabled : settings.chatWidgetEnabled,

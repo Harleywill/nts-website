@@ -1,16 +1,49 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLogoVersion } from "@/hooks/useLogoVersion";
 import { motion } from "framer-motion";
+import type { IconType } from "react-icons";
 import { FaFacebook, FaInstagram, FaLinkedin, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { COMPANY, SERVICES } from "@/lib/constants";
 import { slideUpVariants, staggerContainerVariants, staggerItemVariants, staggerContainerFastVariants, staggerItemFastVariants } from "@/lib/animations";
+
+interface SocialUrls {
+  facebookUrl?: string | null;
+  instagramUrl?: string | null;
+  linkedinUrl?: string | null;
+  twitterUrl?: string | null;
+}
+
+const SOCIAL_LINKS: { key: keyof SocialUrls; label: string; icon: IconType }[] = [
+  { key: "facebookUrl", label: "Facebook", icon: FaFacebook },
+  { key: "instagramUrl", label: "Instagram", icon: FaInstagram },
+  { key: "linkedinUrl", label: "LinkedIn", icon: FaLinkedin },
+  { key: "twitterUrl", label: "X (Twitter)", icon: FaXTwitter },
+];
 
 export default function Footer() {
   const logoVersion = useLogoVersion();
   const currentYear = new Date().getFullYear();
+
+  // Social links come from Settings in the admin; icons without a URL are hidden.
+  const [social, setSocial] = useState<SocialUrls>({});
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/settings")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!cancelled && data?.settings) setSocial(data.settings);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  const socialLinks = SOCIAL_LINKS.filter(({ key }) => social[key]?.trim());
 
   return (
     <footer
@@ -62,39 +95,25 @@ export default function Footer() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
             >
-              <motion.a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-full bg-white/10 text-white hover:bg-green-400 hover:text-gray-900 transition-all duration-200"
-                aria-label="Facebook"
-                variants={staggerItemFastVariants}
-                whileHover={{ scale: 1.15, rotate: 5 }}
-              >
-                <FaFacebook size={20} />
-              </motion.a>
-              <motion.a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-full bg-white/10 text-white hover:bg-green-400 hover:text-gray-900 transition-all duration-200"
-                aria-label="Instagram"
-                variants={staggerItemFastVariants}
-                whileHover={{ scale: 1.15, rotate: 5 }}
-              >
-                <FaInstagram size={20} />
-              </motion.a>
-              <motion.a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-full bg-white/10 text-white hover:bg-green-400 hover:text-gray-900 transition-all duration-200"
-                aria-label="LinkedIn"
-                variants={staggerItemFastVariants}
-                whileHover={{ scale: 1.15, rotate: 5 }}
-              >
-                <FaLinkedin size={20} />
-              </motion.a>
+              {/* Icons arrive after the settings fetch, so each animates in on
+                  its own rather than relying on the container's stagger. */}
+              {socialLinks.map(({ key, label, icon: Icon }) => (
+                <motion.a
+                  key={key}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  href={social[key]!.trim()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-white/10 text-white hover:bg-green-400 hover:text-gray-900 transition-all duration-200"
+                  aria-label={label}
+                  variants={staggerItemFastVariants}
+                  whileHover={{ scale: 1.15, rotate: 5 }}
+                >
+                  <Icon size={20} />
+                </motion.a>
+              ))}
             </motion.div>
           </div>
         </motion.div>
