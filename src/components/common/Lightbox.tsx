@@ -67,7 +67,7 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
           e.stopPropagation();
           onClose();
         }}
-        className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-60"
+        className="absolute top-4 right-4 !text-white hover:!text-gray-300 transition-colors z-[60]"
         aria-label="Close lightbox"
       >
         <FaTimes size={32} />
@@ -92,13 +92,13 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
       </div>
 
       {/* Navigation Controls */}
-      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex items-center gap-8 z-60">
+      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex items-center gap-8 z-[60]">
         <button
           onClick={(e) => {
             e.stopPropagation();
             handlePrevious();
           }}
-          className="p-3 rounded-full bg-brand-green-500 hover:bg-brand-green-600 hover:scale-110 transition-all duration-200 text-white shadow-lg"
+          className="p-3 rounded-full bg-brand-green-500 hover:bg-brand-green-600 hover:scale-110 transition-all duration-200 !text-white shadow-lg"
           aria-label="Previous image"
         >
           <FaChevronLeft size={28} />
@@ -113,7 +113,7 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
             e.stopPropagation();
             handleNext();
           }}
-          className="p-3 rounded-full bg-brand-green-500 hover:bg-brand-green-600 hover:scale-110 transition-all duration-200 text-white shadow-lg"
+          className="p-3 rounded-full bg-brand-green-500 hover:bg-brand-green-600 hover:scale-110 transition-all duration-200 !text-white shadow-lg"
           aria-label="Next image"
         >
           <FaChevronRight size={28} />
@@ -121,7 +121,7 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
       </div>
 
       {/* Dot Indicators */}
-      <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 flex gap-3 z-60">
+      <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 flex gap-3 z-[60]">
         {images.map((_, index) => (
           <button
             key={index}
