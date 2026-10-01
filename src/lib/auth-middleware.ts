@@ -1,4 +1,5 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { hasPermission, isAdministrator, UserRole } from "@/lib/admin/permissions";
 import { verifyToken } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
@@ -75,13 +76,22 @@ export async function verifyAuthWithUser(
 }
 
 /**
- * Simple auth check for routes that just need to verify authentication exists
+ * Route guard: returns a 401/403 response unless the request carries a valid
+ * session for a user allowed to access `resource` (see RESOURCE_PERMISSIONS),
+ * or null if the request may proceed. Pass "admin" to allow administrators only.
  */
-export function isAdminAuthenticated(request: NextRequest): boolean {
-  const authHeader = request.headers.get("authorization");
-  const sessionCookie = request.cookies.get("admin-session");
-  return !!(
-    (authHeader && authHeader.startsWith("Bearer ")) ||
-    (sessionCookie && sessionCookie.value)
-  );
+export async function denyUnlessPermitted(
+  request: NextRequest,
+  resource: string
+): Promise<NextResponse | null> {
+  const auth = await verifyAuthWithUser(request);
+  if (!auth.success || !auth.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const role = auth.user.role as UserRole;
+  const allowed = resource === "admin" ? isAdministrator(role) : hasPermission(role, resource);
+  if (!allowed) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+  return null;
 }

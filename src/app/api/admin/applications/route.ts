@@ -1,18 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-
-function isAdminAuthenticated(request: NextRequest): boolean {
-  return !!request.cookies.get("admin-session");
-}
+import { denyUnlessPermitted } from "@/lib/auth-middleware";
 
 export async function GET(request: NextRequest) {
   try {
-    if (!isAdminAuthenticated(request)) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    const denied = await denyUnlessPermitted(request, "applications");
+    if (denied) return denied;
 
     const { searchParams } = new URL(request.url);
     const jobId = searchParams.get("jobId");

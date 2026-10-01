@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-
-function isAdminAuthenticated(request: NextRequest): boolean {
-  return !!request.cookies.get("admin-session");
-}
+import { denyUnlessPermitted } from "@/lib/auth-middleware";
 
 function toKebabCase(str: string): string {
   return str
@@ -20,9 +17,8 @@ function shortId(): string {
 
 export async function GET(request: NextRequest) {
   try {
-    if (!isAdminAuthenticated(request)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = await denyUnlessPermitted(request, "careers");
+    if (denied) return denied;
 
     const jobs = await prisma.job.findMany({
       orderBy: { createdAt: "desc" },
@@ -40,9 +36,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    if (!isAdminAuthenticated(request)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = await denyUnlessPermitted(request, "careers");
+    if (denied) return denied;
 
     const body = await request.json();
 

@@ -1,18 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-
-function isAuthenticated(request: NextRequest): boolean {
-  return !!request.cookies.get("admin-session");
-}
+import { denyUnlessPermitted } from "@/lib/auth-middleware";
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    if (!isAuthenticated(request)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = await denyUnlessPermitted(request, "gallery");
+    if (denied) return denied;
     const { id } = await params;
     const body = await request.json() as { alt?: string; caption?: string; category?: string; published?: boolean; order?: number };
     const image = await prisma.galleryImage.update({
@@ -36,9 +32,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    if (!isAuthenticated(request)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = await denyUnlessPermitted(request, "gallery");
+    if (denied) return denied;
     const { id } = await params;
     await prisma.galleryImage.delete({ where: { id: parseInt(id) } });
     return NextResponse.json({ success: true });

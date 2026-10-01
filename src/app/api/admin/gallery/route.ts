@@ -1,15 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-
-function isAuthenticated(request: NextRequest): boolean {
-  return !!request.cookies.get("admin-session");
-}
+import { denyUnlessPermitted } from "@/lib/auth-middleware";
 
 export async function GET(request: NextRequest) {
   try {
-    if (!isAuthenticated(request)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = await denyUnlessPermitted(request, "gallery");
+    if (denied) return denied;
 
     const [galleryImages, projectImages, newsImages] = await Promise.all([
       prisma.galleryImage.findMany({
@@ -72,9 +68,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    if (!isAuthenticated(request)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = await denyUnlessPermitted(request, "gallery");
+    if (denied) return denied;
     const body = await request.json() as { imageUrl: string; alt?: string; caption?: string; category?: string };
     if (!body.imageUrl) {
       return NextResponse.json({ error: "imageUrl is required" }, { status: 400 });

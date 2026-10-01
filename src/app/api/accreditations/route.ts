@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { denyUnlessPermitted } from "@/lib/auth-middleware";
 
 const ALL_ACCREDITATIONS = [
   { name: "Honeywell", slug: "honeywell" },
@@ -38,8 +39,8 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const auth = request.cookies.get("admin-session");
-  if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await denyUnlessPermitted(request, "admin");
+  if (denied) return denied;
 
   try {
     const body = await request.json();
@@ -69,8 +70,8 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const auth = request.cookies.get("admin-session");
-  if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await denyUnlessPermitted(request, "admin");
+  if (denied) return denied;
 
   try {
     const body = await request.json();

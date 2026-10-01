@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-
-function isAdminAuthenticated(request: NextRequest): boolean {
-  return !!request.cookies.get("admin-session");
-}
+import { denyUnlessPermitted } from "@/lib/auth-middleware";
 
 export async function GET(
   request: NextRequest,
@@ -11,9 +8,8 @@ export async function GET(
 ) {
   const { id } = await params;
   try {
-    if (!isAdminAuthenticated(request)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = await denyUnlessPermitted(request, "careers");
+    if (denied) return denied;
 
     const job = await prisma.job.findUnique({
       where: { id },
@@ -41,9 +37,8 @@ export async function PUT(
 ) {
   const { id } = await params;
   try {
-    if (!isAdminAuthenticated(request)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = await denyUnlessPermitted(request, "careers");
+    if (denied) return denied;
 
     const body = await request.json();
 
@@ -82,9 +77,8 @@ export async function DELETE(
 ) {
   const { id } = await params;
   try {
-    if (!isAdminAuthenticated(request)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = await denyUnlessPermitted(request, "careers");
+    if (denied) return denied;
 
     await prisma.job.delete({ where: { id } });
 

@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { denyUnlessPermitted } from "@/lib/auth-middleware";
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = request.cookies.get("admin-session");
-  if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await denyUnlessPermitted(request, "admin");
+  if (denied) return denied;
 
   const { id } = await params;
   try {

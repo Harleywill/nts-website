@@ -12,6 +12,8 @@ const RESOURCE_PERMISSIONS: Record<string, Set<UserRole>> = {
   news: new Set(['ADMIN', 'EDITOR']),
   testimonials: new Set(['ADMIN', 'EDITOR']),
   hero: new Set(['ADMIN', 'EDITOR']),
+  gallery: new Set(['ADMIN', 'EDITOR']),
+  careers: new Set(['ADMIN', 'EDITOR']),
   users: new Set(['ADMIN']),
   'contact-submissions': new Set(['ADMIN', 'EDITOR']),
   applications: new Set(['ADMIN', 'EDITOR']),

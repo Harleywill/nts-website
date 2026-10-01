@@ -3,14 +3,10 @@ import { unlink } from "fs/promises";
 import path from "path";
 import { prisma } from "@/lib/db";
 import { sendApplicationStatusUpdate } from "@/lib/email";
-import { verifyAuthWithUser } from "@/lib/auth-middleware";
+import { verifyAuthWithUser, denyUnlessPermitted } from "@/lib/auth-middleware";
 import { hasPermission, UserRole } from "@/lib/admin/permissions";
 
 const EMAIL_TRIGGER_STATUSES = new Set(["INTERVIEW", "OFFER", "HIRED"]);
-
-function isAdminAuthenticated(request: NextRequest): boolean {
-  return !!request.cookies.get("admin-session");
-}
 
 export async function PATCH(
   request: NextRequest,
@@ -18,12 +14,8 @@ export async function PATCH(
 ) {
   const { id } = await params;
   try {
-    if (!isAdminAuthenticated(request)) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    const denied = await denyUnlessPermitted(request, "applications");
+    if (denied) return denied;
 
     const body = await request.json();
     const { status, notes } = body;
@@ -84,12 +76,8 @@ export async function GET(
 ) {
   const { id } = await params;
   try {
-    if (!isAdminAuthenticated(request)) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    const denied = await denyUnlessPermitted(request, "applications");
+    if (denied) return denied;
 
     const application = await prisma.application.findUnique({
       where: { id },
