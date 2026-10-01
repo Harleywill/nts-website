@@ -111,43 +111,42 @@ export default function ProjectDetailPage() {
           </div>
 
           {/* Content Section */}
-          <div className=" py-16 sm:py-24 px-6 lg:px-8"
-            
-          >
-            <div className="mx-auto max-w-4xl">
+          <div className="py-16 sm:py-24 px-6 lg:px-8">
+            <div className="mx-auto max-w-5xl">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
+                className="bg-white rounded-2xl border border-slate-200 shadow-[0_12px_40px_-12px_rgba(26,47,110,0.18)] p-6 sm:p-10"
               >
-                {/* Featured Image - Floated Right */}
-                {project.imageUrl && (
-                  <div className="float-right w-full sm:w-80 ml-6 mb-6 rounded-xl overflow-hidden shadow-md border-4 border-gray-200">
-                    <img
-                      src={project.imageUrl}
-                      alt={project.title}
-                      className="w-full h-56 sm:h-64 object-cover"
-                      style={{ objectPosition: `${(project.cropX ?? 0.5) * 100}% ${(project.cropY ?? 0.5) * 100}%` }}
-                    />
+                <div className={project.imageUrl ? "grid gap-8 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] md:gap-10" : ""}>
+                  {/* Featured Image — first on mobile, right column on desktop */}
+                  {project.imageUrl && (
+                    <div className="md:order-2 rounded-xl overflow-hidden border border-slate-200 self-start">
+                      <img
+                        src={project.imageUrl}
+                        alt={project.title}
+                        className="w-full h-56 sm:h-72 md:h-80 object-cover"
+                        style={{ objectPosition: `${(project.cropX ?? 0.5) * 100}% ${(project.cropY ?? 0.5) * 100}%` }}
+                      />
+                    </div>
+                  )}
+
+                  <div className="md:order-1 flex flex-col">
+                    <p className="whitespace-pre-wrap leading-relaxed text-gray-700 text-base sm:text-lg">
+                      {project.description}
+                    </p>
+
+                    <div className="mt-8 pt-8 border-t border-slate-200">
+                      <Link
+                        href="/projects"
+                        className="inline-flex items-center gap-2 px-6 py-3 font-semibold text-white rounded-lg transition-all duration-200 hover:shadow-lg"
+                        style={{ backgroundColor: "#4caf50" }}
+                      >
+                        ← Back to Projects
+                      </Link>
+                    </div>
                   </div>
-                )}
-
-                {/* Content */}
-                <div className="prose prose-lg max-w-none">
-                  <p className="whitespace-pre-wrap leading-relaxed text-gray-700 text-base sm:text-lg">
-                    {project.description}
-                  </p>
-                </div>
-
-                {/* CTA */}
-                <div className="border-t border-gray-200 pt-12">
-                  <Link
-                    href="/"
-                    className="inline-flex items-center gap-2 px-8 py-3 font-semibold text-white rounded-lg transition-all duration-200 hover:shadow-lg"
-                    style={{ backgroundColor: "#4caf50" }}
-                  >
-                    ← Back to Home
-                  </Link>
                 </div>
               </motion.div>
             </div>
