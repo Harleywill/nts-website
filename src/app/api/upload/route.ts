@@ -2,9 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
+import { verifyAuthWithUser } from "@/lib/auth-middleware";
 
 export async function POST(request: NextRequest) {
   try {
+    // Admin-only: every caller is an admin page. Public CV uploads use
+    // /api/upload/cv instead.
+    const auth = await verifyAuthWithUser(request);
+    if (!auth.success || !auth.user || auth.user.role === "VIEWER") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const formData = await request.formData();
     const file = formData.get("file") as File;
 
@@ -21,11 +29,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024;
+    // Validate file size (max 5MB; 10MB for full-width hero photos)
+    const isHero = formData.get("kind") === "hero";
+    const maxMb = isHero ? 10 : 5;
+    const maxSize = maxMb * 1024 * 1024;
     if (file.size > maxSize) {
       return NextResponse.json(
-        { error: "File too large. Maximum size is 5MB." },
+        { error: `File too large. Maximum size is ${maxMb}MB.` },
         { status: 400 }
       );
     }

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import bcryptjs from "bcryptjs";
+import { DEFAULT_HERO_IMAGES } from "@/lib/hero/defaults";
 
 async function main() {
   const adminUsername = process.env.ADMIN_USERNAME || "admin";
@@ -26,6 +27,14 @@ async function main() {
       },
     });
     console.log("Admin user created:", admin.username, "role:", admin.role);
+  }
+
+  // Seed hero slides with the original hard-coded set (first run only)
+  const existingHeroImages = await prisma.heroImage.count();
+  if (existingHeroImages === 0) {
+    await prisma.heroImage.createMany({
+      data: DEFAULT_HERO_IMAGES.map((img, index) => ({ ...img, order: index })),
+    });
   }
 
   // Seed projects
