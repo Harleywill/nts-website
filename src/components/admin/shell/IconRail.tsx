@@ -207,7 +207,7 @@ export function IconRail({ collapsed, onToggle }: { collapsed: boolean; onToggle
               type="submit"
               title={`Sign out (${displayName})`}
               aria-label="Sign out"
-              className="w-10 h-10 flex items-center justify-center rounded-lg"
+              className="w-10 h-10 flex items-center justify-center rounded-lg !text-white"
               style={{ border: '1px solid rgba(255,255,255,0.35)', background: 'transparent', color: '#ffffff', cursor: 'pointer' }}
             >
               <MdLogout size={18} />
@@ -235,7 +235,7 @@ export function IconRail({ collapsed, onToggle }: { collapsed: boolean; onToggle
           <form action="/api/auth/logout" method="POST">
             <button
               type="submit"
-              className="w-full h-9 rounded-lg transition-colors"
+              className="w-full h-9 rounded-lg transition-colors !text-white"
               style={{
                 border: '1px solid rgba(255,255,255,0.35)', background: 'transparent', color: '#ffffff',
                 fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 500, cursor: 'pointer',
