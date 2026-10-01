@@ -100,16 +100,8 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* RIGHT: Trust message and ContactForm */}
+            {/* RIGHT: ContactForm */}
             <div className="space-y-6">
-              {/* Trust Message */}
-              <div className="rounded-lg border-l-4 border-[#4caf50] bg-[#f0f9ff] p-4">
-                <p className="flex items-center gap-2 font-medium text-gray-700">
-                  <span className="text-[#4caf50] text-xl">✓</span>
-                  We respond within 24 hours
-                </p>
-              </div>
-
               {/* Contact Form */}
               <div className="rounded-2xl border border-gray-200 bg-white p-1 shadow-[0_20px_60px_rgba(13,21,48,0.08)]">
                 <ContactForm />
