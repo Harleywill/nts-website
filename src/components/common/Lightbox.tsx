@@ -4,7 +4,11 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
 
-const MAX_DOTS = 10;
+// Dots shown either side of the selected one (9 in total). The selected dot is
+// always in the centre; slots past the first/last image are left empty.
+const DOTS_EACH_SIDE = 4;
+// Dot diameter (px) by distance from the selected dot, so the row tapers off.
+const DOT_SIZES = [12, 8, 8, 6, 4];
 
 interface LightboxProps {
   images: string[];
@@ -50,13 +54,6 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
-
-  // Keep the current image's dot roughly centred in a window of MAX_DOTS.
-  const dotCount = Math.min(MAX_DOTS, images.length);
-  const dotStart = Math.min(
-    Math.max(currentIndex - Math.floor(MAX_DOTS / 2), 0),
-    images.length - dotCount
-  );
 
   return (
     <motion.div
@@ -129,14 +126,17 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
         </button>
       </div>
 
-      {/* Dot Indicators — at most MAX_DOTS, in a window that slides with the
-          current image. End dots shrink when more images lie beyond them. */}
+      {/* Dot Indicators — selected dot always centred, neighbours taper off */}
       <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 flex items-center gap-3 z-[60]">
-        {Array.from({ length: dotCount }, (_, i) => dotStart + i).map((index, i) => {
-          const isCurrent = index === currentIndex;
-          const isEdge =
-            (i === 0 && dotStart > 0) ||
-            (i === dotCount - 1 && dotStart + dotCount < images.length);
+        {Array.from({ length: DOTS_EACH_SIDE * 2 + 1 }, (_, slot) => {
+          const offset = slot - DOTS_EACH_SIDE;
+          const index = currentIndex + offset;
+          const size = DOT_SIZES[Math.abs(offset)];
+          // Empty slot keeps the selected dot centred at the gallery's ends
+          if (index < 0 || index >= images.length) {
+            return <span key={`empty-${slot}`} aria-hidden="true" style={{ width: size, height: size }} />;
+          }
+          const isCurrent = offset === 0;
           return (
             <button
               key={index}
@@ -144,12 +144,12 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
                 e.stopPropagation();
                 setCurrentIndex(index);
               }}
-              className={`rounded-full transition-all duration-300 hover:scale-125 cursor-pointer ${
-                isCurrent
-                  ? "w-4 h-4 bg-green-400 shadow-lg shadow-green-400/50"
-                  : `${isEdge ? "w-2 h-2" : "w-3 h-3"} bg-white bg-opacity-60 hover:bg-opacity-100`
+              className={`rounded-full transition-all duration-300 cursor-pointer ${
+                isCurrent ? "bg-white shadow-md shadow-black/40" : "bg-white/40 hover:bg-white/80"
               }`}
+              style={{ width: size, height: size }}
               aria-label={`Go to image ${index + 1}`}
+              aria-current={isCurrent ? "true" : undefined}
             />
           );
         })}
