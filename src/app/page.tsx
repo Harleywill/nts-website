@@ -10,8 +10,14 @@ import ServicesGrid from "@/components/home/ServicesGrid";
 import LatestProjects from "@/components/home/LatestProjects";
 import Testimonials from "@/components/home/Testimonials";
 import FeaturedNews from "@/components/home/FeaturedNews";
+import LiveStats from "@/components/home/LiveStats";
+import { getLiveStats } from "@/lib/live-stats";
 
-export default function Home() {
+// The live figures come from the database, so refresh the page every 10 minutes.
+export const revalidate = 600;
+
+export default async function Home() {
+  const liveStats = await getLiveStats();
   return (
     <div className="flex flex-col min-h-screen "
       
@@ -23,11 +29,16 @@ export default function Home() {
           <HeroMobile />
         </div>
         <div className="hidden md:block">
-          <HeroDesktop />
+          <HeroDesktop liveStats={liveStats} />
         </div>
 
         {/* Featured News Card - Below Hero */}
         <FeaturedNewsCard />
+
+        {/* On desktop the live figures sit in the hero; phones have no hero stats, so they get the strip. */}
+        <div className="block md:hidden">
+          <LiveStats />
+        </div>
 
         <AccreditationsSection />
         <AboutSection />

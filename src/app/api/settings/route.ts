@@ -112,7 +112,8 @@ export async function PUT(request: NextRequest) {
       instagramUrl,
       twitterUrl,
       logoVersion,
-      chatWidgetEnabled
+      chatWidgetEnabled,
+      liveStatsDefaultPeriod
     } = body;
 
     let settings = await prisma.siteSettings.findFirst();
@@ -150,6 +151,7 @@ export async function PUT(request: NextRequest) {
           twitterUrl: twitterUrl !== undefined ? twitterUrl : settings.twitterUrl,
           logoVersion: logoVersion !== undefined ? logoVersion : settings.logoVersion,
           chatWidgetEnabled: chatWidgetEnabled !== undefined ? chatWidgetEnabled : settings.chatWidgetEnabled,
+          liveStatsDefaultPeriod: liveStatsDefaultPeriod === "all" || liveStatsDefaultPeriod === "year" ? liveStatsDefaultPeriod : settings.liveStatsDefaultPeriod,
         },
       });
     }

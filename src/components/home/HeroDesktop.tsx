@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import HeroCarousel from "./HeroCarousel";
+import LiveStatsStrip from "./LiveStatsStrip";
+import type { LiveStatsData } from "@/lib/live-stats";
 
-export default function HeroDesktop() {
+export default function HeroDesktop({ liveStats }: { liveStats?: LiveStatsData | null }) {
   return (
     <div className="relative isolate overflow-hidden min-h-screen flex items-center justify-center" style={{ backgroundColor: "#1a2f6e" }}>
       {/* Background Image Carousel */}
@@ -59,7 +61,10 @@ export default function HeroDesktop() {
             </Link>
           </div>
 
-          {/* Stats */}
+          {/* Stats: live figures from BigChange, or the original static tiles until the first sync */}
+          {liveStats ? (
+            <LiveStatsStrip data={liveStats} variant="hero" />
+          ) : (
           <dl className="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div className="flex flex-col-reverse gap-1">
               <dt className="text-base/7 text-gray-300">Years in Business</dt>
@@ -78,6 +83,7 @@ export default function HeroDesktop() {
               <dd className="text-4xl font-semibold tracking-tight text-white">Always</dd>
             </div>
           </dl>
+          )}
         </div>
       </div>
     </div>

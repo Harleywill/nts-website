@@ -17,6 +17,7 @@ interface SiteSettings {
   twitterUrl?: string;
   logoVersion?: number;
   chatWidgetEnabled?: boolean;
+  liveStatsDefaultPeriod?: 'year' | 'all';
 }
 
 interface Accreditation {
@@ -139,6 +140,29 @@ export default function SettingsPage() {
     } catch {
       setSettings(s => ({ ...s, chatWidgetEnabled: prev }));
       showToast('Error updating chat widget', 'error');
+    }
+  };
+
+  const handleLiveStatsPeriod = async (next: 'year' | 'all') => {
+    const prev = settings.liveStatsDefaultPeriod ?? 'year';
+    if (next === prev) return;
+    setSettings(s => ({ ...s, liveStatsDefaultPeriod: next }));
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ ...settings, liveStatsDefaultPeriod: next }),
+      });
+      if (res.ok) {
+        showToast(`Homepage figures now open on ${next === 'year' ? 'last 12 months' : 'all time'}`);
+      } else {
+        setSettings(s => ({ ...s, liveStatsDefaultPeriod: prev }));
+        showToast('Failed to update homepage figures', 'error');
+      }
+    } catch {
+      setSettings(s => ({ ...s, liveStatsDefaultPeriod: prev }));
+      showToast('Error updating homepage figures', 'error');
     }
   };
 
@@ -369,6 +393,35 @@ export default function SettingsPage() {
           color: settings.chatWidgetEnabled ? 'var(--green-700)' : 'var(--slate-600)',
         }}>
           {settings.chatWidgetEnabled ? 'Enabled' : 'Disabled'}
+        </div>
+      </div>
+
+      {/* ── LIVE FIGURES ── */}
+      <div style={cardStyle}>
+        <h2 style={{ ...sectionHeading, marginBottom: '4px' }}>Homepage Live Figures</h2>
+        <p style={{ ...sectionSub, margin: '0 0 16px' }}>
+          Which period the live job figures show first. Visitors can switch between the two.
+        </p>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {([['year', 'Last 12 months'], ['all', 'All time']] as const).map(([value, label]) => {
+            const active = (settings.liveStatsDefaultPeriod ?? 'year') === value;
+            return (
+              <button
+                key={value}
+                onClick={() => handleLiveStatsPeriod(value)}
+                aria-pressed={active}
+                style={{
+                  padding: '8px 16px', borderRadius: 'var(--radius-md)', cursor: 'pointer',
+                  border: active ? '2px solid var(--green-600)' : '1px solid var(--slate-300, #cbd5e1)',
+                  background: active ? 'var(--green-100)' : '#fff',
+                  color: active ? 'var(--green-700)' : 'var(--slate-600)',
+                  fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600,
+                }}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
       </div>
 

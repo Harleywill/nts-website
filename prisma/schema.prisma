@@ -143,8 +143,19 @@ model SiteSettings {
   twitterUrl  String?
   logoVersion Int      @default(1)
   chatWidgetEnabled Boolean @default(false)
+  liveStatsDefaultPeriod String @default("year")
   updatedAt   DateTime @updatedAt
 }
+
+// Homepage live numbers, filled by scripts/sync-bigchange-stats.ts. One row
+// per stat key (acUnits, jobs, services, customers).
+model LiveStat {
+  key       String   @id
+  lastYear  Int
+  allTime   Int
+  updatedAt DateTime @updatedAt
+}
+
 
 model Job {
   id               String         @id @default(cuid())
