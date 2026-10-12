@@ -113,7 +113,8 @@ export async function PUT(request: NextRequest) {
       twitterUrl,
       logoVersion,
       chatWidgetEnabled,
-      liveStatsDefaultPeriod
+      liveStatsDefaultPeriod,
+      liveStatsEnabled
     } = body;
 
     let settings = await prisma.siteSettings.findFirst();
@@ -151,6 +152,7 @@ export async function PUT(request: NextRequest) {
           twitterUrl: twitterUrl !== undefined ? twitterUrl : settings.twitterUrl,
           logoVersion: logoVersion !== undefined ? logoVersion : settings.logoVersion,
           chatWidgetEnabled: chatWidgetEnabled !== undefined ? chatWidgetEnabled : settings.chatWidgetEnabled,
+          liveStatsEnabled: typeof liveStatsEnabled === "boolean" ? liveStatsEnabled : settings.liveStatsEnabled,
           liveStatsDefaultPeriod: liveStatsDefaultPeriod === "all" || liveStatsDefaultPeriod === "year" ? liveStatsDefaultPeriod : settings.liveStatsDefaultPeriod,
         },
       });

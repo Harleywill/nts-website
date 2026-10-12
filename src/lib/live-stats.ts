@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { STAT_KEYS, StatKey } from "@/lib/live-stats-config";
+import { STAT_KEYS, StatKey, SYNC_INTERVAL_HOURS } from "@/lib/live-stats-config";
 
 export type LiveStatsData = {
   defaultPeriod: "year" | "all";
@@ -15,6 +15,7 @@ export async function getLiveStats(): Promise<LiveStatsData | null> {
       prisma.liveStat.findMany(),
       prisma.siteSettings.findFirst(),
     ]);
+    if (settings && settings.liveStatsEnabled === false) return null;
     if (!STAT_KEYS.every((k) => rows.some((r) => r.key === k))) return null;
 
     const stats = {} as LiveStatsData["stats"];
@@ -32,4 +33,27 @@ export async function getLiveStats(): Promise<LiveStatsData | null> {
     console.error("getLiveStats failed:", error);
     return null;
   }
+}
+
+export type LiveStatsSyncStatus = {
+  lastRunAt: string | null;
+  lastSuccessAt: string | null;
+  ok: boolean | null;
+  message: string;
+  stale: boolean;
+};
+
+// "Stale" = no successful sync for 4 sync intervals (24 hours at the 6-hourly schedule).
+export async function getLiveStatsSyncStatus(): Promise<LiveStatsSyncStatus> {
+  const row = await prisma.liveStatSync.findUnique({ where: { id: 1 } });
+  if (!row) return { lastRunAt: null, lastSuccessAt: null, ok: null, message: "The sync has not run yet.", stale: true };
+  const staleAfterMs = SYNC_INTERVAL_HOURS * 4 * 60 * 60 * 1000;
+  const stale = !row.lastSuccessAt || Date.now() - row.lastSuccessAt.getTime() > staleAfterMs;
+  return {
+    lastRunAt: row.lastRunAt.toISOString(),
+    lastSuccessAt: row.lastSuccessAt ? row.lastSuccessAt.toISOString() : null,
+    ok: row.ok,
+    message: row.message,
+    stale,
+  };
 }

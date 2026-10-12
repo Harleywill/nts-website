@@ -144,6 +144,7 @@ model SiteSettings {
   logoVersion Int      @default(1)
   chatWidgetEnabled Boolean @default(false)
   liveStatsDefaultPeriod String @default("year")
+  liveStatsEnabled Boolean @default(true)
   updatedAt   DateTime @updatedAt
 }
 
@@ -251,4 +252,13 @@ model Application {
   job          Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
   submittedAt  DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+// One row (id 1): the outcome of the most recent BigChange sync, shown in admin.
+model LiveStatSync {
+  id            Int       @id
+  lastRunAt     DateTime
+  lastSuccessAt DateTime?
+  ok            Boolean
+  message       String
 }

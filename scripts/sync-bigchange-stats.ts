@@ -140,11 +140,29 @@ async function main() {
     await prisma.liveStat.upsert({ where: { key }, update: v, create: { key, ...v } });
   }
   console.log("[live-stats] saved");
+  const now = new Date();
+  const message = `${jobs.length} completed jobs, ${acUnits} AC units`;
+  await prisma.liveStatSync.upsert({
+    where: { id: 1 },
+    update: { lastRunAt: now, lastSuccessAt: now, ok: true, message },
+    create: { id: 1, lastRunAt: now, lastSuccessAt: now, ok: true, message },
+  });
+}
+
+async function recordFailure(message: string) {
+  if (DRY_RUN) return;
+  const text = message.slice(0, 300);
+  await prisma.liveStatSync.upsert({
+    where: { id: 1 },
+    update: { lastRunAt: new Date(), ok: false, message: text },
+    create: { id: 1, lastRunAt: new Date(), ok: false, message: text },
+  }).catch(() => {});
 }
 
 main()
-  .catch((err) => {
+  .catch(async (err) => {
     console.error("[live-stats] FAILED — leaving the last good numbers in place:", err.message);
+    await recordFailure(String(err.message || err));
     process.exitCode = 1;
   })
   .finally(() => prisma.$disconnect());

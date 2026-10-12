@@ -18,6 +18,15 @@ interface SiteSettings {
   logoVersion?: number;
   chatWidgetEnabled?: boolean;
   liveStatsDefaultPeriod?: 'year' | 'all';
+  liveStatsEnabled?: boolean;
+}
+
+interface LiveStatsSyncStatus {
+  lastRunAt: string | null;
+  lastSuccessAt: string | null;
+  ok: boolean | null;
+  message: string;
+  stale: boolean;
 }
 
 interface Accreditation {
@@ -56,6 +65,7 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [savingAccreditations, setSavingAccreditations] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [syncStatus, setSyncStatus] = useState<LiveStatsSyncStatus | null>(null);
   const [newName, setNewName] = useState('');
   const [newImageUrl, setNewImageUrl] = useState('');
   const [newImagePreview, setNewImagePreview] = useState('');
@@ -72,7 +82,9 @@ export default function SettingsPage() {
     Promise.all([
       fetch('/api/settings', { credentials: 'include' }).then(r => r.json()),
       fetch('/api/accreditations', { credentials: 'include' }).then(r => r.json()),
-    ]).then(([settingsData, accreditationsData]) => {
+      fetch('/api/admin/live-stats', { credentials: 'include' }).then(r => (r.ok ? r.json() : null)).catch(() => null),
+    ]).then(([settingsData, accreditationsData, syncData]) => {
+      setSyncStatus(syncData);
       setSettings(settingsData.settings || settingsData || {});
       setAccreditations(Array.isArray(accreditationsData) ? accreditationsData : []);
     }).catch(console.error).finally(() => setLoading(false));
@@ -140,6 +152,29 @@ export default function SettingsPage() {
     } catch {
       setSettings(s => ({ ...s, chatWidgetEnabled: prev }));
       showToast('Error updating chat widget', 'error');
+    }
+  };
+
+  const handleLiveStatsEnabled = async () => {
+    const prev = settings.liveStatsEnabled ?? true;
+    const next = !prev;
+    setSettings(s => ({ ...s, liveStatsEnabled: next }));
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ ...settings, liveStatsEnabled: next }),
+      });
+      if (res.ok) {
+        showToast(next ? 'Live figures switched on' : 'Live figures switched off — showing the original tiles');
+      } else {
+        setSettings(s => ({ ...s, liveStatsEnabled: prev }));
+        showToast('Failed to update live figures', 'error');
+      }
+    } catch {
+      setSettings(s => ({ ...s, liveStatsEnabled: prev }));
+      showToast('Error updating live figures', 'error');
     }
   };
 
@@ -398,30 +433,89 @@ export default function SettingsPage() {
 
       {/* ── LIVE FIGURES ── */}
       <div style={cardStyle}>
-        <h2 style={{ ...sectionHeading, marginBottom: '4px' }}>Homepage Live Figures</h2>
-        <p style={{ ...sectionSub, margin: '0 0 16px' }}>
-          Which period the live job figures show first. Visitors can switch between the two.
-        </p>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          {([['year', 'Last 12 months'], ['all', 'All time']] as const).map(([value, label]) => {
-            const active = (settings.liveStatsDefaultPeriod ?? 'year') === value;
-            return (
-              <button
-                key={value}
-                onClick={() => handleLiveStatsPeriod(value)}
-                aria-pressed={active}
-                style={{
-                  padding: '8px 16px', borderRadius: 'var(--radius-md)', cursor: 'pointer',
-                  border: active ? '2px solid var(--green-600)' : '1px solid var(--slate-300, #cbd5e1)',
-                  background: active ? 'var(--green-100)' : '#fff',
-                  color: active ? 'var(--green-700)' : 'var(--slate-600)',
-                  fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600,
-                }}
-              >
-                {label}
-              </button>
-            );
-          })}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px' }}>
+          <div>
+            <h2 style={{ ...sectionHeading, marginBottom: '4px' }}>Homepage Live Figures</h2>
+            <p style={{ ...sectionSub, margin: 0 }}>
+              Show the live job figures from BigChange on the homepage. Switch off to show the original tiles instead.
+            </p>
+          </div>
+          <button
+            role="switch"
+            aria-checked={settings.liveStatsEnabled ?? true}
+            onClick={handleLiveStatsEnabled}
+            title={(settings.liveStatsEnabled ?? true) ? 'Switch off live figures' : 'Switch on live figures'}
+            style={{
+              position: 'relative',
+              width: '52px', height: '30px', flexShrink: 0,
+              borderRadius: '999px', border: 'none', cursor: 'pointer',
+              background: (settings.liveStatsEnabled ?? true) ? 'var(--green-600)' : 'var(--slate-300, #cbd5e1)',
+              transition: 'background 0.2s',
+            }}
+          >
+            <span style={{
+              position: 'absolute', top: '3px',
+              left: (settings.liveStatsEnabled ?? true) ? '25px' : '3px',
+              width: '24px', height: '24px', borderRadius: '50%',
+              background: '#fff', boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
+              transition: 'left 0.2s',
+            }} />
+          </button>
+        </div>
+
+        <div style={{ marginTop: '20px' }}>
+          <p style={{ ...sectionSub, margin: '0 0 10px' }}>
+            Which period shows first. Visitors can switch between the two.
+          </p>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            {([['year', 'Last 12 months'], ['all', 'All time']] as const).map(([value, label]) => {
+              const active = (settings.liveStatsDefaultPeriod ?? 'year') === value;
+              return (
+                <button
+                  key={value}
+                  onClick={() => handleLiveStatsPeriod(value)}
+                  aria-pressed={active}
+                  style={{
+                    padding: '8px 16px', borderRadius: 'var(--radius-md)', cursor: 'pointer',
+                    border: active ? '2px solid var(--green-600)' : '1px solid var(--slate-300, #cbd5e1)',
+                    background: active ? 'var(--green-100)' : '#fff',
+                    color: active ? 'var(--green-700)' : 'var(--slate-600)',
+                    fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600,
+                  }}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div style={{
+          marginTop: '20px', padding: '12px 14px', borderRadius: 'var(--radius-md)',
+          background: !syncStatus || syncStatus.stale || syncStatus.ok === false ? '#fef2f2' : 'var(--green-100)',
+          color: !syncStatus || syncStatus.stale || syncStatus.ok === false ? '#991b1b' : 'var(--green-700)',
+          fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.5,
+        }}>
+          {!syncStatus ? (
+            <strong>Could not read the sync status.</strong>
+          ) : (
+            <>
+              <strong>
+                {syncStatus.lastSuccessAt === null
+                  ? 'The sync has not completed yet.'
+                  : syncStatus.stale
+                    ? 'The figures are out of date — the sync has not succeeded for over 24 hours.'
+                    : 'Sync is working.'}
+              </strong>
+              <div>
+                {syncStatus.lastSuccessAt && (
+                  <>Last successful sync: {new Date(syncStatus.lastSuccessAt).toLocaleString('en-GB', { dateStyle: 'long', timeStyle: 'short', timeZone: 'Europe/London' })}. </>
+                )}
+                {syncStatus.ok === false && <>The latest attempt failed: {syncStatus.message}</>}
+                {syncStatus.ok === true && <>Last result: {syncStatus.message}.</>}
+              </div>
+            </>
+          )}
         </div>
       </div>
 
