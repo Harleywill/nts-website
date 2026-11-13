@@ -30,16 +30,18 @@ echo "📂 Navigating to project directory..."
 cd /opt/nts-website
 
 echo "📥 Pulling latest code from git..."
-# Clean up any local database files that might block the pull
-rm -f prisma/dev.db prisma/*.db
+# (The old "rm -f prisma/*.db" is gone on purpose: the database is Postgres now,
+# and nothing in this script should ever delete a database file.)
 git pull origin main
 
 echo "🔨 Building Next.js application..."
 npm run build
 
 echo "🗄️  Setting up database..."
-# Run Prisma migrations to create the database schema
-npx prisma migrate deploy || echo "Migrations already applied"
+# Apply any new Prisma migrations to the Postgres database. NO "|| echo ..."
+# fallback any more: with set -e a failed migration must stop the deploy
+# before the app is restarted against a half-migrated schema.
+npx prisma migrate deploy
 
 # Seed the database with initial data
 npx prisma db seed || echo "Database already seeded"

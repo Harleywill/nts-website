@@ -6,11 +6,11 @@ export async function GET() {
     const [standalone, projectImages] = await Promise.all([
       prisma.galleryImage.findMany({
         where: { published: true },
-        orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+        orderBy: [{ order: "asc" }, { createdAt: "desc" }, { id: "asc" }],
       }),
       prisma.projectImage.findMany({
         include: { project: { select: { category: true, title: true, published: true } } },
-        orderBy: { createdAt: "desc" },
+        orderBy: [{ createdAt: "desc" }, { id: "asc" }],
       }),
     ]);
 

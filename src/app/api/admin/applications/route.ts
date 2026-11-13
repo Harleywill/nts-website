@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
       include: {
         job: { select: { title: true, department: true } },
       },
-      orderBy: { submittedAt: "desc" },
+      orderBy: [{ submittedAt: "desc" }, { id: "asc" }],
       skip,
       take: limit,
     });

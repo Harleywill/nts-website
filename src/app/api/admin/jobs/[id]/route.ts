@@ -15,7 +15,7 @@ export async function GET(
       where: { id },
       include: {
         applications: {
-          orderBy: { submittedAt: "desc" },
+          orderBy: [{ submittedAt: "desc" }, { id: "asc" }],
         },
       },
     });

@@ -6,8 +6,8 @@ import { hasPermission, UserRole } from "@/lib/admin/permissions";
 export async function GET() {
   try {
     const newsItems = await prisma.newsItem.findMany({
-      orderBy: { createdAt: "desc" },
-      include: { images: { orderBy: { order: "asc" } } },
+      orderBy: [{ createdAt: "desc" }, { id: "asc" }],
+      include: { images: { orderBy: [{ order: "asc" }, { id: "asc" }] } },
     });
     return NextResponse.json(newsItems);
   } catch (error) {
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
           ? { create: gallery.map((url, i) => ({ imageUrl: url, order: i })) }
           : undefined,
       },
-      include: { images: { orderBy: { order: "asc" } } },
+      include: { images: { orderBy: [{ order: "asc" }, { id: "asc" }] } },
     });
 
     return NextResponse.json(newsItem);

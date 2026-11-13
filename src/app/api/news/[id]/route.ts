@@ -11,7 +11,7 @@ export async function GET(
     const { id } = await params;
     const newsItem = await prisma.newsItem.findUnique({
       where: { id: parseInt(id) },
-      include: { images: { orderBy: { order: "asc" } } },
+      include: { images: { orderBy: [{ order: "asc" }, { id: "asc" }] } },
     });
     if (!newsItem) {
       return NextResponse.json({ error: "News item not found" }, { status: 404 });
@@ -69,7 +69,7 @@ export async function PUT(
           create: (gallery ?? []).map((url, i) => ({ imageUrl: url, order: i })),
         },
       },
-      include: { images: { orderBy: { order: "asc" } } },
+      include: { images: { orderBy: [{ order: "asc" }, { id: "asc" }] } },
     });
 
     return NextResponse.json(newsItem);

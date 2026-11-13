@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     if (typeof imageUrl !== "string" || !imageUrl.startsWith("/")) {
       return NextResponse.json({ error: "imageUrl is required" }, { status: 400 });
     }
-    const last = await prisma.heroImage.findFirst({ orderBy: { order: "desc" } });
+    const last = await prisma.heroImage.findFirst({ orderBy: [{ order: "desc" }, { id: "asc" }] });
     const image = await prisma.heroImage.create({
       data: { imageUrl, order: (last?.order ?? -1) + 1 },
     });

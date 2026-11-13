@@ -13,27 +13,27 @@ export async function GET(request: NextRequest) {
     // Fetch recent activity from all tables
     const [users, projects, newsItems, testimonials, contactSubmissions, applications] = await Promise.all([
       prisma.user.findMany({
-        orderBy: { createdAt: "desc" },
+        orderBy: [{ createdAt: "desc" }, { id: "asc" }],
         take: 50,
       }),
       prisma.project.findMany({
-        orderBy: { updatedAt: "desc" },
+        orderBy: [{ updatedAt: "desc" }, { id: "asc" }],
         take: 50,
       }),
       prisma.newsItem.findMany({
-        orderBy: { createdAt: "desc" },
+        orderBy: [{ createdAt: "desc" }, { id: "asc" }],
         take: 50,
       }),
       prisma.testimonial.findMany({
-        orderBy: { createdAt: "desc" },
+        orderBy: [{ createdAt: "desc" }, { id: "asc" }],
         take: 50,
       }),
       prisma.contactSubmission.findMany({
-        orderBy: { createdAt: "desc" },
+        orderBy: [{ createdAt: "desc" }, { id: "asc" }],
         take: 50,
       }),
       prisma.application.findMany({
-        orderBy: { submittedAt: "desc" },
+        orderBy: [{ submittedAt: "desc" }, { id: "asc" }],
         take: 50,
       }),
     ]);

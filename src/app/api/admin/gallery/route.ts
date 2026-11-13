@@ -9,14 +9,14 @@ export async function GET(request: NextRequest) {
 
     const [galleryImages, projectImages, newsImages] = await Promise.all([
       prisma.galleryImage.findMany({
-        orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+        orderBy: [{ order: "asc" }, { createdAt: "desc" }, { id: "asc" }],
       }),
       prisma.projectImage.findMany({
-        orderBy: { createdAt: "desc" },
+        orderBy: [{ createdAt: "desc" }, { id: "asc" }],
         include: { project: { select: { id: true, title: true } } },
       }),
       prisma.newsImage.findMany({
-        orderBy: { order: "asc" },
+        orderBy: [{ order: "asc" }, { id: "asc" }],
         include: { newsItem: { select: { id: true, title: true } } },
       }),
     ]);

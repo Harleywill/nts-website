@@ -8,7 +8,7 @@ export async function GET() {
   try {
     const testimonials = await prisma.testimonial.findMany({
       include: { project: true },
-      orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
+      orderBy: [{ featured: "desc" }, { createdAt: "desc" }, { id: "asc" }],
     });
     return NextResponse.json(testimonials);
   } catch (error) {

@@ -7,9 +7,7 @@ export async function GET() {
       where: {
         published: true,
       },
-      orderBy: {
-        order: 'asc',
-      },
+      orderBy: [{ order: 'asc' }, { id: 'asc' }],
     });
 
     return NextResponse.json({

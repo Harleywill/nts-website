@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     const reviews = await prisma.googleReview.findMany({
-      orderBy: { order: "asc" },
+      orderBy: [{ order: "asc" }, { id: "asc" }],
     });
 
     return NextResponse.json({ reviews });

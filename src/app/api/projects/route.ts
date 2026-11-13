@@ -6,7 +6,7 @@ import { hasPermission, UserRole } from "@/lib/admin/permissions";
 export async function GET() {
   try {
     const projects = await prisma.project.findMany({
-      orderBy: { date: "desc" },
+      orderBy: [{ date: "desc" }, { id: "asc" }],
       include: { images: true },
     });
     return NextResponse.json(projects);

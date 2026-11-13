@@ -6,7 +6,7 @@ import { hasPermission } from "@/lib/admin/permissions";
 export async function GET(request: NextRequest) {
   try {
     const submissions = await prisma.contactSubmission.findMany({
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ createdAt: "desc" }, { id: "asc" }],
     });
     return NextResponse.json(submissions);
   } catch (error) {

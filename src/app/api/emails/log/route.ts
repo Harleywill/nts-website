@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
         emailError: true,
         createdAt: true,
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ createdAt: "desc" }, { id: "asc" }],
     });
 
     // Transform data for email log view

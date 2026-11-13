@@ -1,0 +1,264 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../.sqlite-client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("SQLITE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  EDITOR
+  VIEWER
+}
+
+enum JobStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  TEMPORARY
+}
+
+model User {
+  id                    Int      @id @default(autoincrement())
+  username              String   @unique
+  password              String
+  role                  UserRole @default(EDITOR)
+  passwordChanged       Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model Project {
+  id           Int      @id @default(autoincrement())
+  title        String
+  description  String
+  category     String
+  date         DateTime @default(now())
+  imageUrl     String?
+  cropX        Float    @default(0.5)
+  cropY        Float    @default(0.5)
+  cropWidth    Float    @default(1)
+  cropHeight   Float    @default(1)
+  featured     Boolean  @default(false)
+  published    Boolean  @default(false)
+  clientName   String?
+  duration     String?
+  highlights   String?
+  metrics      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  images       ProjectImage[]
+  testimonials Testimonial[]
+}
+
+model ProjectImage {
+  id        Int      @id @default(autoincrement())
+  projectId Int
+  imageUrl  String
+  alt       String?
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  text      String
+  name      String
+  company   String?
+  projectId Int?
+  featured  Boolean  @default(false)
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  project   Project? @relation(fields: [projectId], references: [id])
+}
+
+model NewsItem {
+  id        Int         @id @default(autoincrement())
+  title     String
+  content   String
+  imageUrl  String?
+  cropX     Float       @default(0)
+  cropY     Float       @default(0)
+  cropWidth Float       @default(1)
+  cropHeight Float      @default(1)
+  featured  Boolean     @default(false)
+  published Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  images    NewsImage[]
+}
+
+model NewsImage {
+  id         Int      @id @default(autoincrement())
+  newsItemId Int
+  imageUrl   String
+  alt        String?
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  newsItem   NewsItem @relation(fields: [newsItemId], references: [id], onDelete: Cascade)
+
+  @@index([newsItemId, order])
+}
+
+model ContactSubmission {
+  id               Int      @id @default(autoincrement())
+  name             String
+  email            String
+  phone            String?
+  service          String?
+  message          String
+  read             Boolean  @default(false)
+  status           String   @default("UNREAD")
+  emailSentToAdmin Boolean  @default(false)
+  emailSentToUser  Boolean  @default(false)
+  adminEmails      String?
+  userEmail        String?
+  emailError       String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model SiteSettings {
+  id          Int      @id @default(autoincrement())
+  companyName String
+  phone       String
+  email       String
+  address     String?
+  city        String?
+  postalCode  String?
+  facebookUrl String?
+  linkedinUrl String?
+  instagramUrl String?
+  twitterUrl  String?
+  logoVersion Int      @default(1)
+  chatWidgetEnabled Boolean @default(false)
+  liveStatsDefaultPeriod String @default("year")
+  liveStatsEnabled Boolean @default(true)
+  updatedAt   DateTime @updatedAt
+}
+
+// Homepage live numbers, filled by scripts/sync-bigchange-stats.ts. One row
+// per stat key (acUnits, jobs, services, customers).
+model LiveStat {
+  key       String   @id
+  lastYear  Int
+  allTime   Int
+  updatedAt DateTime @updatedAt
+}
+
+
+model Job {
+  id               String         @id @default(cuid())
+  slug             String         @unique
+  title            String
+  department       String
+  location         String
+  employmentType   EmploymentType
+  salaryRange      String
+  experience       String
+  closesAt         DateTime
+  status           JobStatus      @default(DRAFT)
+  description      String
+  responsibilities String
+  requirements     String
+  applications     Application[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model GoogleReview {
+  id        Int      @id @default(autoincrement())
+  author    String
+  rating    Int
+  text      String
+  imageUrl  String?
+  published Boolean  @default(false)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GalleryImage {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  alt       String?
+  caption   String?
+  category  String?
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HeroImage {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  caption   String?
+  alt       String?
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Accreditation {
+  id       Int     @id @default(autoincrement())
+  name     String
+  slug     String  @unique
+  imageUrl String?
+  enabled  Boolean @default(true)
+  order    Int     @default(0)
+
+  @@index([order])
+}
+
+model DailyStats {
+  id                    Int      @id @default(autoincrement())
+  date                  DateTime @unique
+  userCount             Int      @default(0)
+  projectCount          Int      @default(0)
+  newsCount             Int      @default(0)
+  testimonialCount      Int      @default(0)
+  contactSubmissionCount Int     @default(0)
+  applicationCount      Int      @default(0)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model Application {
+  id           String   @id @default(cuid())
+  fullName     String
+  email        String
+  phone        String
+  postcode     String
+  cvFilename   String
+  cvUrl        String
+  coverLetter  String?
+  notes        String?
+  status       String   @default("NEW")
+  reference    String   @unique
+  jobId        String
+  job          Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  submittedAt  DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// One row (id 1): the outcome of the most recent BigChange sync, shown in admin.
+model LiveStatSync {
+  id            Int       @id
+  lastRunAt     DateTime
+  lastSuccessAt DateTime?
+  ok            Boolean
+  message       String
+}

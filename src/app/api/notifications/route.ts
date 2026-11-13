@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     // Get recent items for preview
     const recentSubmissions = await prisma.contactSubmission.findMany({
       where: { read: false },
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ createdAt: "desc" }, { id: "asc" }],
       take: 3,
       select: {
         id: true,
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
     const recentApplications = await prisma.application.findMany({
       where: { status: "NEW" },
-      orderBy: { submittedAt: "desc" },
+      orderBy: [{ submittedAt: "desc" }, { id: "asc" }],
       take: 3,
       include: {
         job: { select: { title: true } },

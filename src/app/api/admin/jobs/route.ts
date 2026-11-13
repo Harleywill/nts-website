@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     if (denied) return denied;
 
     const jobs = await prisma.job.findMany({
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ createdAt: "desc" }, { id: "asc" }],
       include: {
         _count: { select: { applications: true } },
       },

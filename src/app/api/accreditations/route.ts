@@ -30,7 +30,7 @@ export async function GET() {
   try {
     await ensureSeeded();
     const accreditations = await prisma.accreditation.findMany({
-      orderBy: { order: "asc" },
+      orderBy: [{ order: "asc" }, { id: "asc" }],
     });
     return NextResponse.json(accreditations);
   } catch (error) {
@@ -86,7 +86,7 @@ export async function PUT(request: NextRequest) {
       )
     );
 
-    const accreditations = await prisma.accreditation.findMany({ orderBy: { order: "asc" } });
+    const accreditations = await prisma.accreditation.findMany({ orderBy: [{ order: "asc" }, { id: "asc" }] });
     return NextResponse.json(accreditations);
   } catch (error) {
     return NextResponse.json({ error: "Failed to update accreditations" }, { status: 500 });

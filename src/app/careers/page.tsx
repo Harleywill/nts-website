@@ -18,7 +18,7 @@ export const dynamic = 'force-dynamic';
 export default async function CareersPage() {
   const jobs = await prisma.job.findMany({
     where: { status: "PUBLISHED" },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ createdAt: "desc" }, { id: "asc" }],
     include: {
       _count: { select: { applications: true } },
     },
